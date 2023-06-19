@@ -1,5 +1,6 @@
 const container = document.getElementById('container');
 const canvas = document.getElementById('canvas1');
+const file = document.getElementById('fileupload');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
@@ -15,7 +16,7 @@ container.addEventListener('click', function() {
     analyser = audioContext.createAnalyser(); // create node
     audioSource.connect(analyser);
     analyser.connect(audioContext.destination);
-    analyser.fftSize = 32; //number of FFT samples -    2^n.   bars = fftSize/2
+    analyser.fftSize = 4096; //number of FFT samples -    2^n.   bars = fftSize/2
     const bufferLength = analyser.frequencyBinCount;    //data samples available
     const dataArray = new Uint8Array(bufferLength);
 
@@ -28,7 +29,7 @@ container.addEventListener('click', function() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         analyser.getByteFrequencyData(dataArray);
         for (let i=0; i<bufferLength; i++){
-            barHeight = dataArray[i];
+            barHeight = dataArray[i] * 4;
             ctx.fillStyle = 'white';
             ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
             x += barWidth;
@@ -38,5 +39,39 @@ container.addEventListener('click', function() {
     animate();
 });
 
+file.addEventListener('change', function(){
+    const files = this.files;
+    const audio1 = document.getElementById('audio1');
+    audio1.src = URL.createObjectURL(files[0]);
+    audio1.load();
+    audio1.play();
+    audioSource = audioContext.createMediaElementSource(audio1);
+    analyser = audioContext.createAnalyser(); // create node
+    audioSource.connect(analyser);
+    analyser.connect(audioContext.destination);
+    analyser.fftSize = 4096; //number of FFT samples -    2^n.   bars = fftSize/2
+    const bufferLength = analyser.frequencyBinCount;    //data samples available
+    const dataArray = new Uint8Array(bufferLength);
+
+    const barWidth = canvas.width/bufferLength;
+    let barHeight;
+    let x = 0;
+
+    function animate() {
+        x = 0;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        analyser.getByteFrequencyData(dataArray);
+        for (let i=0; i<bufferLength; i++){
+            barHeight = dataArray[i] * 4;
+            ctx.fillStyle = 'white';
+            ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+            x += barWidth;
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+})
+
 // let audio1 = new Audio('spell.wav'); // Audio('spell.wav') = audio1.src = 'spell.wav'
 // 33:40 - widać góre skryptu js
+// 42:50
