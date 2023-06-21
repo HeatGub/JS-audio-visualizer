@@ -18,7 +18,7 @@ file.addEventListener('change', function(){
     analyser = audioContext.createAnalyser(); // create node
     audioSource.connect(analyser);
     analyser.connect(audioContext.destination);
-    analyser.fftSize = 4096; //number of FFT samples -    2^n.   bars = fftSize/2
+    analyser.fftSize = 256; //number of FFT samples -    2^n.   bars = fftSize/2
     const bufferLength = analyser.frequencyBinCount;    //data samples available
     const dataArray = new Uint8Array(bufferLength);
 
@@ -38,9 +38,49 @@ file.addEventListener('change', function(){
 
 function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
     for (let i=0; i<bufferLength; i++){
+        const red = i * barHeight/20;
+        const green = i * 4;
+        const blue = barHeight/2;
         barHeight = dataArray[i] * 4;
-        ctx.fillStyle = 'yellow';
+        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
+        // console.log('red=' + red + ' green=' + green + ' blue=' + blue);
     }
 }
+
+
+
+
+
+
+
+
+
+
+// BLOCK FOR INSTANT TESTING - change html also
+container.addEventListener('click', function() {
+    const audio1 = document.getElementById('audio1');
+    const audioContext = new AudioContext();
+    audio1.play();
+    audioSource = audioContext.createMediaElementSource(audio1);
+    analyser = audioContext.createAnalyser(); // create node
+    audioSource.connect(analyser);
+    analyser.connect(audioContext.destination);
+    analyser.fftSize = 4096; //number of FFT samples -    2^n.   bars = fftSize/2
+    const bufferLength = analyser.frequencyBinCount;    //data samples available
+    const dataArray = new Uint8Array(bufferLength);
+
+    const barWidth = canvas.width/bufferLength;
+    let barHeight;
+    let x = 0;
+
+    function animate() {
+        x = 0;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        analyser.getByteFrequencyData(dataArray);
+        drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
+        requestAnimationFrame(animate);
+    }
+    animate();
+});
