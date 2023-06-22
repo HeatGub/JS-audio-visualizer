@@ -14,6 +14,13 @@
         <!-- <audio id="audio1" controls></audio> -->
         <audio id="audio1" src="spell.wav" controls></audio>
         <input type = "file" id="fileupload" accept="audio/*"></input>
+        <button id="button1" type="button">play</button>
+
+        <div class="slider">
+            <input id ="slider" type="range" min="1" max="500" value="3.5" oninput="updateValue(this.value)">
+            <p id="rangeValue"></p>
+        </div>
+
     </div>
 
     <script src="script.js"></script>

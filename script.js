@@ -1,4 +1,5 @@
 const container = document.getElementById('container');
+const button = document.getElementById('button1');
 const canvas = document.getElementById('canvas1');
 const file = document.getElementById('fileupload');
 canvas.width = window.innerWidth;
@@ -8,12 +9,22 @@ let audioSource;
 let analyser;
 // VISUALISATION PARAMETERS
 // ctx.lineWidth = 0; //no bar borders?
-const amplify = 150;
-const turns = 1; //how many turns of radial bars. Integers = overlapping bars.
+const turns = 3.7; //how many turns of radial bars. Integers = overlapping bars.
 fftSize = 256; //number of FFT samples - 2^n values,   bars amount = fftSize/2
+let amplify = document.getElementById('slider').value;
+let rangeValue;
+
+function updateValue(val) {
+    document.getElementById("rangeValue").innerHTML = val;
+    amplify = val;
+}
+
 
 // BLOCK FOR INSTANT TESTING - change html also
-container.addEventListener('click', function() {
+button.addEventListener('click', function() {
+    console.log('click play');
+    try{console.log(rangeValue)}
+    finally{
     const audio1 = document.getElementById('audio1');
     const audioContext = new AudioContext();
     audio1.play();
@@ -37,17 +48,17 @@ container.addEventListener('click', function() {
         requestAnimationFrame(animate);
     }
     animate();
-});
+}});
 
 // RADIAL BAR VISUALIZER
 function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
     for (let i=0; i<bufferLength; i++){
-        barHeight = amplify * Math.log10(dataArray[i]); // equalized bar heights
-        // barHeight = amplify * dataArray[i];
+        // barHeight = amplify * Math.log10(dataArray[i]); // equalized bar heights
+        barHeight = amplify * dataArray[i];
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
-        const red =  barHeight/amplify;
+        const red =  60*barHeight/amplify;
         const green =  256*(i)/(bufferLength);
         const blue =  256*(bufferLength-(i))/(bufferLength);
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
