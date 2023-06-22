@@ -8,7 +8,9 @@ let audioSource;
 let analyser;
 // VISUALISATION PARAMETERS
 // ctx.lineWidth = 0; //no bar borders?
-const amplify = 4;
+const amplify = 150;
+const turns = 1; //how many turns of radial bars. Integers = overlapping bars.
+fftSize = 256; //number of FFT samples - 2^n values,   bars amount = fftSize/2
 
 // BLOCK FOR INSTANT TESTING - change html also
 container.addEventListener('click', function() {
@@ -19,8 +21,8 @@ container.addEventListener('click', function() {
     analyser = audioContext.createAnalyser(); // create node
     audioSource.connect(analyser);
     analyser.connect(audioContext.destination);
-    analyser.fftSize = 32; //number of FFT samples - 2^n values,   bars amount = fftSize/2
-    const bufferLength = analyser.frequencyBinCount;    //data samples available
+    analyser.fftSize = fftSize;
+    const bufferLength = analyser.frequencyBinCount;    //data samples available - fftSize/2
     const dataArray = new Uint8Array(bufferLength);
 
     const barWidth = canvas.width/bufferLength;
@@ -37,44 +39,65 @@ container.addEventListener('click', function() {
     animate();
 });
 
+// RADIAL BAR VISUALIZER
 function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
     for (let i=0; i<bufferLength; i++){
-        barHeight = dataArray[i] * amplify;
-        const red =  barHeight/2;
-        const green =  256*(i+1)/(bufferLength+1);
-        const blue =  256*(bufferLength-(i-1))/(bufferLength-1); //0-100
+        barHeight = amplify * Math.log10(dataArray[i]); // equalized bar heights
+        // barHeight = amplify * dataArray[i];
+        ctx.save(); //canvas values to restore later
+        ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
+        ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
+        const red =  barHeight/amplify;
+        const green =  256*(i)/(bufferLength);
+        const blue =  256*(bufferLength-(i))/(bufferLength);
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        ctx.fillRect(0, 0, barWidth, barHeight);
         x += barWidth;
         // console.log('red=' + red + ' green=' + green + ' blue=' + blue);
+        ctx.restore(); //to the ctx.save
     }
 }
 
-// // ON FILE CHANGE
-// file.addEventListener('change', function(){
-//     const audioContext = new AudioContext();
-//     const files = this.files;
-//     const audio1 = document.getElementById('audio1');
-//     audio1.src = URL.createObjectURL(files[0]);
-//     audio1.load();
-//     audio1.play();
-//     audioSource = audioContext.createMediaElementSource(audio1);
-//     analyser = audioContext.createAnalyser(); // create node
-//     audioSource.connect(analyser);
-//     analyser.connect(audioContext.destination);
-//     analyser.fftSize = 32; //number of FFT samples -    2^n.   bars = fftSize/2
-//     const bufferLength = analyser.frequencyBinCount;    //data samples available
-//     const dataArray = new Uint8Array(bufferLength);
-//     const barWidth = canvas.width/bufferLength;
-//     let barHeight;
-//     let x = 0;
-
-//     function animate() {
-//         x = 0;
-//         ctx.clearRect(0, 0, canvas.width, canvas.height);
-//         analyser.getByteFrequencyData(dataArray);
-//         drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
-//         requestAnimationFrame(animate);
+// // HORIZONTAL BAR VISUALIZER
+// function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
+//     for (let i=0; i<bufferLength; i++){
+//         barHeight = dataArray[i] * amplify;
+//         const red =  barHeight/2;
+//         const green =  256*(i+1)/(bufferLength+1);
+//         const blue =  256*(bufferLength-(i-1))/(bufferLength-1);
+//         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+//         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+//         x += barWidth;
+//         // console.log('red=' + red + ' green=' + green + ' blue=' + blue);
 //     }
-//     animate();
-// });
+// }
+
+
+// ON FILE CHANGE
+file.addEventListener('change', function(){
+    const audioContext = new AudioContext();
+    const files = this.files;
+    const audio1 = document.getElementById('audio1');
+    audio1.src = URL.createObjectURL(files[0]);
+    audio1.load();
+    audio1.play();
+    audioSource = audioContext.createMediaElementSource(audio1);
+    analyser = audioContext.createAnalyser(); // create node
+    audioSource.connect(analyser);
+    analyser.connect(audioContext.destination);
+    analyser.fftSize = 32; //number of FFT samples -    2^n.   bars = fftSize/2
+    const bufferLength = analyser.frequencyBinCount;    //data samples available
+    const dataArray = new Uint8Array(bufferLength);
+    const barWidth = canvas.width/bufferLength;
+    let barHeight;
+    let x = 0;
+
+    function animate() {
+        x = 0;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        analyser.getByteFrequencyData(dataArray);
+        drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
+        requestAnimationFrame(animate);
+    }
+    animate();
+});
