@@ -9,23 +9,22 @@ let audioSource;
 let analyser;
 // VISUALISATION PARAMETERS
 // ctx.lineWidth = 0; //no bar borders?
-const turns = 3.7; //how many turns of radial bars. Integers = overlapping bars.
-fftSize = 256; //number of FFT samples - 2^n values,   bars amount = fftSize/2
-let amplify = document.getElementById('slider').value;
-let rangeValue;
+const turns = 1; //how many turns of radial bars. Integers > 1 give overlapping bars.
+fftSize = 512; //number of FFT samples - 2^n values,   bars amount = fftSize/2
+let amplification = document.getElementById('slider1').value;
 
-function updateValue(val) {
-    document.getElementById("rangeValue").innerHTML = val;
-    amplify = val;
+//change html
+function updateValue(sliderValue, sliderValueID) {
+    document.getElementById(sliderValueID).innerHTML = sliderValue; //show the number
+    amplification = sliderValue; //change scope to global
+    return;
 }
-
 
 // BLOCK FOR INSTANT TESTING - change html also
 button.addEventListener('click', function() {
     console.log('click play');
-    try{console.log(rangeValue)}
-    finally{
     const audio1 = document.getElementById('audio1');
+    audio1.volume = 0.2;
     const audioContext = new AudioContext();
     audio1.play();
     audioSource = audioContext.createMediaElementSource(audio1);
@@ -48,40 +47,43 @@ button.addEventListener('click', function() {
         requestAnimationFrame(animate);
     }
     animate();
-}});
+});
 
-// RADIAL BAR VISUALIZER
-function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
-    for (let i=0; i<bufferLength; i++){
-        // barHeight = amplify * Math.log10(dataArray[i]); // equalized bar heights
-        barHeight = amplify * dataArray[i];
-        ctx.save(); //canvas values to restore later
-        ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
-        ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
-        const red =  60*barHeight/amplify;
-        const green =  256*(i)/(bufferLength);
-        const blue =  256*(bufferLength-(i))/(bufferLength);
-        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-        ctx.fillRect(0, 0, barWidth, barHeight);
-        x += barWidth;
-        // console.log('red=' + red + ' green=' + green + ' blue=' + blue);
-        ctx.restore(); //to the ctx.save
-    }
-}
+let bufferLengthCutoff = fftSize/2 * 0.01; //part of high frequencies cut (0-1)
+// console.log(bufferLengthCutoff);
 
-// // HORIZONTAL BAR VISUALIZER
+// // RADIAL BAR VISUALIZER
 // function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
-//     for (let i=0; i<bufferLength; i++){
-//         barHeight = dataArray[i] * amplify;
-//         const red =  barHeight/2;
-//         const green =  256*(i+1)/(bufferLength+1);
-//         const blue =  256*(bufferLength-(i-1))/(bufferLength-1);
+//     for (let i=0; i<(bufferLength-bufferLengthCutoff); i++){
+//         // barHeight = amplification * Math.log10(dataArray[i]); // equalized bar heights
+//         barHeight = amplification * dataArray[i];
+//         ctx.save(); //canvas values to restore later
+//         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
+//         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
+//         const red =  60*barHeight/amplification;
+//         const green =  256*(i)/(bufferLength);
+//         const blue =  256*(bufferLength-(i))/(bufferLength);
 //         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-//         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+//         ctx.fillRect(0, 0, barWidth, barHeight);
 //         x += barWidth;
 //         // console.log('red=' + red + ' green=' + green + ' blue=' + blue);
+//         ctx.restore(); //to the ctx.save
 //     }
 // }
+
+// HORIZONTAL BAR VISUALIZER
+function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
+    for (let i=0; i<bufferLength; i++){
+        barHeight = dataArray[i] * amplification;
+        const red =  barHeight/2;
+        const green =  256*(i+1)/(bufferLength+1);
+        const blue =  256*(bufferLength-(i-1))/(bufferLength-1);
+        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth;
+        // console.log('red=' + red + ' green=' + green + ' blue=' + blue);
+    }
+}
 
 
 // ON FILE CHANGE
@@ -89,6 +91,7 @@ file.addEventListener('change', function(){
     const audioContext = new AudioContext();
     const files = this.files;
     const audio1 = document.getElementById('audio1');
+    audio1.volume = 0.2;
     audio1.src = URL.createObjectURL(files[0]);
     audio1.load();
     audio1.play();

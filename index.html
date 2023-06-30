@@ -17,8 +17,10 @@
         <button id="button1" type="button">play</button>
 
         <div class="slider">
-            <input id ="slider" type="range" min="1" max="500" value="3.5" oninput="updateValue(this.value)">
-            <p id="rangeValue"></p>
+            <p>amplification</p>
+            <!-- <input id ="slider1" type="range" min="0.1" max="20" value="3.5" step="0.1"> -->
+            <input id ="slider1" type="range" min="0.1" max="20" value="3.5" step="0.1" oninput="updateValue(this.value, 'sliderValue1')"> 
+            <p id="sliderValue1"></p>
         </div>
 
     </div>
