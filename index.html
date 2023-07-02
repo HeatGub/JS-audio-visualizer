@@ -28,12 +28,10 @@
 
             <p>High cutoff</p>
             <input id ="sliderHighCut" type="range" min="0" max="0.99" value="0" step="0.01" oninput="updateValueHighCut(this.value, 'sliderValueHighCut')"> 
-            <p id="sliderValueHighCut">.</p>
-
-            
+            <p id="sliderValueHighCut">.</p>           
 
             <label for="fftSizes">FFT size:</label>
-            <select name="fftSizes" id="droplist" oninput="updateValueFftSize(this.value)">
+            <select name="fftSizes" id="droplistFftSizes" oninput="updateValueFftSize(this.value)">
                 <option value="128">128</option>
                 <option value="32">32</option>
                 <option value="64">64</option>
@@ -44,6 +42,12 @@
                 <option value="2048">2048</option>
                 <option value="4096">4096</option>
                 <option value="8192">8192</option>
+            </select>
+            <br>
+            <label for="visualizers">Visualizer type:</label>
+            <select name="visualizers" id="droplistVisualizers" oninput="updateValueVisualizerType(this.value)">
+                <option value="horizontal bars">horizontal bars</option>
+                <option value="radial bars">Radial bars</option>
             </select>
 
         </div>

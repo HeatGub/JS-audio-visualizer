@@ -14,11 +14,12 @@ let audioContext = new AudioContext();
 // VISUALISATION PARAMETERS
 // ctx.lineWidth = 0; //no bar borders?
 const turns = 1; //how many turns of radial bars. Integers > 1 give overlapping bars.
-let fftSize = document.getElementById('droplist').value; //number of FFT samples - 2^n values,   bars amount = fftSize/2
+let fftSize = document.getElementById('droplistFftSizes').value; //number of FFT samples - 2^n values,   bars amount = fftSize/2
 let amplification = document.getElementById('sliderAmplification').value;
 let highCutoff = document.getElementById('sliderHighCut').value; //part of frequencies cut (0 - 0.99) 
 let widthMultiplier = document.getElementById('sliderWidthMultiplier').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
+let VisualizerType = document.getElementById('droplistVisualizers').value;;
 
 // ON FILE CHANGE   -   click the button to reset after fftSize changes
 file.addEventListener('change', function(){
@@ -35,7 +36,7 @@ function updateValueWidthMultiplier(sliderValue, sliderValueID) {
     document.getElementById(sliderValueID).innerHTML = sliderValue; //show the number
     widthMultiplier = sliderValue;
     barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
-    console.log(barWidth);
+    // console.log(barWidth);
 }
 
 function updateValueHighCut(sliderValue, sliderValueID) {
@@ -46,8 +47,12 @@ function updateValueHighCut(sliderValue, sliderValueID) {
 function updateValueFftSize(thisValue) {
     fftSize = Math.floor(thisValue);
     barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
-    console.log('updt');
-    console.log(barWidth);
+    // console.log(barWidth);
+}
+
+function updateValueVisualizerType(thisValue) {
+    VisualizerType = thisValue;
+    console.log(VisualizerType);
 }
 
 button.addEventListener('click', function () {
@@ -65,19 +70,26 @@ button.addEventListener('click', function () {
     let barHeight;
     let x = 0;
 
-
     function animate() {
         x = 0;
         ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
         analyser.getByteFrequencyData(dataArray); //copies the current frequency data into a Uint8Array
-        drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
+        // drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
+        if (VisualizerType == 'horizontal bars') {
+            drawVisualizerHorizontalBars(bufferLength, x, barWidth, barHeight, dataArray);
+        // drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray);
+        }
+        else if (VisualizerType == 'radial bars') {
+            drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray);
+        // drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray);
+        }
         requestAnimationFrame(animate);
     }
     animate();
 });
 
-// HORIZONTAL BAR VISUALIZER
-function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
+// HORIZONTAL BARS VISUALIZER
+function drawVisualizerHorizontalBars(bufferLength, x, barWidth, barHeight, dataArray){
     for (let i = 0; i < bufferLength-highCutoff; i++){
         barHeight = dataArray[i] * amplification;
         const red =  2*barHeight/amplification;
@@ -89,21 +101,21 @@ function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
     }
 }
 
-// // RADIAL BAR VISUALIZER
-// function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
-//     for (let i=0; i<(bufferLength-highCutoff); i++){
-//         // barHeight = amplification * Math.log10(dataArray[i]); // equalized bar heights
-//         barHeight = amplification * dataArray[i];
-//         ctx.save(); //canvas values to restore later
-//         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
-//         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
-//         const red =  60*barHeight/amplification;
-//         const green =  256*(i)/(bufferLength);
-//         const blue =  256*(bufferLength-(i))/(bufferLength);
-//         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-//         ctx.fillRect(0, 0, barWidth, barHeight);
-//         x += barWidth;
-//         // console.log('red=' + red + ' green=' + green + ' blue=' + blue);
-//         ctx.restore(); //to the ctx.save
-//     }
-// }
+// RADIAL BARS VISUALIZER
+function drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray){
+    for (let i=0; i<(bufferLength-highCutoff); i++){
+        // barHeight = amplification * Math.log10(dataArray[i]); // equalized bar heights
+        barHeight = amplification * dataArray[i];
+        ctx.save(); //canvas values to restore later
+        ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
+        ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
+        const red =  60*barHeight/amplification;
+        const green =  256*(i)/(bufferLength);
+        const blue =  256*(bufferLength-(i))/(bufferLength);
+        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.fillRect(0, 0, barWidth, barHeight);
+        x += barWidth;
+        // console.log('red=' + red + ' green=' + green + ' blue=' + blue);
+        ctx.restore(); //to the ctx.save
+    }
+}
