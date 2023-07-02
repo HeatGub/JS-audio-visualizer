@@ -5,7 +5,10 @@ const file = document.getElementById('fileupload');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
-let audioSource;
+const audio1 = document.getElementById('audio1');
+audio1.volume = 0.2;
+let audioContext = new AudioContext();
+// let audioSource;
 // let analyser;
 // let audio1 = document.getElementById('audio1');
 // VISUALISATION PARAMETERS
@@ -16,6 +19,12 @@ let amplification = document.getElementById('sliderAmplification').value;
 let highCutoff = document.getElementById('sliderHighCut').value; //part of frequencies cut (0 - 0.99) 
 let widthMultiplier = document.getElementById('sliderWidthMultiplier').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
+
+// ON FILE CHANGE
+file.addEventListener('change', function(){
+    const files = this.files;
+    audio1.src = URL.createObjectURL(files[0]);
+});
 
 function updateValueAmplification(sliderValue, sliderValueID) {
     document.getElementById(sliderValueID).innerHTML = sliderValue; //show the number
@@ -37,15 +46,12 @@ function updateValueHighCut(sliderValue, sliderValueID) {
 function updateValueFftSize(thisValue) {
     fftSize = Math.floor(thisValue);
     barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
+    console.log('updt');
     console.log(barWidth);
 }
 
-// BLOCK FOR INSTANT TESTING - change html also
 button.addEventListener('click', function() {
     console.log('click play');
-    const audio1 = document.getElementById('audio1');
-    audio1.volume = 0.2;
-    const audioContext = new AudioContext();
     audio1.play();
     if (typeof audioSource == 'undefined') { //without that condition there is an error on creating audioSource
         audioSource = audioContext.createMediaElementSource(audio1);
@@ -100,42 +106,3 @@ function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
 //         ctx.restore(); //to the ctx.save
 //     }
 // }
-
-
-// ON FILE CHANGE
-file.addEventListener('change', function(){
-    const audioContext = new AudioContext();
-    const files = this.files;
-    const audio1 = document.getElementById('audio1');
-    audio1.volume = 0.2;
-    audio1.src = URL.createObjectURL(files[0]);
-    audio1.load();
-    audio1.play();
-
-    if (typeof audioSource != 'undefined') { //without that condition there is an error on creating audioSource
-        audioSource = 0;
-        audioSource = audioContext.createMediaElementSource(audio1);
-        analyser = audioContext.createAnalyser(); // create node
-        audioSource.connect(analyser);
-        analyser.connect(audioContext.destination);
-    }
-
-    // audioSource = audioContext.createMediaElementSource(audio1);
-    // analyser = audioContext.createAnalyser(); // create node
-    // audioSource.connect(analyser);
-    // analyser.connect(audioContext.destination);
-    // analyser.fftSize = fftSize; //number of FFT samples -    2^n.   bars = fftSize/2
-    // const bufferLength = analyser.frequencyBinCount;    //data samples available
-    // const dataArray = new Uint8Array(bufferLength);
-    // let barHeight;
-    // let x = 0;
-
-    // function animate() {
-    //     x = 0;
-    //     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //     analyser.getByteFrequencyData(dataArray);
-    //     drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
-    //     requestAnimationFrame(animate);
-    // }
-    // animate();
-});
