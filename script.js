@@ -4,6 +4,7 @@ const canvas = document.getElementById('canvas1');
 const file = document.getElementById('fileupload');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+// canvas.height = window.innerWidth; //to make widt/heig 1:1
 const ctx = canvas.getContext('2d');
 const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
@@ -13,13 +14,17 @@ let audioContext = new AudioContext();
 // let audio1 = document.getElementById('audio1');
 // VISUALISATION PARAMETERS
 // ctx.lineWidth = 0; //no bar borders?
-const turns = 1; //how many turns of radial bars. Integers > 1 give overlapping bars.
+let turns = document.getElementById('sliderTurns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
 let fftSize = document.getElementById('droplistFftSizes').value; //number of FFT samples - 2^n values,   bars amount = fftSize/2
 let amplification = document.getElementById('sliderAmplification').value;
 let highCutoff = document.getElementById('sliderHighCut').value; //part of frequencies cut (0 - 0.99) 
+let bufferLength = fftSize/2;
+let bufferLengthAfterCutoff = bufferLength -highCutoff;
+
 let widthMultiplier = document.getElementById('sliderWidthMultiplier').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
-let VisualizerType = document.getElementById('droplistVisualizers').value;;
+let VisualizerType = document.getElementById('droplistVisualizers').value;
+
 
 // ON FILE CHANGE   -   click the button to reset after fftSize changes
 file.addEventListener('change', function(){
@@ -42,17 +47,25 @@ function updateValueWidthMultiplier(sliderValue, sliderValueID) {
 function updateValueHighCut(sliderValue, sliderValueID) {
     document.getElementById(sliderValueID).innerHTML = sliderValue; //show the number
     highCutoff = fftSize/2 * sliderValue;
+    bufferLengthAfterCutoff = bufferLength -highCutoff;
 }
 
 function updateValueFftSize(thisValue) {
     fftSize = Math.floor(thisValue);
+    bufferLength = fftSize/2;
     barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
+    bufferLengthAfterCutoff = bufferLength -highCutoff;
     // console.log(barWidth);
 }
 
 function updateValueVisualizerType(thisValue) {
     VisualizerType = thisValue;
     console.log(VisualizerType);
+}
+
+function updateValueTurns(sliderValue, sliderValueID) {
+    turns = sliderValue;
+    document.getElementById(sliderValueID).innerHTML = sliderValue;
 }
 
 button.addEventListener('click', function () {
@@ -90,11 +103,11 @@ button.addEventListener('click', function () {
 
 // HORIZONTAL BARS VISUALIZER
 function drawVisualizerHorizontalBars(bufferLength, x, barWidth, barHeight, dataArray){
-    for (let i = 0; i < bufferLength-highCutoff; i++){
+    for (let i = 0; i < bufferLengthAfterCutoff; i++){
         barHeight = dataArray[i] * amplification;
         const red =  2*barHeight/amplification;
-        const green =  256*i / (bufferLength-highCutoff);
-        const blue =  256*((bufferLength-highCutoff-i) / (bufferLength-highCutoff));
+        const green =  256*i / (bufferLengthAfterCutoff);
+        const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
@@ -103,15 +116,15 @@ function drawVisualizerHorizontalBars(bufferLength, x, barWidth, barHeight, data
 
 // RADIAL BARS VISUALIZER
 function drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray){
-    for (let i=0; i<(bufferLength-highCutoff); i++){
+    for (let i=0; i<(bufferLengthAfterCutoff); i++){
         // barHeight = amplification * Math.log10(dataArray[i]); // equalized bar heights
         barHeight = amplification * dataArray[i];
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
-        const red =  60*barHeight/amplification;
-        const green =  256*(i)/(bufferLength);
-        const blue =  256*(bufferLength-(i))/(bufferLength);
+        const red =  2*barHeight/amplification;
+        const green =  256*i / (bufferLengthAfterCutoff);
+        const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
         ctx.fillRect(0, 0, barWidth, barHeight);
         x += barWidth;
