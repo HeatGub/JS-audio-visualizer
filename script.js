@@ -20,7 +20,7 @@ let highCutoff = document.getElementById('sliderHighCut').value; //part of frequ
 let widthMultiplier = document.getElementById('sliderWidthMultiplier').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
 
-// ON FILE CHANGE
+// ON FILE CHANGE   -   click the button to reset after fftSize changes
 file.addEventListener('change', function(){
     const files = this.files;
     audio1.src = URL.createObjectURL(files[0]);
@@ -50,7 +50,7 @@ function updateValueFftSize(thisValue) {
     console.log(barWidth);
 }
 
-button.addEventListener('click', function() {
+button.addEventListener('click', function () {
     console.log('click play');
     audio1.play();
     if (typeof audioSource == 'undefined') { //without that condition there is an error on creating audioSource
@@ -64,6 +64,7 @@ button.addEventListener('click', function() {
     const dataArray = new Uint8Array(bufferLength);
     let barHeight;
     let x = 0;
+
 
     function animate() {
         x = 0;
@@ -80,8 +81,8 @@ function drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray){
     for (let i = 0; i < bufferLength-highCutoff; i++){
         barHeight = dataArray[i] * amplification;
         const red =  2*barHeight/amplification;
-        const green =  256*i / bufferLength;
-        const blue =  256*((bufferLength-i) / bufferLength);
+        const green =  256*i / (bufferLength-highCutoff);
+        const blue =  256*((bufferLength-highCutoff-i) / (bufferLength-highCutoff));
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
