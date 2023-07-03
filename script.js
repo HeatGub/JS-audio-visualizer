@@ -6,24 +6,24 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 // canvas.height = window.innerWidth; //to make widt/heig 1:1
 const ctx = canvas.getContext('2d');
+// ctx.shadowColor = 'white';
+// ctx.shadowOffsetX = 2;
+// ctx.shadowOffsetY = -2;
+ctx.lineWidth = 2; //no bar borders?
 const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
 let audioContext = new AudioContext();
-// let audioSource;
-// let analyser;
-// let audio1 = document.getElementById('audio1');
+
 // VISUALISATION PARAMETERS
-// ctx.lineWidth = 0; //no bar borders?
 let turns = document.getElementById('sliderTurns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
 let fftSize = document.getElementById('droplistFftSizes').value; //number of FFT samples - 2^n values,   bars amount = fftSize/2
-let amplification = document.getElementById('sliderAmplification').value;
 let highCutoff = document.getElementById('sliderHighCut').value; //part of frequencies cut (0 - 0.99) 
 let bufferLength = fftSize/2;
 let bufferLengthAfterCutoff = bufferLength -highCutoff;
+let amplification = document.getElementById('sliderAmplification').value;
 let widthMultiplier = document.getElementById('sliderWidthMultiplier').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
 let VisualizerType = document.getElementById('droplistVisualizers').value;
-
 
 // ON FILE CHANGE   -   click the button to reset after fftSize changes
 file.addEventListener('change', function(){
@@ -40,7 +40,6 @@ function updateValueWidthMultiplier(sliderValue, sliderValueID) {
     document.getElementById(sliderValueID).innerHTML = sliderValue; //show the number
     widthMultiplier = sliderValue;
     barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
-    // console.log(barWidth);
 }
 
 function updateValueHighCut(sliderValue, sliderValueID) {
@@ -54,7 +53,6 @@ function updateValueFftSize(thisValue) {
     bufferLength = fftSize/2;
     barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
     bufferLengthAfterCutoff = bufferLength -highCutoff;
-    // console.log(barWidth);
 }
 
 function updateValueVisualizerType(thisValue) {
@@ -85,26 +83,63 @@ button.addEventListener('click', function () {
         x = 0;
         ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
         analyser.getByteFrequencyData(dataArray); //copies the current frequency data into a Uint8Array
-        // drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
         if (VisualizerType == 'horizontal bars') {
-            drawVisualizerHorizontalBars(bufferLength, x, barWidth, barHeight, dataArray);
+            drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
         else if (VisualizerType == 'horizontal bars log') {
-            drawVisualizerHorizontalBarsLog(bufferLength, x, barWidth, barHeight, dataArray);
+            drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
         else if (VisualizerType == 'radial bars') {
-            drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray);
+            drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
         else if (VisualizerType == 'radial bars log') {
-            drawVisualizerRadialBarsLog(bufferLength, x, barWidth, barHeight, dataArray);
+            drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
+        }
+        else if (VisualizerType == 'polygons') {
+            drawVisualizerPolygons(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
         requestAnimationFrame(animate);
     }
     animate();
 });
 
+// POLYGONS VISUALIZER
+function drawVisualizerPolygons(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
+    ctx.strokeStyle = 'yellow'; //white lines
+    for (let i=0; i<(bufferLengthAfterCutoff); i++){
+        radius = dataArray[i] * amplification;
+        n = bufferLengthAfterCutoff-i;
+        inset = 2;
+
+        radius = dataArray[i] * amplification;
+        n = bufferLengthAfterCutoff-i;
+        inset = 2;
+
+        // ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // radius -= i;
+        ctx.beginPath();
+        ctx.save(); //creates snapshot of global settings
+        ctx.translate(canvas.width/2, canvas.height/2);
+        ctx.moveTo(0, 0 - radius); //center
+
+        for (let j=0; j < n; j++){
+            ctx.rotate(Math.PI / n);
+            ctx.lineTo(0, 0 - (radius * inset));
+            ctx.rotate(Math.PI / n);
+            ctx.lineTo(0, 0 - radius);
+        }
+
+        // ctx.restore(); //Restores translation and rotation to snapshot values
+        ctx.closePath(); 
+        ctx.stroke();//display 
+        // ctx.fill();
+        x += barWidth;
+        ctx.restore(); //to the ctx.save
+    }
+}
+
 // HORIZONTAL BARS VISUALIZER
-function drawVisualizerHorizontalBars(bufferLength, x, barWidth, barHeight, dataArray){
+function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
     for (let i = 0; i < bufferLengthAfterCutoff; i++){
         barHeight = dataArray[i] * amplification;
         const red =  2*barHeight/amplification;
@@ -114,23 +149,23 @@ function drawVisualizerHorizontalBars(bufferLength, x, barWidth, barHeight, data
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
     }
+
 }
-// HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
-function drawVisualizerHorizontalBarsLog(bufferLength, x, barWidth, barHeight, dataArray){
-    for (let i = 0; i < bufferLengthAfterCutoff; i++){
-        barHeight = Math.log(dataArray[i]) * amplification * 20;
-        // barHeight = dataArray[i] * amplification;
-        const red =  2*barHeight/amplification;
-        const green =  256*i / (bufferLengthAfterCutoff);
-        const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
-        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-        x += barWidth;
-    }
-}
+// // HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
+// function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
+//     for (let i = 0; i < bufferLengthAfterCutoff; i++){
+//         barHeight = Math.log(dataArray[i]) * amplification * 30;
+//         const red =  2*barHeight/amplification;
+//         const green =  256*i / (bufferLengthAfterCutoff);
+//         const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+//         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+//         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+//         x += barWidth;
+//     }
+// }
 
 // RADIAL BARS VISUALIZER
-function drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray){
+function drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
         barHeight = dataArray[i] * amplification;
         ctx.save(); //canvas values to restore later
@@ -147,9 +182,9 @@ function drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArra
 }
 
 // RADIAL BARS VISUALIZER - LOGARITHMIC SCALE
-function drawVisualizerRadialBarsLog(bufferLength, x, barWidth, barHeight, dataArray){
+function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        barHeight = Math.log(dataArray[i]) * amplification * 20;
+        barHeight = Math.log(dataArray[i]) * amplification * 30;
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
