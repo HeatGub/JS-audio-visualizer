@@ -20,7 +20,6 @@ let amplification = document.getElementById('sliderAmplification').value;
 let highCutoff = document.getElementById('sliderHighCut').value; //part of frequencies cut (0 - 0.99) 
 let bufferLength = fftSize/2;
 let bufferLengthAfterCutoff = bufferLength -highCutoff;
-
 let widthMultiplier = document.getElementById('sliderWidthMultiplier').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
 let VisualizerType = document.getElementById('droplistVisualizers').value;
@@ -60,7 +59,6 @@ function updateValueFftSize(thisValue) {
 
 function updateValueVisualizerType(thisValue) {
     VisualizerType = thisValue;
-    console.log(VisualizerType);
 }
 
 function updateValueTurns(sliderValue, sliderValueID) {
@@ -90,11 +88,15 @@ button.addEventListener('click', function () {
         // drawVisualizer(bufferLength, x, barWidth, barHeight, dataArray);
         if (VisualizerType == 'horizontal bars') {
             drawVisualizerHorizontalBars(bufferLength, x, barWidth, barHeight, dataArray);
-        // drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray);
+        }
+        else if (VisualizerType == 'horizontal bars log') {
+            drawVisualizerHorizontalBarsLog(bufferLength, x, barWidth, barHeight, dataArray);
         }
         else if (VisualizerType == 'radial bars') {
             drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray);
-        // drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray);
+        }
+        else if (VisualizerType == 'radial bars log') {
+            drawVisualizerRadialBarsLog(bufferLength, x, barWidth, barHeight, dataArray);
         }
         requestAnimationFrame(animate);
     }
@@ -113,12 +115,24 @@ function drawVisualizerHorizontalBars(bufferLength, x, barWidth, barHeight, data
         x += barWidth;
     }
 }
+// HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
+function drawVisualizerHorizontalBarsLog(bufferLength, x, barWidth, barHeight, dataArray){
+    for (let i = 0; i < bufferLengthAfterCutoff; i++){
+        barHeight = Math.log(dataArray[i]) * amplification * 20;
+        // barHeight = dataArray[i] * amplification;
+        const red =  2*barHeight/amplification;
+        const green =  256*i / (bufferLengthAfterCutoff);
+        const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth;
+    }
+}
 
 // RADIAL BARS VISUALIZER
 function drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        // barHeight = amplification * Math.log10(dataArray[i]); // equalized bar heights
-        barHeight = amplification * dataArray[i];
+        barHeight = dataArray[i] * amplification;
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
@@ -128,7 +142,23 @@ function drawVisualizerRadialBars(bufferLength, x, barWidth, barHeight, dataArra
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
         ctx.fillRect(0, 0, barWidth, barHeight);
         x += barWidth;
-        // console.log('red=' + red + ' green=' + green + ' blue=' + blue);
+        ctx.restore(); //to the ctx.save
+    }
+}
+
+// RADIAL BARS VISUALIZER - LOGARITHMIC SCALE
+function drawVisualizerRadialBarsLog(bufferLength, x, barWidth, barHeight, dataArray){
+    for (let i=0; i<(bufferLengthAfterCutoff); i++){
+        barHeight = Math.log(dataArray[i]) * amplification * 20;
+        ctx.save(); //canvas values to restore later
+        ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
+        ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
+        const red =  2*barHeight/amplification;
+        const green =  256*i / (bufferLengthAfterCutoff);
+        const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.fillRect(0, 0, barWidth, barHeight);
+        x += barWidth;
         ctx.restore(); //to the ctx.save
     }
 }
