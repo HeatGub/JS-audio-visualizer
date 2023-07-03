@@ -9,7 +9,7 @@ const ctx = canvas.getContext('2d');
 // ctx.shadowColor = 'white';
 // ctx.shadowOffsetX = 2;
 // ctx.shadowOffsetY = -2;
-ctx.lineWidth = 2; //no bar borders?
+// ctx.lineWidth = 2; //no bar borders?
 const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
 let audioContext = new AudioContext();
@@ -24,6 +24,7 @@ let amplification = document.getElementById('sliderAmplification').value;
 let widthMultiplier = document.getElementById('sliderWidthMultiplier').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
 let VisualizerType = document.getElementById('droplistVisualizers').value;
+let polygonSymmetry= document.getElementById('sliderPolygonSymmetry').value;
 
 // ON FILE CHANGE   -   click the button to reset after fftSize changes
 file.addEventListener('change', function(){
@@ -64,6 +65,12 @@ function updateValueTurns(sliderValue, sliderValueID) {
     document.getElementById(sliderValueID).innerHTML = sliderValue;
 }
 
+function updateValuePolygonSymmetry(sliderValue, sliderValueID) {
+    polygonSymmetry = sliderValue;
+    document.getElementById(sliderValueID).innerHTML = sliderValue;
+}
+
+
 button.addEventListener('click', function () {
     console.log('click play');
     audio1.play();
@@ -96,7 +103,7 @@ button.addEventListener('click', function () {
             drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
         else if (VisualizerType == 'polygons') {
-            drawVisualizerPolygons(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
+            drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray);
         }
         requestAnimationFrame(animate);
     }
@@ -104,36 +111,40 @@ button.addEventListener('click', function () {
 });
 
 // POLYGONS VISUALIZER
-function drawVisualizerPolygons(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
-    ctx.strokeStyle = 'yellow'; //white lines
+function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        radius = dataArray[i] * amplification;
-        n = bufferLengthAfterCutoff-i;
-        inset = 2;
 
-        radius = dataArray[i] * amplification;
-        n = bufferLengthAfterCutoff-i;
-        inset = 2;
+        barHeight = dataArray[i] * amplification;
+        const red =  2*barHeight/amplification;
+        const green =  256*i / (bufferLengthAfterCutoff);
+        const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+        ctx.strokeStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
 
-        // ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // radius -= i;
+        // radius = dataArray[i] * amplification;
+        // inset = 2;
+
+        // radius = i * 3 * amplification;
+        // inset = 1 + dataArray[i]/256;
+
+        radius = i/bufferLengthAfterCutoff * amplification * 100;
+        inset = 1 + dataArray[i]/256;
+        ctx.lineWidth = widthMultiplier * amplification * (dataArray[i]/256) ; // widthMultiplier * (0-1)
+
         ctx.beginPath();
         ctx.save(); //creates snapshot of global settings
         ctx.translate(canvas.width/2, canvas.height/2);
         ctx.moveTo(0, 0 - radius); //center
 
-        for (let j=0; j < n; j++){
-            ctx.rotate(Math.PI / n);
+        for (let j=0; j < polygonSymmetry; j++){
+            ctx.rotate(Math.PI / polygonSymmetry);
             ctx.lineTo(0, 0 - (radius * inset));
-            ctx.rotate(Math.PI / n);
+            ctx.rotate(Math.PI / polygonSymmetry);
             ctx.lineTo(0, 0 - radius);
         }
 
-        // ctx.restore(); //Restores translation and rotation to snapshot values
         ctx.closePath(); 
         ctx.stroke();//display 
         // ctx.fill();
-        x += barWidth;
         ctx.restore(); //to the ctx.save
     }
 }
@@ -151,18 +162,19 @@ function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barH
     }
 
 }
-// // HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
-// function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
-//     for (let i = 0; i < bufferLengthAfterCutoff; i++){
-//         barHeight = Math.log(dataArray[i]) * amplification * 30;
-//         const red =  2*barHeight/amplification;
-//         const green =  256*i / (bufferLengthAfterCutoff);
-//         const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
-//         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-//         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-//         x += barWidth;
-//     }
-// }
+
+// HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
+function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
+    for (let i = 0; i < bufferLengthAfterCutoff; i++){
+        barHeight = Math.log(dataArray[i]) * amplification * 30;
+        const red =  2*barHeight/amplification;
+        const green =  256*i / (bufferLengthAfterCutoff);
+        const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth;
+    }
+}
 
 // RADIAL BARS VISUALIZER
 function drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){

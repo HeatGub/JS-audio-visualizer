@@ -57,7 +57,11 @@
 
             <p>Turns</p>
             <input id ="sliderTurns" type="range" min="-10" max="10" value="1" step="0.1" oninput="updateValueTurns(this.value, 'sliderValueTurns')"> 
-            <p id="sliderValueTurns">.</p>   
+            <p id="sliderValueTurns">.</p>
+
+            <p>Polygon symmetry</p>
+            <input id ="sliderPolygonSymmetry" type="range" min="2" max="100" value="16" step="1" oninput="updateValuePolygonSymmetry(this.value, 'sliderValuePolygonSymmetry')"> 
+            <p id="sliderValuePolygonSymmetry">.</p>
 
         </div>
 
