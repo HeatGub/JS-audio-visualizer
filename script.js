@@ -110,6 +110,39 @@ button.addEventListener('click', function () {
     animate();
 });
 
+// let h = [0, 120, 0];
+// let h = [120, 0.01, 1];
+// let h = [240, 120, 1];
+let h = [240, 120, 360];
+let s = [0, 50, 100];
+let l = [0, 50, 100];
+let a = [1, 1, 1];
+// h musi rosnac od h0 do h1 liniowo w 1szym kroku. pozniej tak samo z h3
+// czerwony hue = 0
+// zielony hue = 100
+
+// HORIZONTAL BARS VISUALIZER
+function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
+    for (let i = 0; i < bufferLengthAfterCutoff; i++){
+        barHeight = dataArray[i] * amplification;
+        let hHorizontalDistribution = h[0] - (h[1]-h[0])*(-i/bufferLengthAfterCutoff); //BOTH WAYS
+        // let h_final = hHorizontalDistribution - (h[2]-hHorizontalDistribution)*(-dataArray[i]/256);
+        // console.log(h_final);
+        let aHorizontalDistribution = a[0] - (a[1]-a[0])*(-i/bufferLengthAfterCutoff);
+        let h_final = hHorizontalDistribution;
+        // let s_final = 50 + (dataArray[i]/256) * 50;
+        // let l_final = (dataArray[i]/256) * 50;
+        let s_final = 80;
+        let l_final = 50;
+        // let a_final = 1;
+        let a_final = aHorizontalDistribution;
+        finalColor = 'hsla(' + h_final + ', ' + s_final + '%, ' + l_final + '%, ' + a_final +')';
+        ctx.fillStyle = 'hsla(' + h_final + ', ' + s_final + '%, ' + l_final + '%, ' + a_final +')';
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth;
+    }
+}
+
 // POLYGONS VISUALIZER
 function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
@@ -149,19 +182,18 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
     }
 }
 
-// HORIZONTAL BARS VISUALIZER
-function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
-    for (let i = 0; i < bufferLengthAfterCutoff; i++){
-        barHeight = dataArray[i] * amplification;
-        const red =  2*barHeight/amplification;
-        const green =  256*i / (bufferLengthAfterCutoff);
-        const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
-        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-        x += barWidth;
-    }
-
-}
+// // HORIZONTAL BARS VISUALIZER
+// function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
+//     for (let i = 0; i < bufferLengthAfterCutoff; i++){
+//         barHeight = dataArray[i] * amplification;
+//         const red =  2*barHeight/amplification;
+//         const green =  256*i / (bufferLengthAfterCutoff);
+//         const blue =  256*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+//         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+//         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+//         x += barWidth;
+//     }
+// }
 
 // HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
 function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){

@@ -32,7 +32,7 @@
 
             <label for="fftSizes">FFT size:</label>
             <select name="fftSizes" id="droplistFftSizes" oninput="updateValueFftSize(this.value)">
-                <option value="64">64</option>
+                <option value="2048">2048</option>
                 <option value="32">32</option>
                 <option value="64">64</option>
                 <option value="128">128</option>
@@ -47,10 +47,10 @@
             <br>
             <label for="visualizers">Visualizer type:</label>
             <select name="visualizers" id="droplistVisualizers" oninput="updateValueVisualizerType(this.value)">
+                <option value="horizontal bars">horizontal bars</option>
                 <option value="polygons">polygons</option>
                 <option value="horizontal bars log">horizontal bars (logarithmic)</option>
                 <option value="radial bars log">radial bars (logarithmic)</option>
-                <option value="horizontal bars">horizontal bars</option>
                 <option value="radial bars">radial bars</option>
 
             </select>
