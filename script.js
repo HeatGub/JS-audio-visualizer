@@ -14,8 +14,15 @@ const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
 let audioContext = new AudioContext();
 
+let lowMultiplierRed = 0;
+let highMultiplierRed = 0;
 let respMultiplierRed = 1;
+let lowMultiplierGreen = 0;
+let highMultiplierGreen = 1;
 let respMultiplierGreen = 0;
+let lowMultiplierBlue = 1;
+let highMultiplierBlue = 0;
+let respMultiplierBlue = 0;
 
 // VISUALISATION PARAMETERS
 let turns = document.getElementById('sliderTurns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
@@ -50,8 +57,15 @@ function updateField(e) {
 }
 
 function updateValue() {
-    [respMultiplierRed, 
-    respMultiplierGreen] = [...rangeInputs].map((el) => el.value);
+    [lowMultiplierRed,
+    highMultiplierRed,
+    respMultiplierRed,
+    lowMultiplierGreen,
+    highMultiplierGreen,
+    respMultiplierGreen,
+    lowMultiplierBlue,
+    highMultiplierBlue,
+    respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
     // console.log(respMultiplierRed);
     // console.log(...rangeInputs);
 }
@@ -140,21 +154,6 @@ button.addEventListener('click', function () {
     animate();
 });
 
-// let respMultiplierRed = 1;
-let lowMultiplierRed = 0;
-let highMultiplierRed = 0;
-
-// let respMultiplierGreen = 0;
-let lowMultiplierGreen = 0;
-let highMultiplierGreen = 1;
-
-let respMultiplierBlue = 0;
-let lowMultiplierBlue = 1;
-let highMultiplierBlue = 0;
-
-
-
-// DOPISAĆ 3 WSPOLCZYNNIKI KTORE BEDA ODPOWIADAC LOW/HIGH ENDOWI I GLOSNOSCI
 // HORIZONTAL BARS VISUALIZER
 function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
     for (let i = 0; i < bufferLengthAfterCutoff; i++){

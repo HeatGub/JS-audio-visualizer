@@ -63,13 +63,44 @@
             <input id ="sliderPolygonSymmetry" type="range" min="2" max="100" value="16" step="1" oninput="updateValuePolygonSymmetry(this.value, 'sliderValuePolygonSymmetry')"> 
             <p id="sliderValuePolygonSymmetry">.</p>
 
+            RED
             <div class="sliderNew">
-                <input type="range" value="1" min="0" max="10" data-field="respMultiplierRed" />
-                <input type="text" value="2" data-field="respMultiplierRed" />
+                <input type="range" value="0" min="0" max="2" step="0.01" data-field="lowMultiplierRed" />
+                <input type="text" value="0" data-field="lowMultiplierRed" />
             </div>
             <div class="sliderNew">
-                <input type="range" value="1" min="0" max="10" data-field="respMultiplierGreen" />
-                <input type="text" value="2" data-field="respMultiplierGreen" />
+                <input type="range" value="0" min="0" max="2" step="0.01" data-field="highMultiplierRed" />
+                <input type="text" value="0" data-field="highMultiplierRed" />
+            </div>
+            <div class="sliderNew">
+                <input type="range" value="1" min="0" max="2" step="0.01" data-field="respMultiplierRed" />
+                <input type="text" value="1" data-field="respMultiplierRed" />
+            </div>
+            GREEN
+            <div class="sliderNew">
+                <input type="range" value="0" min="0" max="2" step="0.01" data-field="lowMultiplierGreen" />
+                <input type="text" value="0" data-field="lowMultiplierGreen" />
+            </div>
+            <div class="sliderNew">
+                <input type="range" value="1" min="0" max="2" step="0.01" data-field="highMultiplierGreen" />
+                <input type="text" value="1" data-field="highMultiplierGreen" />
+            </div>
+            <div class="sliderNew">
+                <input type="range" value="0" min="0" max="2" step="0.01" data-field="respMultiplierGreen" />
+                <input type="text" value="0" data-field="respMultiplierGreen" />
+            </div>
+            BLUE
+            <div class="sliderNew">
+                <input type="range" value="1" min="0" max="2" step="0.01" data-field="lowMultiplierBlue" />
+                <input type="text" value="1" data-field="lowMultiplierBlue" />
+            </div>
+            <div class="sliderNew">
+                <input type="range" value="0" min="0" max="2" step="0.01" data-field="highMultiplierBlue" />
+                <input type="text" value="0" data-field="highMultiplierBlue" />
+            </div>
+            <div class="sliderNew">
+                <input type="range" value="0" min="0" max="2" step="0.01" data-field="respMultiplierBlue" />
+                <input type="text" value="0" data-field="respMultiplierBlue" />
             </div>
 
         </div>
