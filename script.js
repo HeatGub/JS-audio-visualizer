@@ -14,6 +14,7 @@ const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
 let audioContext = new AudioContext();
 
+//COLORPARAMETERS
 let lowMultiplierRed = 0;
 let highMultiplierRed = 0;
 let respMultiplierRed = 1;
@@ -25,16 +26,22 @@ let highMultiplierBlue = 0;
 let respMultiplierBlue = 0;
 
 // VISUALISATION PARAMETERS
-let turns = document.getElementById('sliderTurns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
+let turns = document.getElementById('turns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
 let fftSize = document.getElementById('droplistFftSizes').value; //number of FFT samples - 2^n values,   bars amount = fftSize/2
-let highCutoff = document.getElementById('sliderHighCut').value; //part of frequencies cut (0 - 0.99) 
+let highCutoff = document.getElementById('highCutoff').value; //part of frequencies cut (0 - 0.99) 
 let bufferLength = fftSize/2;
 let bufferLengthAfterCutoff = bufferLength -highCutoff;
-let amplification = document.getElementById('sliderAmplification').value;
-let widthMultiplier = document.getElementById('sliderWidthMultiplier').value;
+let amplification = document.getElementById('amplification').value;
+let widthMultiplier = document.getElementById('widthMultiplier').value;
+let visualizerType = document.getElementById('droplistVisualizers').value;
+let polygonSymmetry= document.getElementById('polygonSymmetry').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
-let VisualizerType = document.getElementById('droplistVisualizers').value;
-let polygonSymmetry= document.getElementById('sliderPolygonSymmetry').value;
+
+// ON FILE CHANGE   -   click the button to reset after fftSize changes
+file.addEventListener('change', function(){
+    const files = this.files;
+    audio1.src = URL.createObjectURL(files[0]);
+});
 
 const rangeInputs = document.querySelectorAll('.sliderNew input[type="range"]');
 const textInputs = document.querySelectorAll('.sliderNew input[type="text"]');
@@ -53,11 +60,18 @@ function updateField(e) {
     document
       .querySelectorAll(`[data-field="${field}"]`)
       .forEach((el) => (el.value = value));
-    updateValue();
+    // console.log(e.target.id);
+    updateValues();
 }
 
-function updateValue() {
-    [lowMultiplierRed,
+// CZY JESLI WYLACZE SLIDER POLYGONS NP. (BEDZIE INNA LICZBA AKT.SLIDEROW) TO MAPOWANIE BEDZIE DZIALALO?
+function updateValues() {
+    [amplification,
+    widthMultiplier,
+    highCutoff,
+    turns,
+    polygonSymmetry,
+    lowMultiplierRed,
     highMultiplierRed,
     respMultiplierRed,
     lowMultiplierGreen,
@@ -66,54 +80,21 @@ function updateValue() {
     lowMultiplierBlue,
     highMultiplierBlue,
     respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
-    // console.log(respMultiplierRed);
-    // console.log(...rangeInputs);
-}
 
-// ON FILE CHANGE   -   click the button to reset after fftSize changes
-file.addEventListener('change', function(){
-    const files = this.files;
-    audio1.src = URL.createObjectURL(files[0]);
-});
-
-function updateValueAmplification(sliderValue, sliderValueID) {
-    document.getElementById(sliderValueID).innerHTML = sliderValue; //show the number
-    amplification = sliderValue;
-}
-
-function updateValueWidthMultiplier(sliderValue, sliderValueID) {
-    document.getElementById(sliderValueID).innerHTML = sliderValue; //show the number
-    widthMultiplier = sliderValue;
-    barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
-}
-
-function updateValueHighCut(sliderValue, sliderValueID) {
-    document.getElementById(sliderValueID).innerHTML = sliderValue; //show the number
-    highCutoff = fftSize/2 * sliderValue;
+    barWidth = widthMultiplier * 2 * (canvas.width/fftSize); //OK
+    bufferLength = fftSize/2;
+    highCutoff = fftSize/2 * highCutoff;
     bufferLengthAfterCutoff = bufferLength -highCutoff;
 }
 
 function updateValueFftSize(thisValue) {
     fftSize = Math.floor(thisValue);
-    bufferLength = fftSize/2;
-    barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
-    bufferLengthAfterCutoff = bufferLength -highCutoff;
+    updateValues();
 }
 
 function updateValueVisualizerType(thisValue) {
-    VisualizerType = thisValue;
+    visualizerType = thisValue;
 }
-
-function updateValueTurns(sliderValue, sliderValueID) {
-    turns = sliderValue;
-    document.getElementById(sliderValueID).innerHTML = sliderValue;
-}
-
-function updateValuePolygonSymmetry(sliderValue, sliderValueID) {
-    polygonSymmetry = sliderValue;
-    document.getElementById(sliderValueID).innerHTML = sliderValue;
-}
-
 
 button.addEventListener('click', function () {
     console.log('click play');
@@ -134,19 +115,19 @@ button.addEventListener('click', function () {
         x = 0;
         ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
         analyser.getByteFrequencyData(dataArray); //copies the current frequency data into a Uint8Array
-        if (VisualizerType == 'horizontal bars') {
+        if (visualizerType == 'horizontal bars') {
             drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
-        else if (VisualizerType == 'horizontal bars log') {
+        else if (visualizerType == 'horizontal bars log') {
             drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
-        else if (VisualizerType == 'radial bars') {
+        else if (visualizerType == 'radial bars') {
             drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
-        else if (VisualizerType == 'radial bars log') {
+        else if (visualizerType == 'radial bars log') {
             drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
-        else if (VisualizerType == 'polygons') {
+        else if (visualizerType == 'polygons') {
             drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray);
         }
         requestAnimationFrame(animate);
@@ -161,62 +142,11 @@ function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barH
         const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
         const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
         const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
-        // const green =  255*i / (bufferLengthAfterCutoff);
-        // const blue =  255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
     }
 }
-
-
-// let h = [240, 120, 1];
-let h = [240, 120, 360];
-let s = [100, 100, 100];
-let l = [20, 60, 50];
-let a = [1, 1, 1];
-// h musi rosnac od h0 do h1 liniowo w 1szym kroku. pozniej tak samo z h3
-// czerwony hue = 0
-// zielony hue = 100
-
-// // HORIZONTAL BARS VISUALIZER
-// function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
-//     for (let i = 0; i < bufferLengthAfterCutoff; i++){
-//         barHeight = dataArray[i] * amplification;
-//         let hHorizontalDistribution = h[0] - (h[1]-h[0])*(-i/bufferLengthAfterCutoff); //BOTH WAYS
-//         let sHorizontalDistribution = s[0] - (s[1]-s[0])*(-i/bufferLengthAfterCutoff);
-//         let lHorizontalDistribution = l[0] - (l[1]-l[0])*(-i/bufferLengthAfterCutoff);
-//         let aHorizontalDistribution = a[0] - (a[1]-a[0])*(-i/bufferLengthAfterCutoff);
-
-//         let h_final = hHorizontalDistribution;
-//         // let h_final = hHorizontalDistribution - (h[2]-hHorizontalDistribution)*(dataArray[i]/255);
-//         let l_final = lHorizontalDistribution;
-//         let s_final = sHorizontalDistribution;
-//         let a_final = aHorizontalDistribution * (dataArray[i]/255) * 2;
-//         // let s_final = sHorizontalDistribution;
-//         // console.log(l_final);
-//         // let a_final = aHorizontalDistribution;
-
-//         // let s_final = 50 + (dataArray[i]/255) * 50;
-//         // let l_final = lHorizontalDistribution * (dataArray[i]/255); // depends on loudness
-//         // let s_final = sHorizontalDistribution + s[2]*(dataArray[i]/255); // depends on loudness
-//         // let l_final = 100;
-//         // let a_final = 1;
-
-//         // Create gradient
-//         // const grd = ctx.createLinearGradient(x, canvas.height - barHeight, x+ barWidth, barHeight, canvas.height);
-//         // const grd = ctx.createLinearGradient(0,canvas.height,0,barHeight); //działa
-//         const grd = ctx.createLinearGradient(0,0,0,barHeight);
-//         grd.addColorStop(0,"green");
-//         grd.addColorStop(1,"red");
-//         ctx.fillStyle = grd;
-
-//         // finalColor = 'hsla(' + h_final + ', ' + s_final + '%, ' + l_final + '%, ' + a_final +')';
-//         // ctx.fillStyle = 'hsla(' + h_final + ', ' + s_final + '%, ' + l_final + '%, ' + a_final +')';
-//         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-//         x += barWidth;
-//     }
-// }
 
 // POLYGONS VISUALIZER
 function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
@@ -256,26 +186,13 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
     }
 }
 
-// // HORIZONTAL BARS VISUALIZER
-// function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
-//     for (let i = 0; i < bufferLengthAfterCutoff; i++){
-//         barHeight = dataArray[i] * amplification;
-//         const red =  2*barHeight/amplification;
-//         const green =  255*i / (bufferLengthAfterCutoff);
-//         const blue =  255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
-//         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-//         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-//         x += barWidth;
-//     }
-// }
-
 // HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
 function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
     for (let i = 0; i < bufferLengthAfterCutoff; i++){
         barHeight = Math.log(dataArray[i]) * amplification * 30;
-        const red =  2*barHeight/amplification;
-        const green =  255*i / (bufferLengthAfterCutoff);
-        const blue =  255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+        const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
+        const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
+        const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
@@ -289,9 +206,9 @@ function drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeigh
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
-        const red =  2*barHeight/amplification;
-        const green =  255*i / (bufferLengthAfterCutoff);
-        const blue =  255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+        const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
+        const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
+        const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
         ctx.fillRect(0, 0, barWidth, barHeight);
         x += barWidth;
@@ -306,9 +223,9 @@ function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHe
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
-        const red =  2*barHeight/amplification;
-        const green =  255*i / (bufferLengthAfterCutoff);
-        const blue =  255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+        const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
+        const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
+        const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
         ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
         ctx.fillRect(0, 0, barWidth, barHeight);
         x += barWidth;
