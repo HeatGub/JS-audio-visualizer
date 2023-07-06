@@ -32,7 +32,7 @@
 
             <label for="fftSizes">FFT size:</label>
             <select name="fftSizes" id="droplistFftSizes" oninput="updateValueFftSize(this.value)">
-                <option value="2048">2048</option>
+                <option value="64">64</option>
                 <option value="32">32</option>
                 <option value="64">64</option>
                 <option value="128">128</option>
@@ -62,6 +62,15 @@
             <p>Polygon symmetry</p>
             <input id ="sliderPolygonSymmetry" type="range" min="2" max="100" value="16" step="1" oninput="updateValuePolygonSymmetry(this.value, 'sliderValuePolygonSymmetry')"> 
             <p id="sliderValuePolygonSymmetry">.</p>
+
+            <div class="sliderNew">
+                <input type="range" value="1" min="0" max="10" data-field="respMultiplierRed" />
+                <input type="text" value="2" data-field="respMultiplierRed" />
+            </div>
+            <div class="sliderNew">
+                <input type="range" value="1" min="0" max="10" data-field="respMultiplierGreen" />
+                <input type="text" value="2" data-field="respMultiplierGreen" />
+            </div>
 
         </div>
 

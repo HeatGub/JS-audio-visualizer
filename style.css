@@ -66,3 +66,9 @@ body {
     z-index: 100;
     font-size: 20px;
 }
+
+.slider input[type="text"] {
+    flex-shrink: 0;
+    width: 50px;
+    padding: 0;
+  }
