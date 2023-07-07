@@ -20,15 +20,15 @@
             <div>
                 <label for="visualizers">Visualizer type:</label>
                 <select name="visualizers" id="droplistVisualizers" oninput="updateVisualizerType()">
-                    <option value="horizontal bars">horizontal bars</option>
                     <option value="polygons">polygons</option>
+                    <option value="horizontal bars">horizontal bars</option>
                     <option value="horizontal bars log">horizontal bars (logarithmic)</option>
                     <option value="radial bars log">radial bars (logarithmic)</option>
                     <option value="radial bars">radial bars</option>
                 </select>
             </div>
             <label for="fftSizes">FFT size:</label>
-            <select name="fftSizes" id="droplistFftSizes" oninput="updateValueFftSize()">
+            <select name="fftSizes" id="droplistFftSizes" oninput="updateFftSize()">
                 <option value="64">64</option>
                 <option value="32">32</option>
                 <option value="64">64</option>
@@ -119,12 +119,24 @@
             </div>
             <p>_________BCK_________</p>
             <div>
+                <label for="backgrounds">Gradient type:</label>
+                <select name="backgrounds" id="droplistBackgrounds" oninput="setBackgroundColor()">
+                    <option value="linear">linear</option>
+                    <option value="radial">radial</option>
+                </select>
+            </div>
+            <div>
                 <b>Color1: <code id="colorCode1"></code></b>
                 <input type="color" id="colorInput1">
             </div>
             <div>
                 <b>Color2: <code id="colorCode2"></code></b>
                 <input type="color" id="colorInput2">
+            </div>
+            <div class="slider" id="GradAngleSliderDiv">
+                <p>GradAngle</p>
+                <input id="GradAngle" type="range" value="0" min="0" max="360" step="1" data-field="GradAngle" />
+                <input type="text" value="0" data-field="GradAngle" />
             </div>
         </div>
 

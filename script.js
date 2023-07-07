@@ -2,6 +2,8 @@ const container = document.getElementById('container');
 const button = document.getElementById('button1');
 const canvas = document.getElementById('canvas1');
 const file = document.getElementById('fileupload');
+const rangeInputs = document.querySelectorAll('.slider input[type="range"]');
+const textInputs = document.querySelectorAll('.slider input[type="text"]');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 // canvas.height = window.innerWidth; //to make widt/heig 1:1
@@ -13,7 +15,6 @@ const ctx = canvas.getContext('2d');
 const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
 let audioContext = new AudioContext();
-
 //COLORPARAMETERS
 let alphaRGB = 1;
 let lowMultiplierRed = 0;
@@ -25,19 +26,7 @@ let respMultiplierGreen = 0;
 let lowMultiplierBlue = 1;
 let highMultiplierBlue = 0;
 let respMultiplierBlue = 0;
-// let colorInput1 = document.getElementById('colorInput1');
-// let colorInput2 = document.getElementById('colorInput2');
-
 // setBackgroundColor();
-colorInput1.addEventListener('input', setBackgroundColor);
-colorInput2.addEventListener('input', setBackgroundColor);
-
-function setBackgroundColor() {
-    const colorInput1 = document.getElementById('colorInput1');
-    const colorInput2 = document.getElementById('colorInput2');
-    container.style.background =  'linear-gradient(to bottom right, ' + colorInput1.value + ', ' + colorInput2.value + ')';
-}
-
 // VISUALISATION PARAMETERS
 let turns = document.getElementById('turns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
 let fftSize = document.getElementById('droplistFftSizes').value; //number of FFT samples - 2^n values,   bars amount = fftSize/2
@@ -56,8 +45,24 @@ file.addEventListener('change', function(){
     audio1.src = URL.createObjectURL(files[0]);
 });
 
-const rangeInputs = document.querySelectorAll('.slider input[type="range"]');
-const textInputs = document.querySelectorAll('.slider input[type="text"]');
+colorInput1.addEventListener('input', setBackgroundColor);
+colorInput2.addEventListener('input', setBackgroundColor);
+GradAngle.addEventListener('input', setBackgroundColor);
+function setBackgroundColor() {
+    const colorInput1 = document.getElementById('colorInput1');
+    const colorInput2 = document.getElementById('colorInput2');
+    const GradAngle = document.getElementById('GradAngle');
+    const droplistBackgrounds = document.getElementById('droplistBackgrounds').value;
+    if (document.getElementById('droplistBackgrounds').value == 'linear'){
+        document.getElementById('GradAngleSliderDiv').style.display = 'block';
+        container.style.background =  'linear-gradient(' + GradAngle.value +'deg, ' + colorInput1.value + ', ' + colorInput2.value + ')';
+    }
+    else {
+        document.getElementById('GradAngleSliderDiv').style.display = 'none';
+        container.style.background = 'radial-gradient(' + colorInput1.value + ' 10%, ' + colorInput2.value + ' 100%)';
+    }
+}
+setBackgroundColor();
 
 rangeInputs.forEach((el) => {
     el.addEventListener("input", updateField);
@@ -77,7 +82,7 @@ function updateField(e) {
     updateValues();
 }
 
-function updateValueFftSize() {
+function updateFftSize() {
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
     updateValues();
 }
@@ -88,7 +93,6 @@ function updateVisualizerType() {
     if (visualizerType == 'radial bars' || visualizerType == 'radial bars log'){
         document.getElementById('turnsSliderDiv').style.display = 'block';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
-        console.log('radial');
     }
     else if (visualizerType == 'polygons'){
         document.getElementById('turnsSliderDiv').style.display = 'none';
@@ -98,7 +102,7 @@ function updateVisualizerType() {
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
     }
-    console.log(visualizerType);
+    // console.log(visualizerType);
 }
 updateVisualizerType(); //to disable unnecessary elements at the start
 
@@ -119,12 +123,13 @@ function updateValues() {
     highMultiplierBlue,
     respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
 
-    barWidth = widthMultiplier * 2 * (canvas.width/fftSize); //OK
+    barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
     bufferLength = fftSize/2;
     highCutoff = fftSize/2 * highCutoff;
     bufferLengthAfterCutoff = bufferLength -highCutoff;
 }
 
+// TO ZAMIENIC NA FUNKCJE
 button.addEventListener('click', function () {
     console.log('click play');
     audio1.play();
@@ -195,6 +200,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
 
         radius = i/bufferLengthAfterCutoff * amplification * 100;
         inset = 1 + dataArray[i]/255;
+        insetLastOne = inset;
         ctx.lineWidth = widthMultiplier * amplification * (dataArray[i]/255) ; // widthMultiplier * (0-1)
 
         ctx.beginPath();
