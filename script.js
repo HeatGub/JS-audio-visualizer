@@ -15,6 +15,7 @@ audio1.volume = 0.2;
 let audioContext = new AudioContext();
 
 //COLORPARAMETERS
+let alphaRGB = 1;
 let lowMultiplierRed = 0;
 let highMultiplierRed = 0;
 let respMultiplierRed = 1;
@@ -24,6 +25,18 @@ let respMultiplierGreen = 0;
 let lowMultiplierBlue = 1;
 let highMultiplierBlue = 0;
 let respMultiplierBlue = 0;
+// let colorInput1 = document.getElementById('colorInput1');
+// let colorInput2 = document.getElementById('colorInput2');
+
+// setBackgroundColor();
+colorInput1.addEventListener('input', setBackgroundColor);
+colorInput2.addEventListener('input', setBackgroundColor);
+
+function setBackgroundColor() {
+    const colorInput1 = document.getElementById('colorInput1');
+    const colorInput2 = document.getElementById('colorInput2');
+    container.style.background =  'linear-gradient(to bottom right, ' + colorInput1.value + ', ' + colorInput2.value + ')';
+}
 
 // VISUALISATION PARAMETERS
 let turns = document.getElementById('turns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
@@ -64,8 +77,8 @@ function updateField(e) {
     updateValues();
 }
 
-function updateValueFftSize(thisValue) {
-    fftSize = Math.floor(thisValue);
+function updateValueFftSize() {
+    fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
     updateValues();
 }
 
@@ -95,6 +108,7 @@ function updateValues() {
     highCutoff,
     turns,
     polygonSymmetry,
+    alphaRGB,
     lowMultiplierRed,
     highMultiplierRed,
     respMultiplierRed,
@@ -150,28 +164,28 @@ button.addEventListener('click', function () {
     animate();
 });
 
+function mixingColors(i, dataArray){
+    const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
+    const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
+    const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
+    return 'rgba(' + red + ', ' + green + ', ' + blue + ', ' + alphaRGB + ')';
+};
+
 // HORIZONTAL BARS VISUALIZER
 function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
     for (let i = 0; i < bufferLengthAfterCutoff; i++){
         barHeight = dataArray[i] * amplification;
-        const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
-        const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
-        const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
-        // ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
-        ctx.fillStyle = 'rgba(' + red + ', ' + green + ', ' + blue + ', 0.6)';
+        ctx.fillStyle = mixingColors(i, dataArray);
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
     }
-}
+};
 
 // POLYGONS VISUALIZER
 function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
         barHeight = dataArray[i] * amplification;
-        const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
-        const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
-        const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
-        ctx.strokeStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.strokeStyle = mixingColors(i, dataArray);
 
         // radius = dataArray[i] * amplification;
         // inset = 2;
@@ -206,10 +220,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
 function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
     for (let i = 0; i < bufferLengthAfterCutoff; i++){
         barHeight = Math.log(dataArray[i]) * amplification * 30;
-        const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
-        const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
-        const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
-        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.fillStyle = mixingColors(i, dataArray);
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
     }
@@ -222,10 +233,7 @@ function drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeigh
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
-        const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
-        const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
-        const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
-        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.fillStyle = mixingColors(i, dataArray);
         ctx.fillRect(0, 0, barWidth, barHeight);
         x += barWidth;
         ctx.restore(); //to the ctx.save
@@ -239,10 +247,7 @@ function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHe
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
-        const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
-        const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
-        const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
-        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.fillStyle = mixingColors(i, dataArray);
         ctx.fillRect(0, 0, barWidth, barHeight);
         x += barWidth;
         ctx.restore(); //to the ctx.save
