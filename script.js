@@ -47,19 +47,16 @@ file.addEventListener('change', function(){
 
 colorInput1.addEventListener('input', setBackgroundColor);
 colorInput2.addEventListener('input', setBackgroundColor);
-GradAngle.addEventListener('input', setBackgroundColor);
+
 function setBackgroundColor() {
-    const colorInput1 = document.getElementById('colorInput1');
-    const colorInput2 = document.getElementById('colorInput2');
-    const GradAngle = document.getElementById('GradAngle');
-    const droplistBackgrounds = document.getElementById('droplistBackgrounds').value;
+    gradAngle = document.getElementById('gradAngle');
     if (document.getElementById('droplistBackgrounds').value == 'linear'){
-        document.getElementById('GradAngleSliderDiv').style.display = 'block';
-        container.style.background =  'linear-gradient(' + GradAngle.value +'deg, ' + colorInput1.value + ', ' + colorInput2.value + ')';
+        document.getElementById('gradAngleSliderDiv').style.display = 'block';
+        container.style.background = 'linear-gradient(' + gradAngle.value +'deg, ' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
     }
     else {
-        document.getElementById('GradAngleSliderDiv').style.display = 'none';
-        container.style.background = 'radial-gradient(' + colorInput1.value + ' 10%, ' + colorInput2.value + ' 100%)';
+        document.getElementById('gradAngleSliderDiv').style.display = 'none';
+        container.style.background = 'radial-gradient(' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
     }
 }
 setBackgroundColor();
@@ -67,11 +64,11 @@ setBackgroundColor();
 rangeInputs.forEach((el) => {
     el.addEventListener("input", updateField);
 });
-  
+
 textInputs.forEach((el) => {
     el.addEventListener("change", updateField);
 });
-  
+
 function updateField(e) {
     const field = e.target.dataset.field;
     const value = e.target.value;
@@ -80,6 +77,7 @@ function updateField(e) {
       .forEach((el) => (el.value = value));
     // console.log(e.target.id);
     updateValues();
+    setBackgroundColor();
 }
 
 function updateFftSize() {
@@ -198,7 +196,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
         // radius = i * 3 * amplification;
         // inset = 1 + dataArray[i]/255;
 
-        radius = i/bufferLengthAfterCutoff * amplification * 100;
+        radius = i/bufferLengthAfterCutoff * amplification * 120;
         inset = 1 + dataArray[i]/255;
         insetLastOne = inset;
         ctx.lineWidth = widthMultiplier * amplification * (dataArray[i]/255) ; // widthMultiplier * (0-1)

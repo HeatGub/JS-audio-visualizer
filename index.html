@@ -127,16 +127,26 @@
             </div>
             <div>
                 <b>Color1: <code id="colorCode1"></code></b>
-                <input type="color" id="colorInput1">
+                <input type="color" id="colorInput1" value="#39419C">
             </div>
             <div>
                 <b>Color2: <code id="colorCode2"></code></b>
                 <input type="color" id="colorInput2">
             </div>
-            <div class="slider" id="GradAngleSliderDiv">
+            <div class="slider" id="gradAngleSliderDiv">
                 <p>GradAngle</p>
-                <input id="GradAngle" type="range" value="0" min="0" max="360" step="1" data-field="GradAngle" />
-                <input type="text" value="0" data-field="GradAngle" />
+                <input id="gradAngle" type="range" value="0" min="0" max="360" step="1" data-field="gradAngle" />
+                <input type="text" value="0" data-field="gradAngle" />
+            </div>
+            <div class="slider" id="gradPosition1SliderDiv">
+                <p>Position 1</p>
+                <input id="gradPosition1" type="range" value="0" min="0" max="100" step="1" data-field="gradPosition1" />
+                <input type="text" value="0" data-field="gradPosition1" />
+            </div>
+            <div class="slider" id="gradPosition2SliderDiv">
+                <p>Position 2</p>
+                <input id="gradPosition2" type="range" value="100" min="0" max="100" step="1" data-field="gradPosition2" />
+                <input type="text" value="100" data-field="gradPosition2" />
             </div>
         </div>
 
