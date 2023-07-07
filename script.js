@@ -43,8 +43,8 @@ file.addEventListener('change', function(){
     audio1.src = URL.createObjectURL(files[0]);
 });
 
-const rangeInputs = document.querySelectorAll('.sliderNew input[type="range"]');
-const textInputs = document.querySelectorAll('.sliderNew input[type="text"]');
+const rangeInputs = document.querySelectorAll('.slider input[type="range"]');
+const textInputs = document.querySelectorAll('.slider input[type="text"]');
 
 rangeInputs.forEach((el) => {
     el.addEventListener("input", updateField);
@@ -64,7 +64,31 @@ function updateField(e) {
     updateValues();
 }
 
-// CZY JESLI WYLACZE SLIDER POLYGONS NP. (BEDZIE INNA LICZBA AKT.SLIDEROW) TO MAPOWANIE BEDZIE DZIALALO?
+function updateValueFftSize(thisValue) {
+    fftSize = Math.floor(thisValue);
+    updateValues();
+}
+
+// update type and disable unnecessary sliders
+function updateVisualizerType() {
+    visualizerType = document.getElementById('droplistVisualizers').value;
+    if (visualizerType == 'radial bars' || visualizerType == 'radial bars log'){
+        document.getElementById('turnsSliderDiv').style.display = 'block';
+        document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
+        console.log('radial');
+    }
+    else if (visualizerType == 'polygons'){
+        document.getElementById('turnsSliderDiv').style.display = 'none';
+        document.getElementById('polygonSymmetrySliderDiv').style.display = 'block';
+    }
+    else {
+        document.getElementById('turnsSliderDiv').style.display = 'none';
+        document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
+    }
+    console.log(visualizerType);
+}
+updateVisualizerType(); //to disable unnecessary elements at the start
+
 function updateValues() {
     [amplification,
     widthMultiplier,
@@ -85,15 +109,6 @@ function updateValues() {
     bufferLength = fftSize/2;
     highCutoff = fftSize/2 * highCutoff;
     bufferLengthAfterCutoff = bufferLength -highCutoff;
-}
-
-function updateValueFftSize(thisValue) {
-    fftSize = Math.floor(thisValue);
-    updateValues();
-}
-
-function updateValueVisualizerType(thisValue) {
-    visualizerType = thisValue;
 }
 
 button.addEventListener('click', function () {
@@ -142,7 +157,8 @@ function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barH
         const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
         const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
         const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
-        ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        // ctx.fillStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
+        ctx.fillStyle = 'rgba(' + red + ', ' + green + ', ' + blue + ', 0.6)';
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
     }
@@ -152,9 +168,9 @@ function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barH
 function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
         barHeight = dataArray[i] * amplification;
-        const red =  2*barHeight/amplification;
-        const green =  255*i / (bufferLengthAfterCutoff);
-        const blue =  255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff));
+        const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
+        const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
+        const blue =  respMultiplierBlue*dataArray[i]  + lowMultiplierBlue*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierBlue * 255*i / (bufferLengthAfterCutoff);
         ctx.strokeStyle = 'rgb(' + red + ', ' + green + ', ' + blue + ')';
 
         // radius = dataArray[i] * amplification;
