@@ -8,35 +8,26 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 // canvas.height = window.innerWidth; //to make widt/heig 1:1
 const ctx = canvas.getContext('2d');
-// ctx.shadowColor = 'white';
+// ctx.shadowColor = 'rgba(0,250,0,0.5)';
 // ctx.shadowOffsetX = 2;
 // ctx.shadowOffsetY = -2;
-// ctx.lineWidth = 2; //no bar borders?
+// ctx.shadowBlur = 2;
 const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
 let audioContext = new AudioContext();
+audio1.addEventListener('play', reloadAnimation);
 //COLORPARAMETERS
-let alphaRGB = 1;
-let lowMultiplierRed = 0;
-let highMultiplierRed = 0;
-let respMultiplierRed = 1;
-let lowMultiplierGreen = 0;
-let highMultiplierGreen = 1;
-let respMultiplierGreen = 0;
-let lowMultiplierBlue = 1;
-let highMultiplierBlue = 0;
-let respMultiplierBlue = 0;
-// setBackgroundColor();
+let [alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0];
 // VISUALISATION PARAMETERS
 let turns = document.getElementById('turns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
 let fftSize = document.getElementById('droplistFftSizes').value; //number of FFT samples - 2^n values,   bars amount = fftSize/2
-let highCutoff = document.getElementById('highCutoff').value; //part of frequencies cut (0 - 0.99) 
+let highCutoff = document.getElementById('highCutoff').value * (fftSize/2); //part of frequencies cut (0 - 0.99)
 let bufferLength = fftSize/2;
-let bufferLengthAfterCutoff = bufferLength -highCutoff;
+let bufferLengthAfterCutoff = bufferLength - highCutoff;
 let amplification = document.getElementById('amplification').value;
 let widthMultiplier = document.getElementById('widthMultiplier').value;
 let visualizerType = document.getElementById('droplistVisualizers').value;
-let polygonSymmetry= document.getElementById('polygonSymmetry').value;
+let polygonSymmetry = document.getElementById('polygonSymmetry').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
 
 // ON FILE CHANGE   -   click the button to reset after fftSize changes
@@ -45,21 +36,21 @@ file.addEventListener('change', function(){
     audio1.src = URL.createObjectURL(files[0]);
 });
 
-colorInput1.addEventListener('input', setBackgroundColor);
-colorInput2.addEventListener('input', setBackgroundColor);
+colorInput1.addEventListener('input', setBackground);
+colorInput2.addEventListener('input', setBackground);
 
-function setBackgroundColor() {
-    gradAngle = document.getElementById('gradAngle');
+function setBackground() {
+    // gradAngle = document.getElementById('gradAngle');
     if (document.getElementById('droplistBackgrounds').value == 'linear'){
         document.getElementById('gradAngleSliderDiv').style.display = 'block';
-        container.style.background = 'linear-gradient(' + gradAngle.value +'deg, ' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
+        container.style.background = 'linear-gradient(' + document.getElementById('gradAngle').value +'deg, ' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
     }
     else {
         document.getElementById('gradAngleSliderDiv').style.display = 'none';
         container.style.background = 'radial-gradient(' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
     }
 }
-setBackgroundColor();
+setBackground();
 
 rangeInputs.forEach((el) => {
     el.addEventListener("input", updateField);
@@ -77,12 +68,37 @@ function updateField(e) {
       .forEach((el) => (el.value = value));
     // console.log(e.target.id);
     updateValues();
-    setBackgroundColor();
+    setBackground();
+}
+
+function updateValues() {
+    [amplification,
+    widthMultiplier,
+    highCutoff,
+    turns,
+    polygonSymmetry,
+    alphaRGB,
+    lowMultiplierRed,
+    highMultiplierRed,
+    respMultiplierRed,
+    lowMultiplierGreen,
+    highMultiplierGreen,
+    respMultiplierGreen,
+    lowMultiplierBlue,
+    highMultiplierBlue,
+    respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
+
+    fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
+    barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
+    bufferLength = fftSize/2;
+    highCutoff = fftSize/2 * highCutoff;
+    bufferLengthAfterCutoff = bufferLength - highCutoff;
 }
 
 function updateFftSize() {
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
     updateValues();
+    reloadAnimation();
 }
 
 // update type and disable unnecessary sliders
@@ -104,33 +120,11 @@ function updateVisualizerType() {
 }
 updateVisualizerType(); //to disable unnecessary elements at the start
 
-function updateValues() {
-    [amplification,
-    widthMultiplier,
-    highCutoff,
-    turns,
-    polygonSymmetry,
-    alphaRGB,
-    lowMultiplierRed,
-    highMultiplierRed,
-    respMultiplierRed,
-    lowMultiplierGreen,
-    highMultiplierGreen,
-    respMultiplierGreen,
-    lowMultiplierBlue,
-    highMultiplierBlue,
-    respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
-
-    barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
-    bufferLength = fftSize/2;
-    highCutoff = fftSize/2 * highCutoff;
-    bufferLengthAfterCutoff = bufferLength -highCutoff;
-}
-
-// TO ZAMIENIC NA FUNKCJE
-button.addEventListener('click', function () {
-    console.log('click play');
-    audio1.play();
+button.addEventListener('click', reloadAnimation);
+//RELOAD ANIMATION
+function reloadAnimation() {
+    console.log('RELOAD');
+    // audio1.play();
     if (typeof audioSource == 'undefined') { //without that condition there is an error on creating audioSource
         audioSource = audioContext.createMediaElementSource(audio1);
         analyser = audioContext.createAnalyser(); // create node
@@ -165,8 +159,9 @@ button.addEventListener('click', function () {
         requestAnimationFrame(animate);
     }
     animate();
-});
+};
 
+//COLOR MIXER
 function mixingColors(i, dataArray){
     const red =  respMultiplierRed*dataArray[i]  + lowMultiplierRed*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierRed * 255*i / (bufferLengthAfterCutoff);
     const green =  respMultiplierGreen*dataArray[i]  + lowMultiplierGreen*255*((bufferLengthAfterCutoff-i) / (bufferLengthAfterCutoff)) + highMultiplierGreen * 255*i / (bufferLengthAfterCutoff);
@@ -198,7 +193,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
 
         radius = i/bufferLengthAfterCutoff * amplification * 120;
         inset = 1 + dataArray[i]/255;
-        insetLastOne = inset;
+        // insetLastOne = inset;
         ctx.lineWidth = widthMultiplier * amplification * (dataArray[i]/255) ; // widthMultiplier * (0-1)
 
         ctx.beginPath();
