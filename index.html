@@ -21,8 +21,8 @@
             <div>
                 <label for="visualizers">Visualizer type:</label>
                 <select name="visualizers" id="droplistVisualizers">
-                    <option value="radial bars">radial bars</option>
                     <option value="polygons">polygons</option>
+                    <option value="radial bars">radial bars</option>
                     <option value="horizontal bars">horizontal bars</option>
                     <option value="horizontal bars log">horizontal bars (logarithmic)</option>
                     <option value="radial bars log">radial bars (logarithmic)</option>
@@ -44,25 +44,25 @@
            
             <div class="slider">
                 <p>amplification</p>
-                <input id="amplification" type="range" min="0.1" max="20" value="3.5" step="0.1" data-field="amplification" />
-                <input type="text" value="3.5" data-field="amplification" />
+                <input id="amplification" type="range" min="0.1" max="40" value="2" step="0.01" data-field="amplification" />
+                <input type="text" value="2" data-field="amplification" />
             </div>
 
             <div class="slider">
                 <p>widthMultiplier</p>
-                <input id="widthMultiplier" type="range" min="0.1" max="10" value="1" step="0.01" data-field="widthMultiplier" />
+                <input id="widthMultiplier" type="range" min="0.1" max="40" value="1" step="0.01" data-field="widthMultiplier" />
                 <input type="text" value="1" data-field="widthMultiplier" />
             </div>
 
             <div class="slider">
                 <p>highCutoff</p>
-                <input id="highCutoff" type="range" type="range" min="0" max="0.99" value="0.1" step="0.01" data-field="highCutoff" />
-                <input type="text" value="0.1" data-field="highCutoff" />
+                <input id="highCutoff" type="range" type="range" min="0" max="0.999" value="0.3" step="0.001" data-field="highCutoff" />
+                <input type="text" value="0.3" data-field="highCutoff" />
             </div>
 
             <div class="slider" id="turnsSliderDiv">
                 <p>turns</p>
-                <input id="turns" type="range" value="1" min="-10" max="10" step="0.01" data-field="turns" />
+                <input id="turns" type="range" value="1" min="-10" max="10" step="0.001" data-field="turns" />
                 <input type="text" value="1" data-field="turns" />
             </div>
 
@@ -70,6 +70,18 @@
                 <p>polygonSymmetry</p>
                 <input id="polygonSymmetry" type="range" value="5" min="2" max="100" step="1" data-field="polygonSymmetry" />
                 <input type="text" value="5" data-field="polygonSymmetry" />
+            </div>
+
+            <div class="slider" id="initialRotationSliderDiv">
+                <p>initial rotation</p>
+                <input id="initialRotation" type="range" value="0.01" min="0" max="1" step="0.001" data-field="initialRotation" />
+                <input type="text" value="0.01" data-field="initialRotation" />
+            </div>
+
+            <div class="slider" id="rotationSpeedSliderDiv">
+                <p>rotation speed</p>
+                <input id="rotationSpeed" type="range" value="0.05" min="-10" max="10" step="0.001" data-field="rotationSpeed" />
+                <input type="text" value="0.05" data-field="rotationSpeed" />
             </div>
             
             <p>_________RGB_________</p>
@@ -155,17 +167,17 @@
             </div>
             alpha
             <div class="slider">
-                <input id="alphaShadow" type="range" value="0.5" min="0" max="1" step="0.01" data-field="alphaShadow" />
-                <input type="text" value="0.5" data-field="alphaShadow" />
+                <input id="alphaShadow" type="range" value="1" min="0" max="1" step="0.01" data-field="alphaShadow" />
+                <input type="text" value="1" data-field="alphaShadow" />
             </div>
             Offset X
             <div class="slider">
-                <input id="shadowOffsetX" type="range" value="1" min="-200" max="200" step="0.1" data-field="shadowOffsetX" />
+                <input id="shadowOffsetX" type="range" value="1" min="-400" max="400" step="0.1" data-field="shadowOffsetX" />
                 <input type="text" value="1" data-field="shadowOffsetX" />
             </div>
             Offset Y
             <div class="slider">
-                <input id="shadowOffsetY" type="range" value="1" min="-200" max="200" step="0.1" data-field="shadowOffsetY" />
+                <input id="shadowOffsetY" type="range" value="1" min="-400" max="400" step="0.1" data-field="shadowOffsetY" />
                 <input type="text" value="1" data-field="shadowOffsetY" />
             </div>
             shadowBlur
