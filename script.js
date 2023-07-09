@@ -26,6 +26,13 @@ let visualizerType = document.getElementById('droplistVisualizers').value;
 let polygonSymmetry = document.getElementById('polygonSymmetry').value;
 let barWidth = widthMultiplier * 2 * (canvas.width/fftSize);
 
+// ________ROTATION________
+let frameCounter = 1;
+let initialTurn = Math.PI;
+let frameTurn;
+let animationSpeed = 1;
+// ________ROTATION________
+
 // ON FILE CHANGE   -   click the button to reset after fftSize changes
 file.addEventListener('change', function(){
     const files = this.files;
@@ -151,15 +158,18 @@ updateVisualizerType(); //to disable unnecessary elements at the start
 //RELOAD ANIMATION
 button.addEventListener('click', reloadAnimation);
 
+let lastRequestId;
+
 function reloadAnimation() {
-    console.log('RELOAD');
-    // audio1.play();
+    window.cancelAnimationFrame(lastRequestId); //to cancel possible multiple animation request
+    console.log('reloadAnimation');
     if (typeof audioSource == 'undefined') { //without that condition there is an error on creating audioSource
         audioSource = audioContext.createMediaElementSource(audio1);
         analyser = audioContext.createAnalyser(); // create node
         audioSource.connect(analyser);
         analyser.connect(audioContext.destination);
     }
+
     analyser.fftSize = fftSize;
     const bufferLength = analyser.frequencyBinCount;    //data samples available - fftSize/2
     const dataArray = new Uint8Array(bufferLength);
@@ -167,6 +177,7 @@ function reloadAnimation() {
     let x = 0;
 
     function animate() {
+        frameCounter += 1;
         x = 0;
         ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
         analyser.getByteFrequencyData(dataArray); //copies the current frequency data into a Uint8Array
@@ -185,7 +196,8 @@ function reloadAnimation() {
         else if (visualizerType == 'polygons') {
             drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray);
         }
-        requestAnimationFrame(animate);
+        // requestAnimationFrame(animate);
+        lastRequestId = window.requestAnimationFrame(animate);
     }
     animate();
 };
@@ -257,16 +269,13 @@ function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, b
     }
 }
 
-let frameCounter = 0;
-let initialTurn = Math.PI;
-let frameTurn;
-let animationSpeed = 10;
 // RADIAL BARS VISUALIZER
 function drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        frameCounter += 1;
-        frameTurn = animationSpeed * frameCounter / 5000 / bufferLengthAfterCutoff;
+        frameTurn = animationSpeed * frameCounter / 100;
+        // frameTurn = animationSpeed * frameCounter / bufferLengthAfterCutoff;
         barHeight = dataArray[i] * amplification;
+        console.log();
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         ctx.rotate(initialTurn + frameTurn + (turns * i * Math.PI * 2 / bufferLength));
