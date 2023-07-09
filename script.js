@@ -12,7 +12,7 @@ const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
 let audioContext = new AudioContext();
 audio1.addEventListener('play', reloadAnimation);
-//COLORPARAMETERS
+//COLORPARAMETERS INIT
 let [alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0];
 // VISUALISATION PARAMETERS
 let turns = document.getElementById('turns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
@@ -49,24 +49,25 @@ setBackground();
 
 // _____________________SHADOW_____________________
 colorInputShadow.addEventListener('input', setShadow);
+alphaShadow.addEventListener('input', setShadow);
+shadowOffsetX.addEventListener('input', setShadow);
+shadowOffsetY.addEventListener('input', setShadow);
+shadowBlur.addEventListener('input', setShadow);
+
 function setShadow() {
-    // console.log(colorInputShadow.value);
-    function hexToRgb(hex) {
+    function hexToRgba(hex) {
         let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
         result ? rgbObj = {
           r: parseInt(result[1], 16),
           g: parseInt(result[2], 16),
           b: parseInt(result[3], 16)
         } : null;
-        rgbValueShadow = 'rgb(' + rgbObj.r + ', ' + rgbObj.g + ', ' + rgbObj.b + ')';
-        console.log(rgbValueShadow);
+        return 'rgba(' + rgbObj.r + ', ' + rgbObj.g + ', ' + rgbObj.b + ', ' + alphaShadow.value + ')';
       }
-    rgbValueShadow = hexToRgb(colorInputShadow.value);
-
-    ctx.shadowColor = colorInputShadow.value
-    ctx.shadowOffsetX = 20;
-    ctx.shadowOffsetY = -20;
-    ctx.shadowBlur = 2;
+    ctx.shadowColor = hexToRgba(colorInputShadow.value);
+    ctx.shadowOffsetX = shadowOffsetX.value;
+    ctx.shadowOffsetY = -shadowOffsetY.value;
+    ctx.shadowBlur = shadowBlur.value;
 }
 setShadow();
 // _____________________SHADOW_____________________
@@ -88,6 +89,7 @@ function updateField(e) {
     // console.log(e.target.id);
     updateValues();
     setBackground();
+    setShadow();
 }
 
 function updateValues() {
@@ -139,8 +141,9 @@ function updateVisualizerType() {
 }
 updateVisualizerType(); //to disable unnecessary elements at the start
 
-button.addEventListener('click', reloadAnimation);
 //RELOAD ANIMATION
+button.addEventListener('click', reloadAnimation);
+
 function reloadAnimation() {
     console.log('RELOAD');
     // audio1.play();

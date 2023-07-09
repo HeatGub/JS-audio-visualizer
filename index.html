@@ -150,15 +150,31 @@
                 <input type="text" value="100" data-field="gradPosition2" />
             </div>
             <p>_______SHADOW_______</p>
-            alpha
-            <div class="slider">
-                <input type="range" value="1" min="0" max="1" step="0.01" data-field="alphaShadow" />
-                <input type="text" value="1" data-field="alphaShadow" />
-            </div>
             <div>
                 <b>Shadow's color:</b>
-                <input type="color" id="colorInputShadow">
+                <input type="color" id="colorInputShadow" value="#ffffff">
             </div>
+            alpha
+            <div class="slider">
+                <input id="alphaShadow" type="range" value="0.5" min="0" max="1" step="0.01" data-field="alphaShadow" />
+                <input type="text" value="0.5" data-field="alphaShadow" />
+            </div>
+            Offset X
+            <div class="slider">
+                <input id="shadowOffsetX" type="range" value="1" min="-200" max="200" step="0.1" data-field="shadowOffsetX" />
+                <input type="text" value="1" data-field="shadowOffsetX" />
+            </div>
+            Offset Y
+            <div class="slider">
+                <input id="shadowOffsetY" type="range" value="1" min="-200" max="200" step="0.1" data-field="shadowOffsetY" />
+                <input type="text" value="1" data-field="shadowOffsetY" />
+            </div>
+            shadowBlur
+            <div class="slider">
+                <input id="shadowBlur" type="range" value="0" min="0" max="420" step="0.1" data-field="shadowBlur" />
+                <input type="text" value="0" data-field="shadowBlur" />
+            </div>
+            
         </div>
 
     </div>
