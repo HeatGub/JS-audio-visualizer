@@ -12,11 +12,12 @@
     <div id="container">
         <canvas id="canvas1"></canvas>
         <!-- <audio id="audio1" controls></audio> -->
-        <audio id="audio1" src="spell.wav" controls></audio>
-        <input type = "file" id="fileupload" accept="audio/*"></input>
-        <button id="button1" type="button">play</button>
+        <audio id="audio1" src="Vanilla - origin.mp3" controls></audio>
 
         <div class="barElements">
+            <input type = "file" id="fileupload" accept="audio/*"></input>
+            <br>
+            <button id="button1" type="button">RELOAD</button>
             <div>
                 <label for="visualizers">Visualizer type:</label>
                 <select name="visualizers" id="droplistVisualizers" oninput="updateVisualizerType()">
@@ -55,13 +56,13 @@
 
             <div class="slider">
                 <p>highCutoff</p>
-                <input id="highCutoff" type="range" type="range" min="0" max="0.99" value="0" step="0.01" data-field="highCutoff" />
-                <input type="text" value="0" data-field="highCutoff" />
+                <input id="highCutoff" type="range" type="range" min="0" max="0.99" value="0.1" step="0.01" data-field="highCutoff" />
+                <input type="text" value="0.1" data-field="highCutoff" />
             </div>
 
             <div class="slider" id="turnsSliderDiv">
                 <p>turns</p>
-                <input id="turns" type="range" value="1" min="-9" max="9" step="0.01" data-field="turns" />
+                <input id="turns" type="range" value="1" min="-10" max="10" step="0.01" data-field="turns" />
                 <input type="text" value="1" data-field="turns" />
             </div>
 
@@ -120,17 +121,17 @@
             <p>_________BCK_________</p>
             <div>
                 <label for="backgrounds">Gradient type:</label>
-                <select name="backgrounds" id="droplistBackgrounds" oninput="setBackgroundColor()">
+                <select name="backgrounds" id="droplistBackgrounds" oninput="setBackground()">
                     <option value="linear">linear</option>
                     <option value="radial">radial</option>
                 </select>
             </div>
             <div>
-                <b>Color1: <code id="colorCode1"></code></b>
+                <b>Color1:</b>
                 <input type="color" id="colorInput1" value="#39419C">
             </div>
             <div>
-                <b>Color2: <code id="colorCode2"></code></b>
+                <b>Color2:</b>
                 <input type="color" id="colorInput2">
             </div>
             <div class="slider" id="gradAngleSliderDiv">
@@ -147,6 +148,16 @@
                 <p>Position 2</p>
                 <input id="gradPosition2" type="range" value="100" min="0" max="100" step="1" data-field="gradPosition2" />
                 <input type="text" value="100" data-field="gradPosition2" />
+            </div>
+            <p>_______SHADOW_______</p>
+            alpha
+            <div class="slider">
+                <input type="range" value="1" min="0" max="1" step="0.01" data-field="alphaShadow" />
+                <input type="text" value="1" data-field="alphaShadow" />
+            </div>
+            <div>
+                <b>Shadow's color:</b>
+                <input type="color" id="colorInputShadow">
             </div>
         </div>
 

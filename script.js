@@ -8,10 +8,6 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 // canvas.height = window.innerWidth; //to make widt/heig 1:1
 const ctx = canvas.getContext('2d');
-// ctx.shadowColor = 'rgba(0,250,0,0.5)';
-// ctx.shadowOffsetX = 2;
-// ctx.shadowOffsetY = -2;
-// ctx.shadowBlur = 2;
 const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
 let audioContext = new AudioContext();
@@ -40,7 +36,6 @@ colorInput1.addEventListener('input', setBackground);
 colorInput2.addEventListener('input', setBackground);
 
 function setBackground() {
-    // gradAngle = document.getElementById('gradAngle');
     if (document.getElementById('droplistBackgrounds').value == 'linear'){
         document.getElementById('gradAngleSliderDiv').style.display = 'block';
         container.style.background = 'linear-gradient(' + document.getElementById('gradAngle').value +'deg, ' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
@@ -51,6 +46,30 @@ function setBackground() {
     }
 }
 setBackground();
+
+// _____________________SHADOW_____________________
+colorInputShadow.addEventListener('input', setShadow);
+function setShadow() {
+    // console.log(colorInputShadow.value);
+    function hexToRgb(hex) {
+        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        result ? rgbObj = {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+        rgbValueShadow = 'rgb(' + rgbObj.r + ', ' + rgbObj.g + ', ' + rgbObj.b + ')';
+        console.log(rgbValueShadow);
+      }
+    rgbValueShadow = hexToRgb(colorInputShadow.value);
+
+    ctx.shadowColor = colorInputShadow.value
+    ctx.shadowOffsetX = 20;
+    ctx.shadowOffsetY = -20;
+    ctx.shadowBlur = 2;
+}
+setShadow();
+// _____________________SHADOW_____________________
 
 rangeInputs.forEach((el) => {
     el.addEventListener("input", updateField);

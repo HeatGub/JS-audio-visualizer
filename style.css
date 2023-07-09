@@ -37,21 +37,15 @@ body {
 }
 
 #fileupload {
-    position: absolute;
-    top: 10px;
-    font-size: 15px;
     color: wheat;
     z-index: 100; /* always on top on other elements */
 }
 
 #button1 {
-    position: absolute;
-    top: 120px;
-    left: 400px;
     color: rgb(189, 127, 12);
     background-color: black;
     font-size: 10px;
-    padding: 50px;
+    padding: 5px;
     z-index: 100; /* always on top on other elements */
 }
 
@@ -65,7 +59,7 @@ body {
 
 .barElements{
     position: absolute;
-    top: 60px;
+    top: 0px;
     color: rgb(210, 182, 132);
     z-index: 100;
     font-size: 20px;
