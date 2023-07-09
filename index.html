@@ -20,16 +20,16 @@
             <button id="button1" type="button">RELOAD</button>
             <div>
                 <label for="visualizers">Visualizer type:</label>
-                <select name="visualizers" id="droplistVisualizers" oninput="updateVisualizerType()">
+                <select name="visualizers" id="droplistVisualizers">
+                    <option value="radial bars">radial bars</option>
                     <option value="polygons">polygons</option>
                     <option value="horizontal bars">horizontal bars</option>
                     <option value="horizontal bars log">horizontal bars (logarithmic)</option>
                     <option value="radial bars log">radial bars (logarithmic)</option>
-                    <option value="radial bars">radial bars</option>
                 </select>
             </div>
             <label for="fftSizes">FFT size:</label>
-            <select name="fftSizes" id="droplistFftSizes" oninput="updateFftSize()">
+            <select name="fftSizes" id="droplistFftSizes">
                 <option value="64">64</option>
                 <option value="32">32</option>
                 <option value="64">64</option>
@@ -73,7 +73,6 @@
             </div>
             
             <p>_________RGB_________</p>
-            <!-- KOLORY KOLORY KOLORY KOLORY KOLORY KOLORY KOLORY -->
             alpha
             <div class="slider">
                 <input type="range" value="1" min="0" max="1" step="0.01" data-field="alphaRGB" />
@@ -121,7 +120,7 @@
             <p>_________BCK_________</p>
             <div>
                 <label for="backgrounds">Gradient type:</label>
-                <select name="backgrounds" id="droplistBackgrounds" oninput="setBackground()">
+                <select name="backgrounds" id="droplistBackgrounds">
                     <option value="linear">linear</option>
                     <option value="radial">radial</option>
                 </select>

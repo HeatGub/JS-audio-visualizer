@@ -34,6 +34,7 @@ file.addEventListener('change', function(){
 
 colorInput1.addEventListener('input', setBackground);
 colorInput2.addEventListener('input', setBackground);
+droplistBackgrounds.addEventListener('input', setBackground);
 
 function setBackground() {
     if (document.getElementById('droplistBackgrounds').value == 'linear'){
@@ -116,12 +117,18 @@ function updateValues() {
     bufferLengthAfterCutoff = bufferLength - highCutoff;
 }
 
+//FFT UPDATE
+droplistFftSizes.addEventListener('input', updateFftSize);
+
 function updateFftSize() {
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
     updateValues();
     reloadAnimation();
 }
 
+
+//VISUALIZER TYPE
+droplistVisualizers.addEventListener('input', updateVisualizerType);
 // update type and disable unnecessary sliders
 function updateVisualizerType() {
     visualizerType = document.getElementById('droplistVisualizers').value;
@@ -176,7 +183,7 @@ function reloadAnimation() {
             drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
         }
         else if (visualizerType == 'polygons') {
-            drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray);
+            drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray);
         }
         requestAnimationFrame(animate);
     }
@@ -202,9 +209,12 @@ function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barH
 };
 
 // POLYGONS VISUALIZER
-function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
+// let frameCounter = 0;
+function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        barHeight = dataArray[i] * amplification;
+        // frameCounter += 1;
+        // initialTurn = frameCounter * Math.PI/100000;
+        // barHeight = dataArray[i] * amplification;
         ctx.strokeStyle = mixingColors(i, dataArray);
 
         // radius = dataArray[i] * amplification;
@@ -222,7 +232,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, barHeight, dataArray){
         ctx.save(); //creates snapshot of global settings
         ctx.translate(canvas.width/2, canvas.height/2);
         ctx.moveTo(0, 0 - radius); //center
-
+        
         for (let j=0; j < polygonSymmetry; j++){
             ctx.rotate(Math.PI / polygonSymmetry);
             ctx.lineTo(0, 0 - (radius * inset));
@@ -247,13 +257,19 @@ function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, b
     }
 }
 
+let frameCounter = 0;
+let initialTurn = Math.PI;
+let frameTurn;
+let animationSpeed = 10;
 // RADIAL BARS VISUALIZER
 function drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
+        frameCounter += 1;
+        frameTurn = animationSpeed * frameCounter / 5000 / bufferLengthAfterCutoff;
         barHeight = dataArray[i] * amplification;
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
-        ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
+        ctx.rotate(initialTurn + frameTurn + (turns * i * Math.PI * 2 / bufferLength));
         ctx.fillStyle = mixingColors(i, dataArray);
         ctx.fillRect(0, 0, barWidth, barHeight);
         x += barWidth;
