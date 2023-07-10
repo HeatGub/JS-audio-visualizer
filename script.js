@@ -32,6 +32,10 @@ let initialRotation = document.getElementById('initialRotation').value;
 let frameTurn;
 // ________ROTATION________
 
+let inset = Number(document.getElementById('inset').value);
+let initialRadius = Number(document.getElementById('initialRadius').value);
+console.log(initialRadius);
+
 file.addEventListener('change', function(){
     const files = this.files;
     audio1.src = URL.createObjectURL(files[0]);
@@ -104,6 +108,8 @@ function updateValues() {
     highCutoff,
     turns,
     polygonSymmetry,
+    inset,
+    initialRadius,
     initialRotation,
     rotationSpeed,
     alphaRGB,
@@ -122,6 +128,8 @@ function updateValues() {
     bufferLength = fftSize/2;
     highCutoff = fftSize/2 * highCutoff;
     bufferLengthAfterCutoff = bufferLength - highCutoff;
+    // console.log(inset);
+    // console.log(initialRadius);
 }
 
 //FFT UPDATE
@@ -182,6 +190,11 @@ function reloadAnimation() {
     let x = 0;
 
     function animate() {
+        // console.log(initialRadius);
+        if (audio1.paused) {
+            console.log('paused');
+            return; //break the loop if paused
+        }
         frameCounter += 1;
         frameTurn = rotationSpeed * frameCounter / 100;
         x = 0;
@@ -228,24 +241,34 @@ function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barH
     }
 };
 
+// let insetLastOne1;
 // POLYGONS VISUALIZER
 function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
     ctx.translate(canvas.width/2, canvas.height/2);
-    ctx.rotate(Number(initialRotation * Math.PI * 2) + Number(rotationSpeed/120) * frameCounter);
+    ctx.rotate(Number(initialRotation * Math.PI * 2) + Number(frameTurn));
+    
     ctx.translate(-canvas.width/2, -canvas.height/2);
-
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
         // barHeight = dataArray[i] * amplification;
         ctx.strokeStyle = mixingColors(i, dataArray);
         // radius = dataArray[i] * amplification;
-        // inset = 2;
-        // radius = i * 3 * amplification;
-        // inset = 1 + dataArray[i]/255;
+        // insetFinal = 2;
+        // radius = i * 10 * amplification;
+        // insetFinal = 1 + dataArray[i]/255;
 
-        radius = i/bufferLengthAfterCutoff * amplification * 240;
-        inset = 1 + dataArray[i]/255;
+        // radius = initialRadius + (i+1)/bufferLengthAfterCutoff * amplification * 240;
+        radius = (i+1)/bufferLengthAfterCutoff * amplification * 240;
+
+        // insetFinal = 1 +  dataArray[i]/255;
+        insetFinal = inset * (1 +  dataArray[i]/255);
+        // insetLastOne1 = inset
 
         // insetLastOne = inset;
+        //THRESHOLD /255
+        if (dataArray[i] <= 2) {
+            ctx.lineWidth = 1;
+        }
+        else {
         ctx.lineWidth = widthMultiplier * amplification * 2 * (dataArray[i]/255) ; // widthMultiplier * (0-1)
         ctx.beginPath();
         ctx.save(); //creates snapshot of global settings
@@ -255,7 +278,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
         
         for (let j=0; j < polygonSymmetry; j++){
             ctx.rotate(Math.PI / polygonSymmetry);
-            ctx.lineTo(0, 0 - (radius * inset));
+            ctx.lineTo(0, 0 - (radius * insetFinal));
             ctx.rotate(Math.PI / polygonSymmetry);
             ctx.lineTo(0, 0 - radius);
         }
@@ -265,6 +288,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
         // ctx.fill();
         ctx.restore(); //to the ctx.save
     }
+}
 }
 
 // HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
