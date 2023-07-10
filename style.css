@@ -49,14 +49,6 @@ body {
     z-index: 100; /* always on top on other elements */
 }
 
-/* .sliderNew{
-    position: absolute;
-    top: 60px;
-    color: rgb(210, 182, 132);
-    z-index: 100;
-    font-size: 20px;
-} */
-
 .barElements{
     position: absolute;
     top: 0px;
