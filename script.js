@@ -169,7 +169,7 @@ function updateVisualizerType() {
 updateVisualizerType(); //to disable unnecessary elements at the start
 
 //RELOAD ANIMATION
-button.addEventListener('click', reloadAnimation);
+// button.addEventListener('click', reloadAnimation);
 
 let lastRequestId;
 
@@ -330,3 +330,73 @@ function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHe
         ctx.restore(); //to the ctx.save
     }
 }
+
+// // ______________________________NEW CSS______________________________
+// let resizer = document.querySelector(".resizer");
+// let sidebar = document.querySelector(".sidebar");
+// let header = document.querySelector(".header");
+// let openMenuButton = document.getElementById("openMenuButton");
+
+// function initResizerFn( resizer, sidebar ) {
+// // track current mouse position in x var
+//     let x, w;
+//     function rs_mousedownHandler( e ) {
+//         x = e.clientX;
+//         var sbWidth = window.getComputedStyle( sidebar ).width;
+//         w = parseInt( sbWidth, 10 );
+//         document.addEventListener("mousemove", rs_mousemoveHandler);
+//         document.addEventListener("mouseup", rs_mouseupHandler);
+//     }
+
+//     function rs_mousemoveHandler( e ) {
+//         let dx = e.clientX - x;
+//         let cw = w + dx; // complete width
+//         if ( cw < 700 ) {
+//             sidebar.style.width = `${ cw }px`;
+//         }
+//     }
+
+//     function rs_mouseupHandler() {
+//     // remove event mousemove && mouseup
+//     document.removeEventListener("mouseup", rs_mouseupHandler);
+//     document.removeEventListener("mousemove", rs_mousemoveHandler);
+//     }
+
+//     resizer.addEventListener("mousedown", rs_mousedownHandler);
+// }
+
+// initResizerFn( resizer, sidebar );
+
+// header.addEventListener("click", closeSidebarMenu);
+// function closeSidebarMenu () {
+//     sidebar.style.display = 'none';
+//     // sidebar.style.width = '-100px';
+//     openMenuButton.style.display = 'block';
+// };
+
+// openMenuButton.addEventListener("click", openSidebarMenu);
+// function openSidebarMenu() {
+//     sidebar.style.display = 'block';
+//     openMenuButton.style.display = 'none';
+// }
+
+// let sidebarCategories = document.querySelectorAll(".sidebarCategory");
+// sidebarCategories.forEach(function(elem) {
+//     elem.addEventListener("click", hideShowCategoryElements);
+// });
+
+// function hideShowCategoryElements (event) {
+//     thisElemId = event.target.id;
+//     console.log(thisElemId);
+//     if (thisElemId.includes('sidebarCategory')){ //to disable hiding more inner elements
+//         console.log(thisElemId);
+//         childDiv = event.target.children[0]; // [0] is category name
+//         if (childDiv.style.display != 'none') {
+//             childDiv.style.display = 'none';
+//         }
+//         else {
+//             childDiv.style.display = 'block';
+//         }
+//     }
+// };
+// // ______________________________NEW CSS______________________________

@@ -1,3 +1,19 @@
+:root {
+    /* color: rgb(42, 42, 42); */
+    /*for font-size: 100% -> rem = 16px (by default)*/
+    font-size: 62.5%; /*-> rem = 10px*/
+    /* font-family: 'Sanchez'; */
+    /* --colGray100: rgba(42, 42, 42, 1); */
+}
+
+html, body {
+    width: 100%;
+    height: 100%;
+    user-select: none;
+    display: flex;
+    /* background-color: #fff; */
+}
+
 body {
     background: black;
     /* background: rgba(100,10,100,0.9); */
@@ -9,6 +25,137 @@ body {
     box-sizing: border-box;
 }
 
+
+.sidebar {
+    position: relative;
+    /* position: absolute; */
+    height: 100%;
+    min-width: 5rem;
+    width: 333px;
+    height: 100%;
+    overflow-x: hidden;
+    background-color: rgba(69, 184, 69, 0.209);
+    text-align: center;
+    padding-right: 0.5rem; /* to compensate resizer width*/ 
+}
+ 
+.resizer {
+    width: 0.5rem;
+    top: 0;
+    right: 0;
+    cursor: col-resize;
+    height: 100%;
+    position: absolute;
+    background-color: #9ced10;
+}
+ 
+.header {
+    padding: 2rem 1rem;
+    background-color: #863515b4;
+    border-radius: 2rem;
+}
+ 
+.header h3 {
+    color: #1919b1;
+    font-size: 2rem;
+}
+ 
+.header h3, ul li {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+  
+ul li:hover {
+    background-color: #fffbfb;
+}
+ 
+.rs-content {
+    /* width: 100%; */
+    flex-grow: 1;
+    padding: 3% 22px;
+    text-align: center;
+    background-color: #555;
+}
+ 
+h1 {
+    color: #fff;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+input[type="range"] {
+    width: calc(98% - 4.5rem); /* 4.5rem because text input width is not enough and it changes line*/
+    height: 0.6rem;
+    cursor: pointer;
+    /* -webkit-appearance: none; */
+    /* background: rgba(178, 174, 174, 0.6); */
+    /* border-radius: 0rem; */
+    /* background-image: linear-gradient(#fb5b26, #a1320a); */
+    /* background-size: 100% 100%; */
+    /* background-repeat: no-repeat; */
+}
+
+input[type="text"] {
+    width: 3.7rem;
+    margin-right: 0.5rem; /*for spacing between the resize bar*/
+    border-radius: 0.5rem;
+    /* display: block; */
+}
+
+input[type="color"] {
+    width: 98%;
+    margin-right: 0.5rem;
+    border-radius: 0.5rem;
+    cursor: pointer;
+}
+
+#openMenuButton{
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: none;
+    background-color: white;
+    border-radius: 1rem;
+    padding: 1.6rem 1rem;
+    /* text-align: center; */
+}
+
+.sidebarCategory{
+    background-color: rgb(255, 182, 56);
+    font-size: 2rem;
+    border-radius: 2rem;
+    padding: 0.5rem;
+    font-weight: 600;
+    margin: 0.5rem 0.2rem;
+    /* border-color: red;
+    border-width: 2rem; */
+}
+
+.sidebarInsideCategoryElements{
+    /* background-color: bisque; */
+    font-size: 1.4rem;
+    /* transition: 1s; */
+}
+
+.sidebarElement{
+    font-size: 1.5rem;
+    font-weight: 400;
+    padding: 0.5rem 0rem;
+    border-radius: 1rem;
+    margin: 0.5rem 0rem;
+}
+
+.sidebarElement:nth-child(even) {
+    background: rgba(33, 110, 28, 0.324);
+}
+
+.sidebarElement:nth-child(odd) {
+    background: rgba(28, 80, 110, 0.324);
+}
+
+/* _______________________________OLD CSS_______________________________ */
+
 #container {
     position: absolute;
     top: 0;
@@ -18,7 +165,8 @@ body {
     /* background: linear-gradient(to bottom right, crimson, orange); */
     width: 100%;
     height: 100%;
-    /* height: width/2; */
+    /* width: 100vw; zooming */
+    /* height: 100vh; zooming */
 }
 
 #canvas1{
@@ -27,6 +175,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
+    /* z-index: 10; */
     /* filter: blur(5px); */
 }
 
