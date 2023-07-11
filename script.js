@@ -34,7 +34,6 @@ let frameTurn;
 
 let inset = Number(document.getElementById('inset').value);
 let initialRadius = Number(document.getElementById('initialRadius').value);
-console.log(initialRadius);
 
 file.addEventListener('change', function(){
     const files = this.files;
@@ -241,7 +240,6 @@ function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barH
     }
 };
 
-// let insetLastOne1;
 // POLYGONS VISUALIZER
 function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
     ctx.translate(canvas.width/2, canvas.height/2);
@@ -249,24 +247,13 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
     
     ctx.translate(-canvas.width/2, -canvas.height/2);
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        // barHeight = dataArray[i] * amplification;
         ctx.strokeStyle = mixingColors(i, dataArray);
-        // radius = dataArray[i] * amplification;
-        // insetFinal = 2;
-        // radius = i * 10 * amplification;
-        // insetFinal = 1 + dataArray[i]/255;
-
-        // radius = initialRadius + (i+1)/bufferLengthAfterCutoff * amplification * 240;
-        radius = (i+1)/bufferLengthAfterCutoff * amplification * 240;
-
-        // insetFinal = 1 +  dataArray[i]/255;
+        radius = Number(initialRadius)* amplification + (i+1)/bufferLengthAfterCutoff * amplification * 240;
         insetFinal = inset * (1 +  dataArray[i]/255);
-        // insetLastOne1 = inset
 
-        // insetLastOne = inset;
         //THRESHOLD /255
-        if (dataArray[i] <= 2) {
-            ctx.lineWidth = 1;
+        if (dataArray[i] <= 1) {
+            ctx.lineWidth = 0;
         }
         else {
         ctx.lineWidth = widthMultiplier * amplification * 2 * (dataArray[i]/255) ; // widthMultiplier * (0-1)
@@ -331,72 +318,72 @@ function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHe
     }
 }
 
-// // ______________________________NEW CSS______________________________
-// let resizer = document.querySelector(".resizer");
-// let sidebar = document.querySelector(".sidebar");
-// let header = document.querySelector(".header");
-// let openMenuButton = document.getElementById("openMenuButton");
+// ______________________________NEW CSS______________________________
+let resizer = document.querySelector(".resizer");
+let sidebar = document.querySelector(".sidebar");
+let header = document.querySelector(".header");
+let openMenuButton = document.getElementById("openMenuButton");
 
-// function initResizerFn( resizer, sidebar ) {
-// // track current mouse position in x var
-//     let x, w;
-//     function rs_mousedownHandler( e ) {
-//         x = e.clientX;
-//         var sbWidth = window.getComputedStyle( sidebar ).width;
-//         w = parseInt( sbWidth, 10 );
-//         document.addEventListener("mousemove", rs_mousemoveHandler);
-//         document.addEventListener("mouseup", rs_mouseupHandler);
-//     }
+function initResizerFn( resizer, sidebar ) {
+// track current mouse position in x var
+    let x, w;
+    function rs_mousedownHandler( e ) {
+        x = e.clientX;
+        var sbWidth = window.getComputedStyle( sidebar ).width;
+        w = parseInt( sbWidth, 10 );
+        document.addEventListener("mousemove", rs_mousemoveHandler);
+        document.addEventListener("mouseup", rs_mouseupHandler);
+    }
 
-//     function rs_mousemoveHandler( e ) {
-//         let dx = e.clientX - x;
-//         let cw = w + dx; // complete width
-//         if ( cw < 700 ) {
-//             sidebar.style.width = `${ cw }px`;
-//         }
-//     }
+    function rs_mousemoveHandler( e ) {
+        let dx = e.clientX - x;
+        let cw = w + dx; // complete width
+        if ( cw < 700 ) {
+            sidebar.style.width = `${ cw }px`;
+            audio1.style.left = `${ cw }px`; //glue to bar
+        }
+    }
 
-//     function rs_mouseupHandler() {
-//     // remove event mousemove && mouseup
-//     document.removeEventListener("mouseup", rs_mouseupHandler);
-//     document.removeEventListener("mousemove", rs_mousemoveHandler);
-//     }
+    function rs_mouseupHandler() {
+    // remove event mousemove && mouseup
+    document.removeEventListener("mouseup", rs_mouseupHandler);
+    document.removeEventListener("mousemove", rs_mousemoveHandler);
+    }
 
-//     resizer.addEventListener("mousedown", rs_mousedownHandler);
-// }
+    resizer.addEventListener("mousedown", rs_mousedownHandler);
+}
 
-// initResizerFn( resizer, sidebar );
+initResizerFn( resizer, sidebar );
 
-// header.addEventListener("click", closeSidebarMenu);
-// function closeSidebarMenu () {
-//     sidebar.style.display = 'none';
-//     // sidebar.style.width = '-100px';
-//     openMenuButton.style.display = 'block';
-// };
+header.addEventListener("click", closeSidebarMenu);
+function closeSidebarMenu () {
+    sidebar.style.display = 'none';
+    // sidebar.style.width = '-100px';
+    openMenuButton.style.display = 'block';
+};
 
-// openMenuButton.addEventListener("click", openSidebarMenu);
-// function openSidebarMenu() {
-//     sidebar.style.display = 'block';
-//     openMenuButton.style.display = 'none';
-// }
+openMenuButton.addEventListener("click", openSidebarMenu);
+function openSidebarMenu() {
+    sidebar.style.display = 'block';
+    openMenuButton.style.display = 'none';
+}
 
-// let sidebarCategories = document.querySelectorAll(".sidebarCategory");
-// sidebarCategories.forEach(function(elem) {
-//     elem.addEventListener("click", hideShowCategoryElements);
-// });
+let sidebarCategories = document.querySelectorAll(".sidebarCategory");
+sidebarCategories.forEach(function(elem) {
+    elem.addEventListener("click", hideShowCategoryElements);
+});
 
-// function hideShowCategoryElements (event) {
-//     thisElemId = event.target.id;
-//     console.log(thisElemId);
-//     if (thisElemId.includes('sidebarCategory')){ //to disable hiding more inner elements
-//         console.log(thisElemId);
-//         childDiv = event.target.children[0]; // [0] is category name
-//         if (childDiv.style.display != 'none') {
-//             childDiv.style.display = 'none';
-//         }
-//         else {
-//             childDiv.style.display = 'block';
-//         }
-//     }
-// };
-// // ______________________________NEW CSS______________________________
+function hideShowCategoryElements (event) {
+    thisElemId = event.target.id;
+    console.log(thisElemId);
+    if (thisElemId.includes('sidebarCategory')){ //to disable hiding more inner elements
+        childDiv = event.target.children[0]; // [0] is category name
+        if (childDiv.style.display != 'none') {
+            childDiv.style.display = 'none';
+        }
+        else {
+            childDiv.style.display = 'block';
+        }
+    }
+};
+// ______________________________NEW CSS______________________________

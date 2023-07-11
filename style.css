@@ -4,6 +4,7 @@
     font-size: 62.5%; /*-> rem = 10px*/
     /* font-family: 'Sanchez'; */
     /* --colGray100: rgba(42, 42, 42, 1); */
+    --initialSidebarWidth: 50rem;
 }
 
 html, body {
@@ -31,10 +32,10 @@ body {
     /* position: absolute; */
     height: 100%;
     min-width: 5rem;
-    width: 333px;
+    width: var(--initialSidebarWidth);
     height: 100%;
     overflow-x: hidden;
-    background-color: rgba(69, 184, 69, 0.209);
+    background-color: rgba(69, 184, 69, 0.609);
     text-align: center;
     padding-right: 0.5rem; /* to compensate resizer width*/ 
 }
@@ -118,11 +119,12 @@ input[type="color"] {
     background-color: white;
     border-radius: 1rem;
     padding: 1.6rem 1rem;
+    z-index: 100;
     /* text-align: center; */
 }
 
 .sidebarCategory{
-    background-color: rgb(255, 182, 56);
+    background-color: rgba(255, 182, 56, 0.2);
     font-size: 2rem;
     border-radius: 2rem;
     padding: 0.5rem;
@@ -147,11 +149,11 @@ input[type="color"] {
 }
 
 .sidebarElement:nth-child(even) {
-    background: rgba(33, 110, 28, 0.324);
+    background: rgba(33, 110, 28, 0.524);
 }
 
 .sidebarElement:nth-child(odd) {
-    background: rgba(28, 80, 110, 0.324);
+    background: rgba(13, 139, 211, 0.524);
 }
 
 /* _______________________________OLD CSS_______________________________ */
@@ -179,41 +181,14 @@ input[type="color"] {
     /* filter: blur(5px); */
 }
 
-#audio1{
-    width: 50%;
-    margin: 50px auto;
-    display: block;
-}
-
 #fileupload {
     color: wheat;
     z-index: 100; /* always on top on other elements */
 }
 
-#button1 {
-    color: rgb(189, 127, 12);
-    background-color: black;
-    font-size: 10px;
-    padding: 5px;
-    z-index: 100; /* always on top on other elements */
-}
-
-.barElements{
-    position: absolute;
-    top: 0px;
-    color: rgb(210, 182, 132);
-    z-index: 100;
-    font-size: 20px;
-}
-
-.barElements input[type="text"] {
-    flex-shrink: 0;
-    width: 50px;
-    padding: 0;
-}
-
 #audio1{
     position: absolute;
-    top: -50px;
-    left: 300px;
+    top: 0px;
+    left: var(--initialSidebarWidth);
+    width: 50%
 }
