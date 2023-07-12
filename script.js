@@ -322,7 +322,15 @@ function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHe
 let resizer = document.querySelector(".resizer");
 let sidebar = document.querySelector(".sidebar");
 let header = document.querySelector(".header");
-let openMenuButton = document.getElementById("openMenuButton");
+// let openMenuButton = document.getElementById("openMenuButton");
+// let hideMenuButton = document.getElementById("hideMenuButton");
+// let openAudioButton = document.getElementById("openAudioButton");
+// let audioContainer = document.getElementById("audioContainer");
+let cwGlobal = 500; //has to be the same as sidebar width in css
+let MaxSidebarX = 2000;
+// let MaxSidebarX = window.innerWidth*0.6; //changes with refresh
+let MinSidebarX = 150;
+let sidebarAudioSpacing = 5; //px
 
 function initResizerFn( resizer, sidebar ) {
 // track current mouse position in x var
@@ -338,10 +346,27 @@ function initResizerFn( resizer, sidebar ) {
     function rs_mousemoveHandler( e ) {
         let dx = e.clientX - x;
         let cw = w + dx; // complete width
-        if ( cw < 700 ) {
+        
+        if ( cw >= MinSidebarX && cw <= MaxSidebarX ) {
             sidebar.style.width = `${ cw }px`;
-            audio1.style.left = `${ cw }px`; //glue to bar
-            hideMenu.style.left = `${ cw }px`; //glue to bar
+            audioContainer.style.left = `${ cw }px`; //glue to bar
+            audioContainer.style.left = cw + sidebarAudioSpacing + 'px';
+            audioContainer.style.width = window.innerWidth - cw - 2*sidebarAudioSpacing +'px';
+            hideMenuButton.style.left = `${ cw }px`; //glue to bar
+            console.log(cw);
+            cwGlobal = cw;
+        }
+        else if (cw < MinSidebarX) {
+            sidebar.style.width = `${ MinSidebarX }px`;
+            audioContainer.style.left =  MinSidebarX + sidebarAudioSpacing +'px'; //glue to bar
+            hideMenuButton.style.left = `${ MinSidebarX }px`; //glue to bar
+            cwGlobal = MinSidebarX;
+        }
+        else if (cw > MaxSidebarX) {
+            sidebar.style.width = `${ MaxSidebarX }px`;
+            audioContainer.style.left = MaxSidebarX + sidebarAudioSpacing +'px';
+            hideMenuButton.style.left = `${ MaxSidebarX }px`; //glue to bar
+            cwGlobal = MaxSidebarX;
         }
     }
 
@@ -356,19 +381,38 @@ function initResizerFn( resizer, sidebar ) {
 
 initResizerFn( resizer, sidebar );
 
-hideMenu.addEventListener("click", closeSidebarMenu);
+hideMenuButton.addEventListener("click", closeSidebarMenu);
 function closeSidebarMenu () {
     sidebar.style.display = 'none';
-    hideMenu.style.display = 'none';
-    // sidebar.style.width = '-100px';
+    hideMenuButton.style.display = 'none';
     openMenuButton.style.display = 'block';
+    audioContainer.style.left = `10rem`; //glue to bar
+    audioContainer.style.width = window.innerWidth -120 +'px'; //hardcoded value for now
 };
+
+hideAudioButton.addEventListener("click", closeAudioContainer);
+function closeAudioContainer () {
+    console.log('closeAudioContainer');
+    audioContainer.style.display = 'none';
+    openAudioButton.style.display = 'block';
+    // audioContainer.style.left = `10rem`; //glue to bar
+    // audioContainer.style.width = window.innerWidth -120 +'px'; //hardcoded value for now
+};
+
+openAudioButton.addEventListener("click", openAudioContainer);
+function openAudioContainer() {
+    openAudioButton.style.display = 'none';
+    audioContainer.style.display = 'block';
+}
 
 openMenuButton.addEventListener("click", openSidebarMenu);
 function openSidebarMenu() {
+    console.log(cwGlobal);
+    audioContainer.style.left = `${ cwGlobal }px`; //glue to bar
+    audioContainer.style.width = window.innerWidth - cwGlobal +'px';
     sidebar.style.display = 'block';
     openMenuButton.style.display = 'none';
-    hideMenu.style.display = 'block';
+    hideMenuButton.style.display = 'block';
 }
 
 let sidebarCategories = document.querySelectorAll(".sidebarCategory");

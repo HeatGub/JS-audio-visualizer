@@ -5,6 +5,7 @@
     /* font-family: 'Sanchez'; */
     /* --colGray100: rgba(42, 42, 42, 1); */
     --initialSidebarWidth: 50rem;
+    --sidebarAudioSpacing: 0.5rem;
 }
 
 html, body {
@@ -178,13 +179,6 @@ input[type="color"] {
     cursor: pointer;
 }
 
-#audio1{
-    position: absolute;
-    top: 0px;
-    left: var(--initialSidebarWidth);
-    width: 50%;
-}
-
 ::-webkit-scrollbar{
     /* background: rgba(1,1,1,0.2); */
     width: 0rem;
@@ -212,7 +206,7 @@ input[type="color"] {
     /* text-align: center; */
 }
 
-#hideMenu{
+#hideMenuButton{
     top:50%;
     /* left: calc(2rem - 1rem); */
     left: var(--initialSidebarWidth);
@@ -220,4 +214,42 @@ input[type="color"] {
     color: rgba(1,1,1,0.5);
     padding: 4rem 0.1rem;
     border-radius: 0 1rem 1rem 0;
+}
+
+#audioContainer{
+    position:absolute;
+    top: 3rem;
+    /* background-color: #1919b1; */
+    /* padding: 0.5rem; */
+    width: calc(100% - var(--initialSidebarWidth) - var(--sidebarAudioSpacing)*2);
+    left: calc( var(--sidebarAudioSpacing) + var(--initialSidebarWidth));
+}
+
+#audio1{
+    width: 100%;
+}
+
+#hideAudioButton{
+    position: relative;
+    top: -3px; /*to touch the audio player*/
+    left: 48%;
+    /* left: calc(2rem - 1rem); */
+    font-size: 2rem;
+    color: rgba(1,1,1,0.5);
+    padding: 0.1rem 4rem;
+    border-radius: 0 0 1rem 1rem;
+    /* border-radius: 0 1rem 1rem 0; */
+}
+
+#openAudioButton{
+    position: absolute;
+    /* position: relative; */
+    left: calc(var(--sidebarAudioSpacing) + var(--initialSidebarWidth)); /*+5px space*/
+    top: 1rem;
+    /* left: 10rem; */
+    display: none;
+    background-color: white;
+    border-radius: 2rem;
+    z-index: 100;
+    /* text-align: center; */
 }
