@@ -1,9 +1,7 @@
 :root {
-    /* color: rgb(42, 42, 42); */
     /*for font-size: 100% -> rem = 16px (by default)*/
     font-size: 62.5%; /*-> rem = 10px*/
     /* font-family: 'Sanchez'; */
-    /* --colGray100: rgba(42, 42, 42, 1); */
     --initialSidebarWidth: 50rem;
     --sidebarAudioSpacing: 0.5rem;
 }
@@ -16,15 +14,39 @@ html, body {
     /* background-color: #fff; */
 }
 
-body {
-    background: black;
-    /* background: rgba(100,10,100,0.9); */
-}
-
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+#container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#canvas1{
+    position: absolute;
+    top: 0; 
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* z-index: 10; */
+    /* filter: blur(5px); */
+}
+
+#fileupload {
+    color: wheat;
+    z-index: 100; /* always on top on other elements */
+    cursor: pointer;
+}
+
+::-webkit-scrollbar{
+    /* background: rgba(1,1,1,0.2); */
+    width: 0rem;
 }
 
 
@@ -37,7 +59,7 @@ body {
     height: 100%;
     /* height: 100wh; */
     overflow-x: hidden;
-    background-color: rgba(69, 184, 69, 0.609);
+    background-color: rgba(255, 255, 255, 0.209);
     text-align: center;
     padding-right: 0.5rem; /* to compensate resizer width*/ 
 }
@@ -49,42 +71,7 @@ body {
     cursor: col-resize;
     height: 100%;
     position: absolute;
-    background-color: #9ced10;
-}
- 
-.header {
-    padding: 2rem 1rem;
-    background-color: #863515b4;
-    border-radius: 2rem;
-}
- 
-.header h3 {
-    color: #1919b1;
-    font-size: 2rem;
-}
- 
-.header h3, ul li {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-  
-ul li:hover {
-    background-color: #fffbfb;
-}
- 
-.rs-content {
-    /* width: 100%; */
-    flex-grow: 1;
-    padding: 3% 22px;
-    text-align: center;
-    background-color: #555;
-}
- 
-h1 {
-    color: #fff;
-    font-weight: 500;
-    text-transform: uppercase;
+    background-color: rgb(255, 204, 0);
 }
 
 input[type="range"] {
@@ -114,13 +101,14 @@ input[type="color"] {
 }
 
 .sidebarCategory{
-    background-color: rgba(255, 182, 56, 0.2);
-    font-size: 2rem;
+    background-color: rgb(0, 0, 0);
+    font-size: 3rem;
     border-radius: 2rem;
     padding: 0.5rem;
     font-weight: 600;
     margin: 0.5rem 0.2rem;
     cursor: pointer;
+    color:rgb(255, 179, 0);
     /* border-color: red;
     border-width: 2rem; */
 }
@@ -133,63 +121,31 @@ input[type="color"] {
 }
 
 .sidebarElement{
-    font-size: 1.5rem;
+    font-size: 2rem;
     font-weight: 400;
     padding: 0.5rem 0rem;
     border-radius: 1rem;
     margin: 0.5rem 0rem;
+    color:rgb(230, 225, 213);
 }
 
 .sidebarElement:nth-child(even) {
-    background: rgba(33, 110, 28, 0.524);
+    background: rgba(198, 197, 195, 0.524);
 }
 
 .sidebarElement:nth-child(odd) {
-    background: rgba(13, 139, 211, 0.524);
+    background: rgba(255, 255, 255, 0.524);
 }
 
-/* _______________________________OLD CSS_______________________________ */
-
-#container {
-    position: absolute;
-    top: 0;
-    left: 0;
-    /* background: black; */
-    /* background: rgb(100,100,100); */
-    /* background: linear-gradient(to bottom right, crimson, orange); */
-    width: 100%;
-    height: 100%;
-    /* width: 100vw; zooming */
-    /* height: 100vh; zooming */
-}
-
-#canvas1{
-    position: absolute;
-    top: 0; 
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* z-index: 10; */
-    /* filter: blur(5px); */
-}
-
-#fileupload {
-    color: wheat;
-    z-index: 100; /* always on top on other elements */
-    cursor: pointer;
-}
-
-::-webkit-scrollbar{
-    /* background: rgba(1,1,1,0.2); */
-    width: 0rem;
+.sidebarElement:hover {
+    background-color: rgba(0, 0, 0, 0.9);
+    transition: 0.5s;
 }
 
 .showHideButton{
     position: absolute;
-    background-color: white;
+    background-color: rgb(244, 237, 237);
     font-size: 5rem;
-    /* height: 10rem; */
-    /* width: 10rem; */
     border-radius: 0 1rem 1rem 0;
     text-align: center;
     padding: 1rem 1rem;
@@ -200,7 +156,7 @@ input[type="color"] {
     top: 1rem;
     left: 1rem;
     display: none;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 2rem;
     z-index: 100;
     /* text-align: center; */
@@ -218,22 +174,25 @@ input[type="color"] {
 
 #audioContainer{
     position:absolute;
-    top: 3rem;
+    top: 2.5rem;
     /* background-color: #1919b1; */
     /* padding: 0.5rem; */
-    width: calc(100% - var(--initialSidebarWidth) - var(--sidebarAudioSpacing)*2);
+    width: calc(100% - var(--initialSidebarWidth) - var(--sidebarAudioSpacing)*3);
     left: calc( var(--sidebarAudioSpacing) + var(--initialSidebarWidth));
 }
 
 #audio1{
     width: 100%;
+    height: 4rem;
 }
 
 #hideAudioButton{
     position: relative;
     top: -3px; /*to touch the audio player*/
-    left: 48%;
+    left: 50%;
+    /* left: 50%; */
     /* left: calc(2rem - 1rem); */
+    /* width:80%; */
     font-size: 2rem;
     color: rgba(1,1,1,0.5);
     padding: 0.1rem 4rem;
@@ -248,7 +207,7 @@ input[type="color"] {
     top: 1rem;
     /* left: 10rem; */
     display: none;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.2);
     border-radius: 2rem;
     z-index: 100;
     /* text-align: center; */
