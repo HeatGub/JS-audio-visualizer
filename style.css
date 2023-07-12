@@ -34,6 +34,7 @@ body {
     min-width: 5rem;
     width: var(--initialSidebarWidth);
     height: 100%;
+    /* height: 100wh; */
     overflow-x: hidden;
     background-color: rgba(69, 184, 69, 0.609);
     text-align: center;
@@ -111,18 +112,6 @@ input[type="color"] {
     cursor: pointer;
 }
 
-#openMenuButton{
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    display: none;
-    background-color: white;
-    border-radius: 1rem;
-    padding: 1.6rem 1rem;
-    z-index: 100;
-    /* text-align: center; */
-}
-
 .sidebarCategory{
     background-color: rgba(255, 182, 56, 0.2);
     font-size: 2rem;
@@ -130,12 +119,14 @@ input[type="color"] {
     padding: 0.5rem;
     font-weight: 600;
     margin: 0.5rem 0.2rem;
+    cursor: pointer;
     /* border-color: red;
     border-width: 2rem; */
 }
 
 .sidebarInsideCategoryElements{
     /* background-color: bisque; */
+    cursor: auto;
     font-size: 1.4rem;
     /* transition: 1s; */
 }
@@ -184,11 +175,49 @@ input[type="color"] {
 #fileupload {
     color: wheat;
     z-index: 100; /* always on top on other elements */
+    cursor: pointer;
 }
 
 #audio1{
     position: absolute;
     top: 0px;
     left: var(--initialSidebarWidth);
-    width: 50%
+    width: 50%;
+}
+
+::-webkit-scrollbar{
+    /* background: rgba(1,1,1,0.2); */
+    width: 0rem;
+}
+
+.showHideButton{
+    position: absolute;
+    background-color: white;
+    font-size: 5rem;
+    /* height: 10rem; */
+    /* width: 10rem; */
+    border-radius: 0 1rem 1rem 0;
+    text-align: center;
+    padding: 1rem 1rem;
+}
+
+#openMenuButton{
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    display: none;
+    background-color: white;
+    border-radius: 2rem;
+    z-index: 100;
+    /* text-align: center; */
+}
+
+#hideMenu{
+    top:50%;
+    /* left: calc(2rem - 1rem); */
+    left: var(--initialSidebarWidth);
+    font-size: 2rem;
+    color: rgba(1,1,1,0.5);
+    padding: 4rem 0.1rem;
+    border-radius: 0 1rem 1rem 0;
 }

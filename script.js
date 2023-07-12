@@ -341,6 +341,7 @@ function initResizerFn( resizer, sidebar ) {
         if ( cw < 700 ) {
             sidebar.style.width = `${ cw }px`;
             audio1.style.left = `${ cw }px`; //glue to bar
+            hideMenu.style.left = `${ cw }px`; //glue to bar
         }
     }
 
@@ -355,9 +356,10 @@ function initResizerFn( resizer, sidebar ) {
 
 initResizerFn( resizer, sidebar );
 
-header.addEventListener("click", closeSidebarMenu);
+hideMenu.addEventListener("click", closeSidebarMenu);
 function closeSidebarMenu () {
     sidebar.style.display = 'none';
+    hideMenu.style.display = 'none';
     // sidebar.style.width = '-100px';
     openMenuButton.style.display = 'block';
 };
@@ -366,6 +368,7 @@ openMenuButton.addEventListener("click", openSidebarMenu);
 function openSidebarMenu() {
     sidebar.style.display = 'block';
     openMenuButton.style.display = 'none';
+    hideMenu.style.display = 'block';
 }
 
 let sidebarCategories = document.querySelectorAll(".sidebarCategory");

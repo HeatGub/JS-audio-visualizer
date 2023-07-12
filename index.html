@@ -6,21 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="icon" href="data:;base64,iVBORw0KGgo="> <!-- no icon error -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>JS audio</title>
 </head>
 <body>
-    <div id="openMenuButton">
-        OPEN
+    <div id="openMenuButton" class="showHideButton fa-solid fa-sliders">
     </div>
     <div id="container">
         <canvas id="canvas1"></canvas>
         <!-- <audio id="audio1" controls></audio> -->
         <audio id="audio1" src="Vanilla - origin.mp3" controls></audio>
-
+        
+        <div id="hideMenu" class="showHideButton fa-solid fa-angles-left">
+        </div>
+        <!-- <i class="fa-solid fa-c"></i> -->
         <div class="sidebar">
             <div class="resizer"></div>
-            <div class="header"><h3>close menu [X]</h3></div>
-            
+           
             <div class ="sidebarCategory" id="sidebarCategory1"> sidebarMenuCategory1
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements1">
                     <div class = "sidebarElement">
@@ -55,8 +57,8 @@
                         <div class="slider">
                             <p>amplification</p>
                             <span>
-                                <input id="amplification" type="range" min="0.1" max="40" value="4" step="0.01" data-field="amplification" />
-                                <input type="text" value="4" data-field="amplification" />
+                                <input id="amplification" type="range" min="0.1" max="40" value="2" step="0.01" data-field="amplification" />
+                                <input type="text" value="2" data-field="amplification" />
                             </span>
                         </div>
                     </div>
