@@ -321,11 +321,6 @@ function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHe
 // ______________________________NEW CSS______________________________
 let resizer = document.querySelector(".resizer");
 let sidebar = document.querySelector(".sidebar");
-let header = document.querySelector(".header");
-// let openMenuButton = document.getElementById("openMenuButton");
-// let hideMenuButton = document.getElementById("hideMenuButton");
-// let openAudioButton = document.getElementById("openAudioButton");
-// let audioContainer = document.getElementById("audioContainer");
 let cwGlobal = 500; //has to be the same as sidebar width in css
 let MaxSidebarX = 1200;
 // let MaxSidebarX = window.innerWidth*0.6; //changes with refresh
@@ -363,16 +358,18 @@ function initResizerFn( resizer, sidebar ) {
         else if (cw > MaxSidebarX) {
             cwGlobal = MaxSidebarX;
         }
+        // resizer.style.height = sidebar.style.height;
     }
 
     function rs_mouseupHandler() {
     // remove event mousemove && mouseup
     document.removeEventListener("mouseup", rs_mouseupHandler);
     document.removeEventListener("mousemove", rs_mousemoveHandler);
-    console.log(cwGlobal);
+    // console.log(cwGlobal);
     }
 
     resizer.addEventListener("mousedown", rs_mousedownHandler);
+    console.log('initResizerFn');
 }
 
 initResizerFn( resizer, sidebar );
@@ -382,17 +379,15 @@ function openSidebarMenu() {
     // audioContainer.style.left = `${ cwGlobal }px`; //glue to bar
     // audioContainer.style.width = window.innerWidth - cwGlobal +'px';
     openMenuButton.style.display = 'none';
-    audioContainer.style.left = cwGlobal + sidebarAudioSpacing + 'px'; //OK
+    // audioContainer.style.left = cwGlobal + sidebarAudioSpacing + 'px'; //OK
     audioContainer.style.width = window.innerWidth - cwGlobal - (2*sidebarAudioSpacing) +'px'; //OK
     sidebar.style.width = cwGlobal + 'px';
     sidebar.style.display = 'block';
     hideMenuButton.style.left = cwGlobal + 'px';
     hideMenuButton.style.display = 'block';
     openAudioButton.style.left = cwGlobal + sidebarAudioSpacing + 'px';
-    console.log('openAudioButton.left');
-    console.log(openAudioButton.style.left);
-    console.log('sidebar.width');
-    console.log(sidebar.style.width);
+    // console.log('opAudioBtn.left =' + openAudioButton.style.left);
+    // console.log('sidebar.width = ' + sidebar.style.width);
 }
 
 hideMenuButton.addEventListener("click", closeSidebarMenu);
@@ -415,7 +410,6 @@ function openAudioContainer() {
 
 hideAudioButton.addEventListener("click", closeAudioContainer);
 function closeAudioContainer () {
-    console.log('closeAudioContainer');
     audioContainer.style.display = 'none';
     openAudioButton.style.display = 'block';
     // audioContainer.style.left = `10rem`; //glue to bar
@@ -445,5 +439,8 @@ function hideShowCategoryElements (event) {
 window.addEventListener('resize', resizeWindow)
 function resizeWindow (){
     console.log('resiz');
-    initResizerFn( resizer, sidebar );
+    // initResizerFn(resizer, sidebar);
+    audioContainer.style.width = window.innerWidth - cwGlobal + 'px'; //OK
+
 }
+resizeWindow;

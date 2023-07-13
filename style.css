@@ -63,14 +63,16 @@ html, body {
     text-align: center;
     padding-right: 0.5rem; /* to compensate resizer width*/ 
 }
- 
+
 .resizer {
-    width: 0.5rem;
-    top: 0;
-    right: 0;
-    cursor: col-resize;
-    height: 100%;
     position: absolute;
+    overflow: hidden;
+    width: 0.5rem;
+    height: 100%;
+    /* left: 0; */
+    right: 0;
+
+    cursor: col-resize;
     background-color: rgb(255, 204, 0);
 }
 
@@ -165,6 +167,7 @@ input[type="color"] {
 #hideMenuButton{
     top:50%;
     /* left: calc(2rem - 1rem); */
+     
     left: var(--initialSidebarWidth);
     font-size: 2rem;
     color: rgba(1,1,1,0.5);
@@ -179,6 +182,7 @@ input[type="color"] {
     /* padding: 0.5rem; */
     width: calc(100% - var(--initialSidebarWidth) - var(--sidebarAudioSpacing)*3);
     left: calc( var(--sidebarAudioSpacing) + var(--initialSidebarWidth));
+    justify-content: center;
 }
 
 #audio1{
@@ -189,7 +193,7 @@ input[type="color"] {
 #hideAudioButton{
     position: relative;
     top: -3px; /*to touch the audio player*/
-    left: 50%;
+    left: calc(50% - 4rem); /*minus button width*/
     /* left: 50%; */
     /* left: calc(2rem - 1rem); */
     /* width:80%; */
