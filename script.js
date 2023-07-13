@@ -6,7 +6,6 @@ const rangeInputs = document.querySelectorAll('.slider input[type="range"]');
 const textInputs = document.querySelectorAll('.slider input[type="text"]');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-// canvas.height = window.innerWidth; //to make widt/heig 1:1
 const ctx = canvas.getContext('2d');
 const audio1 = document.getElementById('audio1');
 audio1.volume = 0.2;
@@ -102,26 +101,7 @@ function updateField(e) {
 }
 
 function updateValues() {
-    [amplification,
-    widthMultiplier,
-    highCutoff,
-    turns,
-    polygonSymmetry,
-    inset,
-    initialRadius,
-    initialRotation,
-    rotationSpeed,
-    alphaRGB,
-    lowMultiplierRed,
-    highMultiplierRed,
-    respMultiplierRed,
-    lowMultiplierGreen,
-    highMultiplierGreen,
-    respMultiplierGreen,
-    lowMultiplierBlue,
-    highMultiplierBlue,
-    respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
-
+    [amplification, widthMultiplier, highCutoff, turns, polygonSymmetry, inset, initialRadius, initialRotation, rotationSpeed, alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
     barWidth = widthMultiplier * (canvas.width/fftSize);
     bufferLength = fftSize/2;
@@ -188,7 +168,6 @@ function reloadAnimation() {
     analyser.fftSize = fftSize;
     const bufferLength = analyser.frequencyBinCount;    //data samples available - fftSize/2
     const dataArray = new Uint8Array(bufferLength);
-    let barHeight;
     let x = 0;
 
     function animate() {
@@ -206,16 +185,16 @@ function reloadAnimation() {
         setShadow(); //necessary to restore shadows after canvas resizing
         analyser.getByteFrequencyData(dataArray); //copies the current frequency data into a Uint8Array
         if (visualizerType == 'horizontal bars') {
-            drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
+            drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, dataArray);
         }
         else if (visualizerType == 'horizontal bars log') {
-            drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
+            drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, dataArray);
         }
         else if (visualizerType == 'radial bars') {
-            drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
+            drawVisualizerRadialBars(bufferLengthAfterCutoff, barWidth, dataArray);
         }
         else if (visualizerType == 'radial bars log') {
-            drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray);
+            drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, barWidth, dataArray);
         }
         else if (visualizerType == 'polygons') {
             drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray);
@@ -234,7 +213,7 @@ function mixingColors(i, dataArray){
 };
 
 // HORIZONTAL BARS VISUALIZER
-function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
+function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, dataArray){
     for (let i = 0; i < bufferLengthAfterCutoff; i++){
         barHeight = dataArray[i] * amplification * 2;
         ctx.fillStyle = mixingColors(i, dataArray);
@@ -242,6 +221,44 @@ function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, barH
         x += barWidth;
     }
 };
+
+// HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
+function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, dataArray){
+    for (let i = 0; i < bufferLengthAfterCutoff; i++){
+        barHeight = Math.log(dataArray[i]) * amplification * 60;
+        ctx.fillStyle = mixingColors(i, dataArray);
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth;
+    }
+}
+
+// RADIAL BARS VISUALIZER
+function drawVisualizerRadialBars(bufferLengthAfterCutoff, barWidth, dataArray){
+    for (let i=0; i<(bufferLengthAfterCutoff); i++){
+        barHeight = dataArray[i] * amplification * 2;
+        ctx.save(); //canvas values to restore later
+        ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
+        // console.log(initialRotation);
+        ctx.rotate(Number(initialRotation * Math.PI * 2) + Number(frameTurn) + (turns * i * Math.PI * 2 / bufferLength));
+        ctx.fillStyle = mixingColors(i, dataArray);
+        ctx.fillRect(0, 0, barWidth, barHeight);
+        ctx.restore(); //to the ctx.save
+    }
+}
+
+// RADIAL BARS VISUALIZER - LOGARITHMIC SCALE
+function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, barWidth, dataArray){
+    for (let i=0; i<(bufferLengthAfterCutoff); i++){
+        barHeight = Math.log(dataArray[i]) * amplification * 60;
+        ctx.save(); //canvas values to restore later
+        ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
+        // ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
+        ctx.rotate(Number(initialRotation * Math.PI * 2) + Number(frameTurn) + (turns * i * Math.PI * 2 / bufferLength));
+        ctx.fillStyle = mixingColors(i, dataArray);
+        ctx.fillRect(0, 0, barWidth, barHeight);
+        ctx.restore(); //to the ctx.save
+    }
+}
 
 // POLYGONS VISUALIZER
 function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
@@ -259,7 +276,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
             ctx.lineWidth = 0;
         }
         else {
-        ctx.lineWidth = widthMultiplier * amplification * 2 * (dataArray[i]/255) ; // widthMultiplier * (0-1)
+        ctx.lineWidth = widthMultiplier/16 * amplification * (dataArray[i]/255) ;
         ctx.beginPath();
         ctx.save(); //creates snapshot of global settings
         ctx.translate(canvas.width/2, canvas.height/2);
@@ -281,53 +298,13 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
 }
 }
 
-// HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
-function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
-    for (let i = 0; i < bufferLengthAfterCutoff; i++){
-        barHeight = Math.log(dataArray[i]) * amplification * 60;
-        ctx.fillStyle = mixingColors(i, dataArray);
-        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
-        x += barWidth;
-    }
-}
-
-// RADIAL BARS VISUALIZER
-function drawVisualizerRadialBars(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
-    for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        barHeight = dataArray[i] * amplification * 2;
-        ctx.save(); //canvas values to restore later
-        ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
-        // console.log(initialRotation);
-        ctx.rotate(Number(initialRotation * Math.PI * 2) + Number(frameTurn) + (turns * i * Math.PI * 2 / bufferLength));
-        ctx.fillStyle = mixingColors(i, dataArray);
-        ctx.fillRect(0, 0, barWidth, barHeight);
-        x += barWidth;
-        ctx.restore(); //to the ctx.save
-    }
-}
-
-// RADIAL BARS VISUALIZER - LOGARITHMIC SCALE
-function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, x, barWidth, barHeight, dataArray){
-    for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        barHeight = Math.log(dataArray[i]) * amplification * 60;
-        ctx.save(); //canvas values to restore later
-        ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
-        // ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
-        ctx.rotate(Number(initialRotation * Math.PI * 2) + Number(frameTurn) + (turns * i * Math.PI * 2 / bufferLength));
-        ctx.fillStyle = mixingColors(i, dataArray);
-        ctx.fillRect(0, 0, barWidth, barHeight);
-        x += barWidth;
-        ctx.restore(); //to the ctx.save
-    }
-}
-
-// ______________________________NEW CSS______________________________
+// ______________________________SIDEBAR STUFF______________________________
 let resizer = document.querySelector(".resizer");
 let sidebar = document.querySelector(".sidebar");
 let cwGlobal = 500; //has to be the same as sidebar width in css
-let MaxSidebarX = 1200;
-// let MaxSidebarX = window.innerWidth*0.6; //changes with refresh
-let MinSidebarX = 150;
+// let MaxSidebarX = 1500;
+let MaxSidebarX = window.innerWidth*0.9; //changes with refresh
+let MinSidebarX = 250;
 let sidebarAudioSpacing = 5; //px
 
 function initResizerFn( resizer, sidebar ) {
@@ -347,13 +324,10 @@ function initResizerFn( resizer, sidebar ) {
         
         if ( cw >= MinSidebarX && cw <= MaxSidebarX ) {
             sidebar.style.width = `${ cw }px`;
+            hideMenuButton.style.left = `${ cw }px`; //glue to bar
             audioContainer.style.left = `${ cw }px`; //glue to bar
-            // audioContainer.style.left = cw + sidebarAudioSpacing + 'px'; //OK
-            // audioContainer.style.width = window.innerWidth - cw - 2*sidebarAudioSpacing +'px'; //OK
             audioContainer.style.width = window.innerWidth - cw + 'px';
             openAudioButton.style.left = cw + sidebarAudioSpacing + 'px';
-            hideMenuButton.style.left = `${ cw }px`; //glue to bar
-            // console.log(cw);
             cwGlobal = cw;
         }
         else if (cw < MinSidebarX) {
@@ -362,14 +336,12 @@ function initResizerFn( resizer, sidebar ) {
         else if (cw > MaxSidebarX) {
             cwGlobal = MaxSidebarX;
         }
-        // resizer.style.height = sidebar.style.height;
     }
 
     function rs_mouseupHandler() {
     // remove event mousemove && mouseup
     document.removeEventListener("mouseup", rs_mouseupHandler);
     document.removeEventListener("mousemove", rs_mousemoveHandler);
-    // console.log(cwGlobal);
     }
 
     resizer.addEventListener("mousedown", rs_mousedownHandler);
@@ -379,8 +351,6 @@ initResizerFn( resizer, sidebar );
 
 openMenuButton.addEventListener("click", openSidebarMenu);
 function openSidebarMenu() {
-    // audioContainer.style.left = `${ cwGlobal }px`; //glue to bar
-    // audioContainer.style.width = window.innerWidth - cwGlobal +'px';
     openMenuButton.style.display = 'none';
     audioContainer.style.left = cwGlobal + 'px';
     audioContainer.style.width = window.innerWidth - cwGlobal +'px'; //OK
@@ -389,8 +359,6 @@ function openSidebarMenu() {
     hideMenuButton.style.left = cwGlobal + 'px';
     hideMenuButton.style.display = 'block';
     openAudioButton.style.left = cwGlobal + sidebarAudioSpacing + 'px';
-    // console.log('opAudioBtn.left =' + openAudioButton.style.left);
-    // console.log('sidebar.width = ' + sidebar.style.width);
 }
 
 hideMenuButton.addEventListener("click", closeSidebarMenu);
@@ -400,10 +368,7 @@ function closeSidebarMenu () {
     openAudioButton.style.left = `8rem`; //hardcoded value for now
     openMenuButton.style.display = 'block';
     audioContainer.style.left = `7.5rem`; //hardcoded value for now = 75px
-    audioContainer.style.width = window.innerWidth -75 + 'px'; //hardcoded value for now
-
-    // audioContainer.style.width = window.innerWidth - 2*sidebarAudioSpacing +'px'; //OK
-    
+    audioContainer.style.width = window.innerWidth -75 + 'px'; //hardcoded value for now    
 };
 
 openAudioButton.addEventListener("click", openAudioContainer);
@@ -416,8 +381,6 @@ hideAudioButton.addEventListener("click", closeAudioContainer);
 function closeAudioContainer () {
     audioContainer.style.display = 'none';
     openAudioButton.style.display = 'block';
-    // audioContainer.style.left = `10rem`; //glue to bar
-    // audioContainer.style.width = window.innerWidth -120 +'px'; //hardcoded value for now
 };
 
 let sidebarCategories = document.querySelectorAll(".sidebarCategory");
@@ -443,9 +406,11 @@ function hideShowCategoryElements (event) {
     }
 };
 
-//WINDOW RESIZING FIRES SIDEBAR RESIZER
+//WINDOW RESIZING
 window.addEventListener('resize', resizeWindow)
 function resizeWindow (){
+    console.log('resizeWindow');
+    MaxSidebarX = window.innerWidth*0.9;
     if (openMenuButton.style.display == 'block') {
         audioContainer.style.width = window.innerWidth -75 + 'px'; //hardcoded
     }
