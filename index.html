@@ -84,8 +84,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class = "sidebarElement">
-                        <div class="slider" id="turnsSliderDiv">
+                    <div class = "sidebarElement" id="turnsSliderDiv">
+                        <div class="slider">
                             <p>turns</p>
                             <span>
                                 <input id="turns" type="range" value="1" min="-10" max="10" step="0.001" data-field="turns" />
@@ -93,8 +93,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class = "sidebarElement">
-                        <div class="slider" id="polygonSymmetrySliderDiv">
+                    <div class = "sidebarElement" id="polygonSymmetrySliderDiv">
+                        <div class="slider">
                             <p>polygonSymmetry</p>
                             <span>
                                 <input id="polygonSymmetry" type="range" value="5" min="2" max="100" step="1" data-field="polygonSymmetry" />
@@ -102,8 +102,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class = "sidebarElement">
-                        <div class="slider" id="insetSliderDiv">
+                    <div class = "sidebarElement" id="insetSliderDiv">
+                        <div class="slider">
                             <p>inset</p>
                             <span>
                                 <input id="inset" type="range" value="0.755" min="-10" max="10" step="0.001" data-field="inset" />
@@ -111,8 +111,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class = "sidebarElement">
-                        <div class="slider" id="initialRadiusSliderDiv">
+                    <div class = "sidebarElement" id="initialRadiusSliderDiv">
+                        <div class="slider">
                             <p>initial radius</p>
                             <span>
                                 <input id="initialRadius" type="range" value="0" min="-400" max="400" step="0.1" data-field="initialRadius" />
@@ -120,8 +120,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class = "sidebarElement">
-                        <div class="slider" id="initialRotationSliderDiv">
+                    <div class = "sidebarElement" id="initialRotationSliderDiv">
+                        <div class="slider">
                             <p>initial rotation</p>
                             <span>
                                 <input id="initialRotation" type="range" value="0.01" min="0" max="1" step="0.001" data-field="initialRotation" />
@@ -129,8 +129,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class = "sidebarElement">
-                        <div class="slider" id="rotationSpeedSliderDiv">
+                    <div class = "sidebarElement" id="rotationSpeedSliderDiv">
+                        <div class="slider">
                             <p>rotation speed</p>
                             <span>
                                 <input id="rotationSpeed" type="range" value="0.2" min="-1" max="1" step="0.001" data-field="rotationSpeed" />
@@ -155,6 +155,7 @@
                         RED lo/hi/amp response
                     <div class = "sidebarElement"> 
                         <div class="slider">
+                            <p>low freq response</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="lowMultiplierRed" />
                                 <input type="text" value="0" data-field="lowMultiplierRed" />
@@ -163,6 +164,7 @@
                     </div>
                     <div class = "sidebarElement"> 
                         <div class="slider">
+                            <p>high freq response</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="highMultiplierRed" />
                                 <input type="text" value="0" data-field="highMultiplierRed" />
@@ -171,6 +173,7 @@
                     </div>
                     <div class = "sidebarElement"> 
                         <div class="slider">
+                            <p>amplitude response</p>
                             <span>
                                 <input type="range" value="1" min="0" max="1" step="0.01" data-field="respMultiplierRed" />
                                 <input type="text" value="1" data-field="respMultiplierRed" />
@@ -180,6 +183,7 @@
                         GREEN lo/hi/amp response
                     <div class = "sidebarElement"> 
                         <div class="slider">
+                            <p>low freq response</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="lowMultiplierGreen" />
                                 <input type="text" value="0" data-field="lowMultiplierGreen" />
@@ -188,6 +192,7 @@
                     </div>
                     <div class = "sidebarElement"> 
                         <div class="slider">
+                            <p>high freq response</p>
                             <span>
                                 <input type="range" value="1" min="0" max="1" step="0.01" data-field="highMultiplierGreen" />
                                 <input type="text" value="1" data-field="highMultiplierGreen" />
@@ -197,6 +202,7 @@
 
                     <div class = "sidebarElement"> 
                         <div class="slider">
+                            <p>amplitude response</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="respMultiplierGreen" />
                                 <input type="text" value="0" data-field="respMultiplierGreen" />
@@ -206,6 +212,7 @@
                         BLUE lo/hi/amp response
                     <div class = "sidebarElement"> 
                         <div class="slider">
+                            <p>low freq response</p>
                             <span>
                                 <input type="range" value="1" min="0" max="1" step="0.01" data-field="lowMultiplierBlue" />
                                 <input type="text" value="1" data-field="lowMultiplierBlue" />
@@ -214,6 +221,7 @@
                     </div>
                     <div class = "sidebarElement"> 
                         <div class="slider">
+                            <p>high freq response</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="highMultiplierBlue" />
                                 <input type="text" value="0" data-field="highMultiplierBlue" />
@@ -222,6 +230,7 @@
                     </div>
                     <div class = "sidebarElement"> 
                         <div class="slider">
+                            <p>amplitude response</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="respMultiplierBlue" />
                                 <input type="text" value="0" data-field="respMultiplierBlue" />
@@ -248,8 +257,8 @@
                         <b>Color2:</b>
                         <input type="color" id="colorInput2">
                     </div>
-                    <div class = "sidebarElement"> 
-                        <div class="slider" id="gradAngleSliderDiv">
+                    <div class = "sidebarElement" id="gradAngleSliderDiv"> 
+                        <div class="slider">
                             <p>GradAngle</p>
                             <span>
                                 <input id="gradAngle" type="range" value="0" min="0" max="360" step="1" data-field="gradAngle" />
@@ -257,8 +266,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class = "sidebarElement"> 
-                        <div class="slider" id="gradPosition1SliderDiv">
+                    <div class = "sidebarElement" id="gradPosition1SliderDiv"> 
+                        <div class="slider">
                             <p>Position 1</p>
                             <span>
                                 <input id="gradPosition1" type="range" value="0" min="0" max="100" step="1" data-field="gradPosition1" />
@@ -266,8 +275,8 @@
                             </span>
                         </div>
                     </div>
-                    <div class = "sidebarElement"> 
-                        <div class="slider" id="gradPosition2SliderDiv">
+                    <div class = "sidebarElement" id="gradPosition2SliderDiv"> 
+                        <div class="slider">
                             <p>Position 2</p>
                             <span>
                                 <input id="gradPosition2" type="range" value="100" min="0" max="100" step="1" data-field="gradPosition2" />

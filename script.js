@@ -150,25 +150,28 @@ function updateVisualizerType() {
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
         document.getElementById('initialRotationSliderDiv').style.display = 'block';
         document.getElementById('rotationSpeedSliderDiv').style.display = 'block';
+        document.getElementById('initialRadiusSliderDiv').style.display = 'none';
+        document.getElementById('insetSliderDiv').style.display = 'none';
     }
     else if (visualizerType == 'polygons'){
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'block';
         document.getElementById('initialRotationSliderDiv').style.display = 'block';
         document.getElementById('rotationSpeedSliderDiv').style.display = 'block';
+        document.getElementById('initialRadiusSliderDiv').style.display = 'block';
+        document.getElementById('insetSliderDiv').style.display = 'block';
     }
     else {
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
         document.getElementById('initialRotationSliderDiv').style.display = 'none';
         document.getElementById('rotationSpeedSliderDiv').style.display = 'none';
+        document.getElementById('initialRadiusSliderDiv').style.display = 'none';
+        document.getElementById('insetSliderDiv').style.display = 'none';
     }
     // console.log(visualizerType);
 }
 updateVisualizerType(); //to disable unnecessary elements at the start
-
-//RELOAD ANIMATION
-// button.addEventListener('click', reloadAnimation);
 
 let lastRequestId;
 
@@ -423,15 +426,19 @@ sidebarCategories.forEach(function(elem) {
 });
 
 function hideShowCategoryElements (event) {
-    thisElemId = event.target.id;
-    console.log(thisElemId);
-    if (thisElemId.includes('sidebarCategory')){ //to disable hiding more inner elements
-        childDiv = event.target.children[0]; // [0] is category name
-        if (childDiv.style.display != 'none') {
-            childDiv.style.display = 'none';
-        }
-        else {
-            childDiv.style.display = 'block';
+    clickedElemId = event.target.id;
+    if (clickedElemId.includes('sidebarCategory')){ //to disable hiding more inner elements
+        targetsChildren = event.target.children;
+        for (let i=0; i<(targetsChildren.length); i++){
+            thisTarget = targetsChildren[i];
+            if (thisTarget.id.includes('sidebarInsideCategoryElements')){
+                if (thisTarget.style.display != 'none') {
+                    thisTarget.style.display = 'none';
+                }
+                else {
+                    thisTarget.style.display = 'block';
+                }
+            }
         }
     }
 };

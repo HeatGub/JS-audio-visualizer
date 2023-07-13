@@ -38,18 +38,6 @@ html, body {
     /* filter: blur(5px); */
 }
 
-#fileupload {
-    color: wheat;
-    z-index: 100; /* always on top on other elements */
-    cursor: pointer;
-}
-
-::-webkit-scrollbar{
-    /* background: rgba(1,1,1,0.2); */
-    width: 0rem;
-}
-
-
 .sidebar {
     position: relative;
     /* position: absolute; */
@@ -76,10 +64,23 @@ html, body {
     background-color: rgb(255, 204, 0);
 }
 
+#fileupload {
+    color: rgb(245, 222, 179);
+    font-size: 1.6rem;
+    z-index: 100; /* always on top on other elements */
+    cursor: pointer;
+}
+
+::-webkit-scrollbar{
+    /* background: rgba(1,1,1,0.2); */
+    width: 0rem;
+}
+
 input[type="range"] {
-    width: calc(98% - 4.5rem); /* 4.5rem because text input width is not enough and it changes line*/
+    width: calc(98% - 5rem); /* 4.5rem because text input width is not enough and it changes line*/
     height: 0.6rem;
     cursor: pointer;
+    margin-top: -1rem;
     /* -webkit-appearance: none; */
     /* background: rgba(178, 174, 174, 0.6); */
     /* border-radius: 0rem; */
@@ -89,22 +90,22 @@ input[type="range"] {
 }
 
 input[type="text"] {
-    width: 3.7rem;
+    width: 4.2rem;
     margin-right: 0.5rem; /*for spacing between the resize bar*/
     border-radius: 0.5rem;
+    font-size: 1.6rem;
     /* display: block; */
 }
 
 input[type="color"] {
     width: 98%;
-    margin-right: 0.5rem;
     border-radius: 0.5rem;
     cursor: pointer;
 }
 
 .sidebarCategory{
     background-color: rgb(0, 0, 0);
-    font-size: 3rem;
+    font-size: 3.2rem;
     border-radius: 2rem;
     padding: 0.5rem;
     font-weight: 600;
@@ -118,14 +119,15 @@ input[type="color"] {
 .sidebarInsideCategoryElements{
     /* background-color: bisque; */
     cursor: auto;
-    font-size: 1.4rem;
+    /* font-size: 1.4rem; */
+    font-size: 2rem;
     /* transition: 1s; */
 }
 
 .sidebarElement{
     font-size: 2rem;
     font-weight: 400;
-    padding: 0.5rem 0rem;
+    padding: 0.2rem 0rem;
     border-radius: 1rem;
     margin: 0.5rem 0rem;
     color:rgb(230, 225, 213);
@@ -199,7 +201,7 @@ input[type="color"] {
 #hideAudioButton{
     position: relative;
     top: -3px; /*to touch the audio player*/
-    left: calc(50% - 4rem); /*minus button width hardcoded*/
+    left: calc(50% - 4.8rem); /*minus button width hardcoded*/
     /* left: 50%; */
     /* left: calc(2rem - 1rem); */
     /* width:80%; */
