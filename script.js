@@ -440,4 +440,10 @@ function hideShowCategoryElements (event) {
         }
     }
 };
-// ______________________________NEW CSS______________________________
+
+//WINDOW RESIZING FIRES SIDEBAR RESIZER
+window.addEventListener('resize', resizeWindow)
+function resizeWindow (){
+    console.log('resiz');
+    initResizerFn( resizer, sidebar );
+}
