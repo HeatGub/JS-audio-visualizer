@@ -345,8 +345,9 @@ function initResizerFn( resizer, sidebar ) {
         if ( cw >= MinSidebarX && cw <= MaxSidebarX ) {
             sidebar.style.width = `${ cw }px`;
             audioContainer.style.left = `${ cw }px`; //glue to bar
-            audioContainer.style.left = cw + sidebarAudioSpacing + 'px'; //OK
-            audioContainer.style.width = window.innerWidth - cw - 2*sidebarAudioSpacing +'px'; //OK
+            // audioContainer.style.left = cw + sidebarAudioSpacing + 'px'; //OK
+            // audioContainer.style.width = window.innerWidth - cw - 2*sidebarAudioSpacing +'px'; //OK
+            audioContainer.style.width = window.innerWidth - cw + 'px';
             openAudioButton.style.left = cw + sidebarAudioSpacing + 'px';
             hideMenuButton.style.left = `${ cw }px`; //glue to bar
             // console.log(cw);
@@ -371,7 +372,6 @@ function initResizerFn( resizer, sidebar ) {
     resizer.addEventListener("mousedown", rs_mousedownHandler);
     console.log('initResizerFn');
 }
-
 initResizerFn( resizer, sidebar );
 
 openMenuButton.addEventListener("click", openSidebarMenu);
@@ -379,8 +379,8 @@ function openSidebarMenu() {
     // audioContainer.style.left = `${ cwGlobal }px`; //glue to bar
     // audioContainer.style.width = window.innerWidth - cwGlobal +'px';
     openMenuButton.style.display = 'none';
-    // audioContainer.style.left = cwGlobal + sidebarAudioSpacing + 'px'; //OK
-    audioContainer.style.width = window.innerWidth - cwGlobal - (2*sidebarAudioSpacing) +'px'; //OK
+    audioContainer.style.left = cwGlobal + 'px';
+    audioContainer.style.width = window.innerWidth - cwGlobal +'px'; //OK
     sidebar.style.width = cwGlobal + 'px';
     sidebar.style.display = 'block';
     hideMenuButton.style.left = cwGlobal + 'px';
@@ -394,10 +394,11 @@ hideMenuButton.addEventListener("click", closeSidebarMenu);
 function closeSidebarMenu () {
     sidebar.style.display = 'none';
     hideMenuButton.style.display = 'none';
-    openAudioButton.style.left = `10rem`; //hardcoded value for now
+    openAudioButton.style.left = `8rem`; //hardcoded value for now
     openMenuButton.style.display = 'block';
-    audioContainer.style.left = `10rem`; //glue to bar
-    audioContainer.style.width = window.innerWidth -120 +'px'; //hardcoded value for now
+    audioContainer.style.left = `7.5rem`; //hardcoded value for now = 75px
+    audioContainer.style.width = window.innerWidth -75 + 'px'; //hardcoded value for now
+
     // audioContainer.style.width = window.innerWidth - 2*sidebarAudioSpacing +'px'; //OK
     
 };
@@ -438,9 +439,11 @@ function hideShowCategoryElements (event) {
 //WINDOW RESIZING FIRES SIDEBAR RESIZER
 window.addEventListener('resize', resizeWindow)
 function resizeWindow (){
-    console.log('resiz');
-    // initResizerFn(resizer, sidebar);
-    audioContainer.style.width = window.innerWidth - cwGlobal + 'px'; //OK
-
+    if (openMenuButton.style.display == 'block') {
+        audioContainer.style.width = window.innerWidth -75 + 'px'; //hardcoded
+    }
+    else {
+        audioContainer.style.left = cwGlobal + 'px';
+        audioContainer.style.width = window.innerWidth - cwGlobal +'px';
+    }
 }
-resizeWindow;

@@ -153,10 +153,14 @@ input[type="color"] {
     padding: 1rem 1rem;
 }
 
+.showHideButton:hover{
+    cursor: pointer;
+}
+
 #openMenuButton{
     position: absolute;
-    top: 1rem;
-    left: 1rem;
+    top: 0.5rem;
+    left: 0.5rem;
     display: none;
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 2rem;
@@ -167,7 +171,6 @@ input[type="color"] {
 #hideMenuButton{
     top:50%;
     /* left: calc(2rem - 1rem); */
-     
     left: var(--initialSidebarWidth);
     font-size: 2rem;
     color: rgba(1,1,1,0.5);
@@ -180,20 +183,23 @@ input[type="color"] {
     top: 2.5rem;
     /* background-color: #1919b1; */
     /* padding: 0.5rem; */
-    width: calc(100% - var(--initialSidebarWidth) - var(--sidebarAudioSpacing)*3);
-    left: calc( var(--sidebarAudioSpacing) + var(--initialSidebarWidth));
+    /* width: calc(100% - var(--initialSidebarWidth) - var(--sidebarAudioSpacing)*3); */
+    /* left: calc( var(--sidebarAudioSpacing) + var(--initialSidebarWidth)); */
+    width: calc(100% - var(--initialSidebarWidth));
+    left:  var(--initialSidebarWidth);
     justify-content: center;
 }
 
 #audio1{
     width: 100%;
     height: 4rem;
+    padding: 0 1rem;
 }
 
 #hideAudioButton{
     position: relative;
     top: -3px; /*to touch the audio player*/
-    left: calc(50% - 4rem); /*minus button width*/
+    left: calc(50% - 4rem); /*minus button width hardcoded*/
     /* left: 50%; */
     /* left: calc(2rem - 1rem); */
     /* width:80%; */
@@ -208,7 +214,7 @@ input[type="color"] {
     position: absolute;
     /* position: relative; */
     left: calc(var(--sidebarAudioSpacing) + var(--initialSidebarWidth)); /*+5px space*/
-    top: 1rem;
+    top: 0.5rem;
     /* left: 10rem; */
     display: none;
     background-color: rgba(255, 255, 255, 0.2);
