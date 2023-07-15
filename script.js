@@ -23,7 +23,7 @@ let amplification = document.getElementById('amplification').value;
 let widthMultiplier = document.getElementById('widthMultiplier').value;
 let visualizerType = document.getElementById('droplistVisualizers').value;
 let polygonSymmetry = document.getElementById('polygonSymmetry').value;
-let barWidth = widthMultiplier * (canvas.width/fftSize);
+let barWidth = widthMultiplier * (canvas.width/fftSize*2);
 // ________ROTATION________
 let frameCounter = 1;
 let rotationSpeed = document.getElementById('rotationSpeed').value;
@@ -38,7 +38,7 @@ file.addEventListener('change', function(){
     const files = this.files;
     audio1.src = URL.createObjectURL(files[0]);
 });
-
+// _____________________BACKGROUND_____________________
 colorInput1.addEventListener('input', setBackground);
 colorInput2.addEventListener('input', setBackground);
 droplistBackgrounds.addEventListener('input', setBackground);
@@ -54,6 +54,7 @@ function setBackground() {
     }
 }
 setBackground();
+// _____________________BACKGROUND_____________________
 
 // _____________________SHADOW_____________________
 colorInputShadow.addEventListener('input', setShadow);
@@ -103,7 +104,7 @@ function updateField(e) {
 function updateValues() {
     [amplification, widthMultiplier, highCutoff, turns, polygonSymmetry, inset, initialRadius, initialRotation, rotationSpeed, alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
-    barWidth = widthMultiplier * (canvas.width/fftSize);
+    barWidth = widthMultiplier * (canvas.width/fftSize*2);
     bufferLength = fftSize/2;
     highCutoff = fftSize/2 * highCutoff;
     bufferLengthAfterCutoff = bufferLength - highCutoff;
@@ -132,6 +133,11 @@ function updateVisualizerType() {
         document.getElementById('rotationSpeedSliderDiv').style.display = 'block';
         document.getElementById('initialRadiusSliderDiv').style.display = 'none';
         document.getElementById('insetSliderDiv').style.display = 'none';
+
+        document.getElementById('widthMultiplier').min = 0.01;
+        document.getElementById('widthMultiplier').max = 50;
+        document.getElementById('widthMultiplier').value = 0.5;
+        document.getElementById('widthMultiplierTextInput').value = 0.5;
     }
     else if (visualizerType == 'polygons'){
         document.getElementById('turnsSliderDiv').style.display = 'none';
@@ -140,16 +146,26 @@ function updateVisualizerType() {
         document.getElementById('rotationSpeedSliderDiv').style.display = 'block';
         document.getElementById('initialRadiusSliderDiv').style.display = 'block';
         document.getElementById('insetSliderDiv').style.display = 'block';
+
+        document.getElementById('widthMultiplier').min = 0.001;
+        document.getElementById('widthMultiplier').max = 100;
+        document.getElementById('widthMultiplier').value = 5;
+        document.getElementById('widthMultiplierTextInput').value = 5;
     }
-    else {
+    else { //horizontal bars//
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
         document.getElementById('initialRotationSliderDiv').style.display = 'none';
         document.getElementById('rotationSpeedSliderDiv').style.display = 'none';
         document.getElementById('initialRadiusSliderDiv').style.display = 'none';
         document.getElementById('insetSliderDiv').style.display = 'none';
+
+        document.getElementById('widthMultiplier').min = 0.1;
+        document.getElementById('widthMultiplier').max = 10;
+        document.getElementById('widthMultiplier').value = 1.33;
+        document.getElementById('widthMultiplierTextInput').value = 1.33;
     }
-    // console.log(visualizerType);
+    updateValues();
 }
 updateVisualizerType(); //to disable unnecessary elements at the start
 
@@ -235,7 +251,7 @@ function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, d
 // RADIAL BARS VISUALIZER
 function drawVisualizerRadialBars(bufferLengthAfterCutoff, barWidth, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        barHeight = dataArray[i] * amplification * 2;
+        barHeight = dataArray[i] * amplification;
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         // console.log(initialRotation);
@@ -249,7 +265,7 @@ function drawVisualizerRadialBars(bufferLengthAfterCutoff, barWidth, dataArray){
 // RADIAL BARS VISUALIZER - LOGARITHMIC SCALE
 function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, barWidth, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        barHeight = Math.log(dataArray[i]) * amplification * 60;
+        barHeight = Math.log(dataArray[i]) * amplification * 30;
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         // ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
