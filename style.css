@@ -307,15 +307,12 @@ input[type="color"] {
 #audio1::-webkit-media-controls-play-button{
     background-color: var(--textColorVariable);
     border-radius: 50%;
-    color: var(--textColorVariable);
 }
 
 #audio1::-webkit-media-controls-mute-button{
-    color: var(--textColorVariable);
-    background-color: rgba(1,1,1,0.9);
+    background-color: var(--textColorVariable);
     border-radius: 50%;
 }
-
 
 #audio1::-webkit-media-controls-volume-slider{
     /* background-color: var(--textColorCategoryAlpha050); */

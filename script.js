@@ -38,6 +38,29 @@ file.addEventListener('change', function(){
     const files = this.files;
     audio1.src = URL.createObjectURL(files[0]);
 });
+
+// STARTING INFO DISPLAY
+function setStartingInfo(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
+    ctx.font = "4rem Audiowide";
+    ctx.fillStyle = 'rgba(200,200,200,0.7)';
+    ctx.textAlign = "center";
+    ctx.shadowColor = 'rgba(250,250,250,0.1)';
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 20;
+    ctx.shadowBlur = 2;
+
+    const startingText = 'UP - sidebar \nDOWN - player\nSPACE - pause\nSHIFT - buttons visibility\nI - show this list (while paused)\n Resize the sidebar by dragging its edge\nFocus the slider to change its value with side arrows';
+    const x = 500;
+    const y = 500;
+    const lineheight = 100;
+    const lines = startingText.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+    ctx.fillText(lines[i], canvas.width/2, canvas.height/2 -300 + (i * lineheight));
+    }
+}
+setStartingInfo();
+
 // _____________________BACKGROUND_____________________
 colorInput1.addEventListener('input', setBackground);
 colorInput2.addEventListener('input', setBackground);
@@ -437,7 +460,7 @@ function hideShowCategoryElements (event) {
 //WINDOW RESIZING
 window.addEventListener('resize', resizeWindow)
 function resizeWindow (){
-    console.log('resizeWindow');
+    // console.log('resizeWindow');
     MaxSidebarX = window.innerWidth*0.9;
     if (openMenuButton.style.display == 'block') {
         audioContainer.style.width = window.innerWidth + 'px';
@@ -452,10 +475,49 @@ function resizeWindow (){
 // ______________________________HOTKEYS______________________________
 buttonsInvisible = false;
 
-// "ARROW UP" HOTKEY FOR BUTTONS VISIBILITY 
 document.onkeydown = function(e) {
     console.log(e.which);
-    if (e.which == 38) {
+
+    // "ARROW UP" HOTKEY FOR SIDEBAR
+    if (e.which == 38) { 
+        e.preventDefault();
+        if (isSidebarHidden == false) {
+            closeSidebarMenu();
+        }
+        else {
+            openSidebarMenu();
+        }    
+    } 
+
+    // "ARROW DOWN" HOTKEY FOR AUDIO
+    if (e.which == 40) { 
+        e.preventDefault();
+        if (isAudioHidden == false) {
+            closeAudioContainer();
+        }
+        else {
+            openAudioContainer();
+        }    
+    }
+
+    // "SPACE" HOTKEY FOR PAUSING
+    if (e.which == 32) {
+        e.preventDefault(); //to prevent going to the end of the sidebar
+        if (audio1.paused) {
+            audio1.play();
+        }
+        else {
+            audio1.pause();
+        }    
+    }
+
+    // "I" HOTKEY FOR INFO DISPLAY
+    if (e.which == 73) {
+        setStartingInfo();
+    }
+
+    // "SHIFT" HOTKEY FOR BUTTONS VISIBILITY 
+    if (e.which == 16) {
         if (buttonsInvisible == false){
             if (isSidebarHidden == false){
                 openMenuButton.style.display = 'none';
@@ -489,35 +551,7 @@ document.onkeydown = function(e) {
         }
     }
 
-    // "SPACE" HOTKEY FOR PAUSING
-    if (e.which == 32) {
-        if (audio1.paused) {
-            audio1.play();
-        }
-        else {
-            audio1.pause();
-        }    
-    }
-
-    // "ARROW DOWN" HOTKEY FOR AUDIO
-    if (e.which == 40) { 
-        if (isAudioHidden == false) {
-            closeAudioContainer();
-        }
-        else {
-            openAudioContainer();
-        }    
-    }
-
-    // "ARROW LEFT" HOTKEY FOR SIDEBAR
-    if (e.which == 37) { 
-        if (isSidebarHidden == false) {
-            closeSidebarMenu();
-        }
-        else {
-            openSidebarMenu();
-        }    
-    }
+    
 };
 
 // ______________________________HOTKEYS______________________________
