@@ -173,7 +173,7 @@ let lastRequestId;
 
 function reloadAnimation() {
     window.cancelAnimationFrame(lastRequestId); //to cancel possible multiple animation request
-    console.log('reloadAnimation');
+    // console.log('reloadAnimation');
     if (typeof audioSource == 'undefined') { //without that condition there is an error on creating audioSource
         audioSource = audioContext.createMediaElementSource(audio1);
         analyser = audioContext.createAnalyser(); // create node
@@ -321,7 +321,6 @@ let cwGlobal = 500; //has to be the same as sidebar width in css
 // let MaxSidebarX = 1500;
 let MaxSidebarX = window.innerWidth*0.9; //changes with refresh
 let MinSidebarX = 250;
-let sidebarAudioSpacing = 5; //px
 
 function initResizerFn( resizer, sidebar ) {
 // track current mouse position in x var
@@ -343,7 +342,7 @@ function initResizerFn( resizer, sidebar ) {
             hideMenuButton.style.left = `${ cw }px`; //glue to bar
             audioContainer.style.left = `${ cw }px`; //glue to bar
             audioContainer.style.width = window.innerWidth - cw + 'px';
-            openAudioButton.style.left = cw + sidebarAudioSpacing + 'px';
+            openAudioButton.style.left = cw + 'px';
             cwGlobal = cw;
         }
         else if (cw < MinSidebarX) {
@@ -365,6 +364,9 @@ function initResizerFn( resizer, sidebar ) {
 }
 initResizerFn( resizer, sidebar );
 
+let isSidebarHidden = false;
+let isAudioHidden = false;
+
 openMenuButton.addEventListener("click", openSidebarMenu);
 function openSidebarMenu() {
     openMenuButton.style.display = 'none';
@@ -374,29 +376,39 @@ function openSidebarMenu() {
     sidebar.style.display = 'block';
     hideMenuButton.style.left = cwGlobal + 'px';
     hideMenuButton.style.display = 'block';
-    openAudioButton.style.left = cwGlobal + sidebarAudioSpacing + 'px';
+    openAudioButton.style.left = cwGlobal + 'px';
+    isSidebarHidden = false;
 }
 
 hideMenuButton.addEventListener("click", closeSidebarMenu);
 function closeSidebarMenu () {
     sidebar.style.display = 'none';
     hideMenuButton.style.display = 'none';
-    openAudioButton.style.left = `8rem`; //hardcoded value for now
+    openAudioButton.style.left = `0rem`;
     openMenuButton.style.display = 'block';
-    audioContainer.style.left = `7.5rem`; //hardcoded value for now = 75px
-    audioContainer.style.width = window.innerWidth -75 + 'px'; //hardcoded value for now    
+    audioContainer.style.left = '0rem';
+    audioContainer.style.width = window.innerWidth + 'px';
+    isSidebarHidden = true;
 };
 
 openAudioButton.addEventListener("click", openAudioContainer);
 function openAudioContainer() {
     openAudioButton.style.display = 'none';
     audioContainer.style.display = 'block';
+    isAudioHidden = false;
 }
 
 hideAudioButton.addEventListener("click", closeAudioContainer);
 function closeAudioContainer () {
     audioContainer.style.display = 'none';
     openAudioButton.style.display = 'block';
+    isAudioHidden = true;
+    if (isSidebarHidden == false){
+        openAudioButton.style.left = cwGlobal + 'px';
+    }
+    else if (isSidebarHidden == true){
+        openAudioButton.style.left = 0 + 'px';
+    }
 };
 
 let sidebarCategories = document.querySelectorAll(".sidebarCategory");
@@ -428,10 +440,84 @@ function resizeWindow (){
     console.log('resizeWindow');
     MaxSidebarX = window.innerWidth*0.9;
     if (openMenuButton.style.display == 'block') {
-        audioContainer.style.width = window.innerWidth -75 + 'px'; //hardcoded
+        audioContainer.style.width = window.innerWidth + 'px';
     }
     else {
         audioContainer.style.left = cwGlobal + 'px';
         audioContainer.style.width = window.innerWidth - cwGlobal +'px';
     }
 }
+// ______________________________SIDEBAR STUFF______________________________
+
+// ______________________________HOTKEYS______________________________
+buttonsInvisible = false;
+
+// "ARROW UP" HOTKEY FOR BUTTONS VISIBILITY 
+document.onkeydown = function(e) {
+    console.log(e.which);
+    if (e.which == 38) {
+        if (buttonsInvisible == false){
+            if (isSidebarHidden == false){
+                openMenuButton.style.display = 'none';
+            }
+            else if (isSidebarHidden == true){
+                openMenuButton.style.display = 'none';
+            }
+            if (isAudioHidden == false){
+                openAudioButton.style.display = 'none';
+            }
+            else if (isAudioHidden == true){
+                openAudioButton.style.display = 'none';
+            }
+            buttonsInvisible = true;
+        }
+
+        else if (buttonsInvisible == true){
+            if (isSidebarHidden == false){
+                openMenuButton.style.display = 'none';
+            }
+            else if (isSidebarHidden == true){
+                openMenuButton.style.display = 'block';
+            }
+            if (isAudioHidden == false){
+                openAudioButton.style.display = 'none';
+            }
+            else if (isAudioHidden == true){
+                openAudioButton.style.display = 'block';
+            }
+            buttonsInvisible = false;
+        }
+    }
+
+    // "SPACE" HOTKEY FOR PAUSING
+    if (e.which == 32) {
+        if (audio1.paused) {
+            audio1.play();
+        }
+        else {
+            audio1.pause();
+        }    
+    }
+
+    // "ARROW DOWN" HOTKEY FOR AUDIO
+    if (e.which == 40) { 
+        if (isAudioHidden == false) {
+            closeAudioContainer();
+        }
+        else {
+            openAudioContainer();
+        }    
+    }
+
+    // "ARROW LEFT" HOTKEY FOR SIDEBAR
+    if (e.which == 37) { 
+        if (isSidebarHidden == false) {
+            closeSidebarMenu();
+        }
+        else {
+            openSidebarMenu();
+        }    
+    }
+};
+
+// ______________________________HOTKEYS______________________________

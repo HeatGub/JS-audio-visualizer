@@ -202,8 +202,8 @@ input[type="color"] {
     border-radius: 0 1rem 1rem 0;
     text-align: center;
     padding: 1rem 1rem;
-    color: rgba(1,1,1,0.6);
-    background-color: rgba(255, 255, 255, 0.07);
+    color: rgba(1,1,1,0.8);
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 .showHideButton:hover{
@@ -212,12 +212,10 @@ input[type="color"] {
 
 #openMenuButton{
     position: absolute;
-    top: 0.5rem;
-    left: 0.5rem;
     display: none;
     border-radius: 2rem;
     z-index: 100;
-    /* text-align: center; */
+    margin: 0.5rem;
 }
 
 #hideMenuButton{
@@ -246,23 +244,28 @@ input[type="color"] {
 
 #hideAudioButton{
     position: relative;
-    /* top: -3px; to touch the audio player */
     left: calc(50% - 4.8rem); /*minus button width hardcoded*/
     font-size: 2rem;
     padding: 0.2rem 4rem;
     border-radius: 1rem 1rem 0 0;
-    background-color: rgba(255, 255, 255, 0.4);
+    /* background-color: rgba(255, 255, 255, 0.4); */
+    background: var(--textColorCategory);
 }
 
 #openAudioButton{
     position: absolute;
-    /* position: relative; */
     left: calc(var(--sidebarAudioSpacing) + var(--initialSidebarWidth)); /*+5px space*/
-    /* top: 0.5rem; */
-    bottom: 0.5rem;
+    bottom: 0rem;
     display: none;
     border-radius: 2rem;
     z-index: 100;
+    margin: 0.5rem;
+}
+
+#openAudioButton:hover, #openMenuButton:hover{
+    color: rgba(1,1,1,0.9);
+    background-color: rgba(255, 255, 255, 0.4);
+    transition: 0.1s;
 }
 
 #redName{
@@ -277,15 +280,11 @@ input[type="color"] {
     color:rgba(0, 0, 255, 0.803);
 }
 
-/* #audio1::-webkit-media-controls-panel{
-    background-color: rgba(0, 0, 0, 0.85);
+#audio1::-webkit-media-controls-panel{
+    /* background-color: rgba(0, 0, 0, 0.85); */
+    background: var(--textColorCategory);
 }
 
-
-#audio1::-webkit-media-controls-play-button{
-    background-color: var(--textColorCategoryAlpha050);
-    border-radius: 50%;
-}
 #audio1::-webkit-media-controls-current-time-display{
     color: var(--textColorVariable);
     text-shadow: none;
@@ -302,16 +301,26 @@ input[type="color"] {
     border-radius: 40px;
     padding: 0.1rem 0rem;
     width: 50%;
-    background: var(--textColorCategoryAlpha050);
+    /* background: var(--textColorCategoryAlpha050); */
 }
 
+#audio1::-webkit-media-controls-play-button{
+    background-color: var(--textColorVariable);
+    border-radius: 50%;
+    color: var(--textColorVariable);
+}
+
+#audio1::-webkit-media-controls-mute-button{
+    color: var(--textColorVariable);
+    background-color: rgba(1,1,1,0.9);
+    border-radius: 50%;
+}
+
+
 #audio1::-webkit-media-controls-volume-slider{
-    background-color: var(--textColorCategoryAlpha050);
+    /* background-color: var(--textColorCategoryAlpha050); */
+    background-color: var(--textColorVariable);
     border-radius: 50px;
     padding-left: 10px;
     padding-right: 10px;
 }
-#audio1::-webkit-media-controls-mute-button{
-    background-color: var(--textColorCategoryAlpha050);
-    border-radius: 50%;
-} */
