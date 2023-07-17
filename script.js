@@ -42,7 +42,7 @@ file.addEventListener('change', function(){
 // STARTING INFO DISPLAY
 function setStartingInfo(){
     ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
-    ctx.font = "4rem Audiowide";
+    ctx.font = "3rem Audiowide";
     ctx.fillStyle = 'rgba(200,200,200,0.7)';
     ctx.textAlign = "center";
     ctx.shadowColor = 'rgba(250,250,250,0.1)';
@@ -50,10 +50,10 @@ function setStartingInfo(){
     ctx.shadowOffsetY = 20;
     ctx.shadowBlur = 2;
 
-    const startingText = 'UP - sidebar \nDOWN - player\nSPACE - pause\nSHIFT - buttons visibility\nF11 - fullscreen mode\n Resize the sidebar by dragging its edge\nFocus the slider to change its value with side arrows';
+    const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nClose sidebar category by clicking its name\nFocus the slider to change its value with side arrows';
     const x = 500;
     const y = 500;
-    const lineheight = 100;
+    const lineheight = 80;
     const lines = startingText.split('\n');
     for (let i = 0; i < lines.length; i++) {
     ctx.fillText(lines[i], canvas.width/2, canvas.height/2 -300 + (i * lineheight));
@@ -408,7 +408,13 @@ function closeSidebarMenu () {
     sidebar.style.display = 'none';
     hideMenuButton.style.display = 'none';
     openAudioButton.style.left = `0rem`;
-    openMenuButton.style.display = 'block';
+    //dont show the opening button if buttonsInvisible
+    if (buttonsInvisible == true){
+        openMenuButton.style.display = 'none';
+    }
+    else if (buttonsInvisible == false){
+        openMenuButton.style.display = 'block';
+    }
     audioContainer.style.left = '0rem';
     audioContainer.style.width = window.innerWidth + 'px';
     isSidebarHidden = true;
@@ -431,6 +437,13 @@ function closeAudioContainer () {
     }
     else if (isSidebarHidden == true){
         openAudioButton.style.left = 0 + 'px';
+    }
+    //dont show the opening button if buttonsInvisible
+    if (buttonsInvisible == true){
+        openAudioButton.style.display = 'none';
+    }
+    else if (buttonsInvisible == false){
+        openAudioButton.style.display = 'block';
     }
 };
 
@@ -477,7 +490,7 @@ function resizeWindow (){
 buttonsInvisible = false;
 
 document.onkeydown = function(e) {
-    console.log(e.which);
+    // console.log(e.which);
 
     // "ARROW UP" HOTKEY FOR SIDEBAR
     if (e.which == 38) { 
@@ -510,6 +523,12 @@ document.onkeydown = function(e) {
         else {
             audio1.pause();
         }    
+    }
+
+    // "F11" HOTKEY FOR FULLSCREEN
+    if (e.which == 122) { 
+        e.preventDefault();
+        document.documentElement.requestFullscreen();
     }
 
     // "SHIFT" HOTKEY FOR BUTTONS VISIBILITY 

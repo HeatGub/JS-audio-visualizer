@@ -170,7 +170,7 @@ input[type="color"] {
     text-shadow: 3px -2px 1px var(--shadowColorCategory);
     outline: 2px solid var(--shadowColorCategory);
     background: var(--backgroundColorElementCategoryHover);
-    transition: 1s ease-in;
+    transition: 1s ease;
 }
 
 .sidebarInsideCategoryElements{
