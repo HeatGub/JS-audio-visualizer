@@ -13,6 +13,7 @@
     --textColorVariable: rgb(222, 215, 215, 0.9);
     --textColorCategory: rgb(24, 84, 214);
     --textColorCategoryAlpha050: rgba(24, 84, 214, 0.822);
+    --shadowColorCategory: rgb(16, 236, 148);
     --resizerWidth: 0.7rem;
 }
 
@@ -74,7 +75,8 @@ html, body {
 }
 
 ::-webkit-scrollbar{
-    width: 0rem;
+    /* width: 0rem; */
+    display: none;
 }
 
 #fileupload {
@@ -145,26 +147,35 @@ input[type="color"] {
 .sidebarCategory{
     background-color: rgba(0, 0, 0, 0.5);
     font-size: 3.2rem;
-    border-radius: 2rem;
+    border-radius: 1.5rem;
     padding: 0.5rem;
     font-weight: 600;
     margin: 0.5rem 0.2rem;
     cursor: pointer;
     color:var(--textColorCategory);
+    text-shadow: 1px -1px 1px var(--shadowColorCategory);
     margin: 1rem;
     overflow: hidden;
     /* border-color: red;
     border-width: 2rem; */
 }
+
+.sidebarCategory > *{
+    text-shadow: none;
+    border-radius: 1rem;
+}
+
 .sidebarCategory:hover{
+    box-shadow: 0 0 8px var(--shadowColorCategory);
+    text-shadow: 3px -2px 1px var(--shadowColorCategory);
+    outline: 2px solid var(--shadowColorCategory);
     background: var(--backgroundColorElementCategoryHover);
-    transition: 1s;
+    transition: 1s ease-in;
 }
 
 .sidebarInsideCategoryElements{
     /* background-color: bisque; */
     cursor: auto;
-    /* font-size: 1.4rem; */
     font-size: 2rem;
     /* transition: 1s; */
 }
@@ -187,9 +198,10 @@ input[type="color"] {
 }
 
 .sidebarElement:hover {
-    /* background-color: rgba(0, 0, 0, 0.9); */
     background-color: var(--textColorCategoryAlpha050);
-    transition: 0.5s;
+    box-shadow: 1px -1px 3px var(--shadowColorCategory);
+    text-shadow: 3px -2px 0px black;
+    transition: 0.5s ease;
 }
 
 .slider > p {
@@ -221,7 +233,7 @@ input[type="color"] {
 #hideMenuButton{
     top: calc(50% - 4.8rem); /*minus button height hardcoded*/
     left: var(--initialSidebarWidth);
-    font-size: 2rem;
+    font-size: 1.5rem;
     background: var(--textColorCategory);
     padding: 4rem 0.2rem;
     border-radius: 0 1rem 1rem 0;
@@ -236,16 +248,10 @@ input[type="color"] {
     justify-content: center;
 }
 
-#audio1{
-    width: 100%;
-    height: 4rem;
-    padding: 0 1rem;
-}
-
 #hideAudioButton{
     position: relative;
     left: calc(50% - 4.8rem); /*minus button width hardcoded*/
-    font-size: 2rem;
+    font-size: 1.5rem;
     padding: 0.2rem 4rem;
     border-radius: 1rem 1rem 0 0;
     /* background-color: rgba(255, 255, 255, 0.4); */
@@ -278,6 +284,13 @@ input[type="color"] {
 
 #blueName{
     color:rgba(0, 0, 255, 0.803);
+}
+
+/* AUDIO STYLING */
+#audio1{
+    width: 100%;
+    height: 4rem;
+    padding: 0 1rem;
 }
 
 #audio1::-webkit-media-controls-panel{

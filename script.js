@@ -50,7 +50,7 @@ function setStartingInfo(){
     ctx.shadowOffsetY = 20;
     ctx.shadowBlur = 2;
 
-    const startingText = 'UP - sidebar \nDOWN - player\nSPACE - pause\nSHIFT - buttons visibility\nI - show this list (while paused)\n Resize the sidebar by dragging its edge\nFocus the slider to change its value with side arrows';
+    const startingText = 'UP - sidebar \nDOWN - player\nSPACE - pause\nSHIFT - buttons visibility\nF11 - fullscreen mode\n Resize the sidebar by dragging its edge\nFocus the slider to change its value with side arrows';
     const x = 500;
     const y = 500;
     const lineheight = 100;
@@ -434,6 +434,7 @@ function closeAudioContainer () {
     }
 };
 
+//CLICK ON CATEGORY NAME TO HIDE INSIDE ELEMENTS
 let sidebarCategories = document.querySelectorAll(".sidebarCategory");
 sidebarCategories.forEach(function(elem) {
     elem.addEventListener("click", hideShowCategoryElements);
@@ -511,11 +512,6 @@ document.onkeydown = function(e) {
         }    
     }
 
-    // "I" HOTKEY FOR INFO DISPLAY
-    if (e.which == 73) {
-        setStartingInfo();
-    }
-
     // "SHIFT" HOTKEY FOR BUTTONS VISIBILITY 
     if (e.which == 16) {
         if (buttonsInvisible == false){
@@ -553,5 +549,4 @@ document.onkeydown = function(e) {
 
     
 };
-
 // ______________________________HOTKEYS______________________________
