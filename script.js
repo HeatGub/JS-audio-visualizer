@@ -153,7 +153,7 @@ function reloadAnimation() {
     function animate() {
         // console.log(initialRadius);
         if (audioPlayer.paused) {
-            console.log('paused');
+            // console.log('paused');
             return; //break the loop if paused
         }
         frameCounter += 1;
