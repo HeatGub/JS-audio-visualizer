@@ -112,8 +112,8 @@ function updateVisualizerType() {
 
         document.getElementById('widthMultiplier').min = 0.001;
         document.getElementById('widthMultiplier').max = 100;
-        document.getElementById('widthMultiplier').value = 5;
-        document.getElementById('widthMultiplierTextInput').value = 5;
+        document.getElementById('widthMultiplier').value = 10;
+        document.getElementById('widthMultiplierTextInput').value = 10;
     }
     else { //horizontal bars//
         document.getElementById('turnsSliderDiv').style.display = 'none';
@@ -125,8 +125,8 @@ function updateVisualizerType() {
 
         document.getElementById('widthMultiplier').min = 0.1;
         document.getElementById('widthMultiplier').max = 10;
-        document.getElementById('widthMultiplier').value = 1.33;
-        document.getElementById('widthMultiplierTextInput').value = 1.33;
+        document.getElementById('widthMultiplier').value = 1.333;
+        document.getElementById('widthMultiplierTextInput').value = 1.333;
     }
     updateValues();
 }
@@ -388,7 +388,7 @@ function closeAudioContainer () {
     }
 };
 
-//STARTING DISPLAY FROM CSS WORKED BAD WITH THE HIDESHOW FUNCTION - PROBABLY NO RENDERING WITH NO DISPLAY
+//STARTING DISPLAY (CSS display : none WORKED BAD WITH THE hideShowCategoryElements)
 document.getElementById('sidebarInsideCategoryElements2').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements3').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements4').style.display = 'none';
@@ -561,6 +561,7 @@ setShadow();
 //______________________________SHADOW______________________________
 
 //______________________________STARTING INFO DISPLAY______________________________
+
 function setStartingInfo(){
     ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
     ctx.fillStyle = 'rgba(200,200,200,0.7)';
@@ -582,5 +583,8 @@ function setStartingInfo(){
     ctx.fillText(lines[i], canvas.width/2, canvas.height/2 -140 + (i * lineheight));
     }
 }
-setStartingInfo();
+// ON LOAD, IN CASE THE API FONT DIDNT LOAD
+window.addEventListener('load', () => {
+    setStartingInfo();
+});
 //______________________________STARTING INFO DISPLAY______________________________

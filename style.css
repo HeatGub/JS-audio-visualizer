@@ -45,7 +45,6 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    /* z-index: 10; */
     /* filter: blur(5px); */
 }
 
@@ -77,7 +76,7 @@ html, body {
 }
 
 ::-webkit-scrollbar{
-    /* width: 0rem; */
+    width: 0rem;
     display: none;
 }
 
@@ -262,6 +261,18 @@ input[type="color"] {
     text-shadow: 0px 0px 3px var(--shadowColorCategory);
 }
 
+/* #openMenuButton, #openAudioButton:hover{
+    box-shadow: 0 0 8px var(--shadowColorCategory);
+    color: var(--shadowColorCategory);
+    transition: 1s ease;
+} */
+
+#hideAudioButton:hover, #hideMenuButton:hover{
+    box-shadow: 0 0 8px var(--shadowColorCategory);
+    color: var(--shadowColorCategory);
+    transition: 1s ease;
+}
+
 #openAudioButton{
     position: absolute;
     left: calc(var(--sidebarAudioSpacing) + var(--initialSidebarWidth)); /*+5px space*/
@@ -273,9 +284,10 @@ input[type="color"] {
 }
 
 #openAudioButton:hover, #openMenuButton:hover{
-    color: rgba(1,1,1,0.9);
-    background-color: rgba(255, 255, 255, 0.4);
-    transition: 0.1s;
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 8px var(--shadowColorCategory);
+    color: var(--shadowColorCategory);
+    transition: 0.2s ease;
 }
 
 #redName{
@@ -331,6 +343,7 @@ input[type="color"] {
 #audioPlayer::-webkit-media-controls-mute-button{
     outline: 3px solid var(--shadowColorCategory);
     background-color: var(--textColorVariable);
+    margin-left: 1rem;
     border-radius: 50%;
 }
 
