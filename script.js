@@ -9,7 +9,7 @@ canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
 const audioPlayer = document.getElementById('audioPlayer');
 // audioPlayer.volume = 0.2;
-let audioContext = new AudioContext();
+// let audioContext = new AudioContext();
 audioPlayer.addEventListener('play', reloadAnimation);
 //COLORPARAMETERS INIT
 let [alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0];
@@ -135,6 +135,7 @@ updateVisualizerType(); //to disable unnecessary elements at the start
 let lastRequestId;
 
 function reloadAnimation() {
+    let audioContext = new AudioContext();
     window.cancelAnimationFrame(lastRequestId); //to cancel possible multiple animation request
     // console.log('reloadAnimation');
     if (typeof audioSource == 'undefined') { //without that condition there is an error on creating audioSource
