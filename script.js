@@ -583,7 +583,7 @@ function setStartingInfo(){
     ctx.fillText(lines[i], canvas.width/2, canvas.height/2 -140 + (i * lineheight));
     }
 }
-// ON LOAD, IN CASE THE API FONT DIDNT LOAD
+// ON LOAD, IN CASE THE API FONT DIDNT LOAD ALREADY
 window.addEventListener('load', () => {
     setStartingInfo();
 });
