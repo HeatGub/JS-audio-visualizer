@@ -72,6 +72,8 @@ html, body {
     right: 0;
     cursor: col-resize;
     background-color: var(--textColorCategoryAlpha050);
+    /* background-color:  var(--shadowColorCategory); */
+    /* border: 1px solid var(--shadowColorCategory); */
 }
 
 ::-webkit-scrollbar{
@@ -167,7 +169,7 @@ input[type="color"] {
 
 .sidebarCategory:hover{
     box-shadow: 0 0 8px var(--shadowColorCategory);
-    text-shadow: 3px -2px 1px var(--shadowColorCategory);
+    text-shadow: 3px -1px 1px var(--shadowColorCategory);
     outline: 2px solid var(--shadowColorCategory);
     background: var(--backgroundColorElementCategoryHover);
     transition: 1s ease;
@@ -232,11 +234,12 @@ input[type="color"] {
 
 #hideMenuButton{
     top: calc(50% - 4.8rem); /*minus button height hardcoded*/
-    left: var(--initialSidebarWidth);
+    left: calc(var(--initialSidebarWidth) - 2px);
     font-size: 1.5rem;
     background: var(--textColorCategory);
     padding: 4rem 0.2rem;
     border-radius: 0 1rem 1rem 0;
+    text-shadow: 0px 0px 3px var(--shadowColorCategory);
 }
 
 #audioContainer{
@@ -256,6 +259,7 @@ input[type="color"] {
     border-radius: 1rem 1rem 0 0;
     /* background-color: rgba(255, 255, 255, 0.4); */
     background: var(--textColorCategory);
+    text-shadow: 0px 0px 3px var(--shadowColorCategory);
 }
 
 #openAudioButton{
@@ -287,48 +291,52 @@ input[type="color"] {
 }
 
 /* AUDIO STYLING */
-#audio1{
+#audioPlayer{
     width: 100%;
     height: 4rem;
     padding: 0 1rem;
 }
 
-#audio1::-webkit-media-controls-panel{
+#audioPlayer::-webkit-media-controls-panel{
     /* background-color: rgba(0, 0, 0, 0.85); */
     background: var(--textColorCategory);
 }
 
-#audio1::-webkit-media-controls-current-time-display{
+#audioPlayer::-webkit-media-controls-current-time-display{
     color: var(--textColorVariable);
     text-shadow: none;
     font-family: "Audiowide", sans-serif;
 }
-#audio1::-webkit-media-controls-time-remaining-display{
+#audioPlayer::-webkit-media-controls-time-remaining-display{
     color: var(--textColorVariable);
     text-shadow: none;
     font-family: "Audiowide", sans-serif;
     margin-right: 1rem;
 }
 
-#audio1::-webkit-media-controls-timeline{
+#audioPlayer::-webkit-media-controls-timeline{
     border-radius: 40px;
     padding: 0.1rem 0rem;
     width: 50%;
+    outline: 1px solid rgba(16, 236, 148, 0.464);
     /* background: var(--textColorCategoryAlpha050); */
 }
 
-#audio1::-webkit-media-controls-play-button{
+#audioPlayer::-webkit-media-controls-play-button{
+    outline: 3px solid var(--shadowColorCategory);
     background-color: var(--textColorVariable);
     border-radius: 50%;
 }
 
-#audio1::-webkit-media-controls-mute-button{
+#audioPlayer::-webkit-media-controls-mute-button{
+    outline: 3px solid var(--shadowColorCategory);
     background-color: var(--textColorVariable);
     border-radius: 50%;
 }
 
-#audio1::-webkit-media-controls-volume-slider{
+#audioPlayer::-webkit-media-controls-volume-slider{
     /* background-color: var(--textColorCategoryAlpha050); */
+    outline: 3px solid var(--shadowColorCategory);
     background-color: var(--textColorVariable);
     border-radius: 50px;
     padding-left: 10px;

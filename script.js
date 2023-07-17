@@ -7,13 +7,13 @@ const textInputs = document.querySelectorAll('.slider input[type="text"]');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
-const audio1 = document.getElementById('audio1');
-audio1.volume = 0.2;
+const audioPlayer = document.getElementById('audioPlayer');
+// audioPlayer.volume = 0.2;
 let audioContext = new AudioContext();
-audio1.addEventListener('play', reloadAnimation);
+audioPlayer.addEventListener('play', reloadAnimation);
 //COLORPARAMETERS INIT
 let [alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0];
-// VISUALISATION PARAMETERS
+// VISUALISATION PARAMETERS INITIALIZATION
 let turns = document.getElementById('turns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
 let fftSize = document.getElementById('droplistFftSizes').value; //number of FFT samples - 2^n values,   bars amount = fftSize/2
 let highCutoff = document.getElementById('highCutoff').value * (fftSize/2); //part of frequencies cut (0 - 0.99)
@@ -29,81 +29,19 @@ let frameCounter = 1;
 let rotationSpeed = document.getElementById('rotationSpeed').value;
 let initialRotation = document.getElementById('initialRotation').value;
 let frameTurn;
-// ________ROTATION________
-
+// ________POLYGONS________
 let inset = Number(document.getElementById('inset').value);
 let initialRadius = Number(document.getElementById('initialRadius').value);
 
+// SOME DECLARATIONS ARE NEARBY THEIR MAIN FUNCTIONS
+
+//FILE HANDLING
 file.addEventListener('change', function(){
     const files = this.files;
-    audio1.src = URL.createObjectURL(files[0]);
+    audioPlayer.src = URL.createObjectURL(files[0]);
 });
 
-// STARTING INFO DISPLAY
-function setStartingInfo(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
-    ctx.font = "3rem Audiowide";
-    ctx.fillStyle = 'rgba(200,200,200,0.7)';
-    ctx.textAlign = "center";
-    ctx.shadowColor = 'rgba(250,250,250,0.1)';
-    ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = 20;
-    ctx.shadowBlur = 2;
-
-    const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nClose sidebar category by clicking its name\nFocus the slider to change its value with side arrows';
-    const x = 500;
-    const y = 500;
-    const lineheight = 80;
-    const lines = startingText.split('\n');
-    for (let i = 0; i < lines.length; i++) {
-    ctx.fillText(lines[i], canvas.width/2, canvas.height/2 -300 + (i * lineheight));
-    }
-}
-setStartingInfo();
-
-// _____________________BACKGROUND_____________________
-colorInput1.addEventListener('input', setBackground);
-colorInput2.addEventListener('input', setBackground);
-droplistBackgrounds.addEventListener('input', setBackground);
-
-function setBackground() {
-    if (document.getElementById('droplistBackgrounds').value == 'linear'){
-        document.getElementById('gradAngleSliderDiv').style.display = 'block';
-        container.style.background = 'linear-gradient(' + document.getElementById('gradAngle').value +'deg, ' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
-    }
-    else {
-        document.getElementById('gradAngleSliderDiv').style.display = 'none';
-        container.style.background = 'radial-gradient(' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
-    }
-}
-setBackground();
-// _____________________BACKGROUND_____________________
-
-// _____________________SHADOW_____________________
-colorInputShadow.addEventListener('input', setShadow);
-alphaShadow.addEventListener('input', setShadow);
-shadowOffsetX.addEventListener('input', setShadow);
-shadowOffsetY.addEventListener('input', setShadow);
-shadowBlur.addEventListener('input', setShadow);
-
-function setShadow() {
-    function hexToRgba(hex) {
-        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-        result ? rgbObj = {
-          r: parseInt(result[1], 16),
-          g: parseInt(result[2], 16),
-          b: parseInt(result[3], 16)
-        } : null;
-        return 'rgba(' + rgbObj.r + ', ' + rgbObj.g + ', ' + rgbObj.b + ', ' + alphaShadow.value + ')';
-      }
-    ctx.shadowColor = hexToRgba(colorInputShadow.value);
-    ctx.shadowOffsetX = shadowOffsetX.value;
-    ctx.shadowOffsetY = -shadowOffsetY.value;
-    ctx.shadowBlur = shadowBlur.value;
-}
-setShadow();
-// _____________________SHADOW_____________________
-
+// ____________________SLIDERS____________________
 rangeInputs.forEach((el) => {
     el.addEventListener("input", updateField);
 });
@@ -123,7 +61,9 @@ function updateField(e) {
     setBackground();
     setShadow();
 }
+// ____________________SLIDERS____________________
 
+// UPDATE VALUES FUNCTION
 function updateValues() {
     [amplification, widthMultiplier, highCutoff, turns, polygonSymmetry, inset, initialRadius, initialRotation, rotationSpeed, alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
@@ -198,7 +138,7 @@ function reloadAnimation() {
     window.cancelAnimationFrame(lastRequestId); //to cancel possible multiple animation request
     // console.log('reloadAnimation');
     if (typeof audioSource == 'undefined') { //without that condition there is an error on creating audioSource
-        audioSource = audioContext.createMediaElementSource(audio1);
+        audioSource = audioContext.createMediaElementSource(audioPlayer);
         analyser = audioContext.createAnalyser(); // create node
         audioSource.connect(analyser);
         analyser.connect(audioContext.destination);
@@ -211,7 +151,7 @@ function reloadAnimation() {
 
     function animate() {
         // console.log(initialRadius);
-        if (audio1.paused) {
+        if (audioPlayer.paused) {
             console.log('paused');
             return; //break the loop if paused
         }
@@ -373,6 +313,7 @@ function initResizerFn( resizer, sidebar ) {
         }
         else if (cw > MaxSidebarX) {
             cwGlobal = MaxSidebarX;
+
         }
     }
 
@@ -383,7 +324,7 @@ function initResizerFn( resizer, sidebar ) {
     }
 
     resizer.addEventListener("mousedown", rs_mousedownHandler);
-    console.log('initResizerFn');
+    // console.log('initResizerFn');
 }
 initResizerFn( resizer, sidebar );
 
@@ -447,6 +388,11 @@ function closeAudioContainer () {
     }
 };
 
+//STARTING DISPLAY FROM CSS WORKED BAD WITH THE HIDESHOW FUNCTION - PROBABLY NO RENDERING WITH NO DISPLAY
+document.getElementById('sidebarInsideCategoryElements2').style.display = 'none';
+document.getElementById('sidebarInsideCategoryElements3').style.display = 'none';
+document.getElementById('sidebarInsideCategoryElements4').style.display = 'none';
+
 //CLICK ON CATEGORY NAME TO HIDE INSIDE ELEMENTS
 let sidebarCategories = document.querySelectorAll(".sidebarCategory");
 sidebarCategories.forEach(function(elem) {
@@ -460,6 +406,7 @@ function hideShowCategoryElements (event) {
         for (let i=0; i<(targetsChildren.length); i++){
             thisTarget = targetsChildren[i];
             if (thisTarget.id.includes('sidebarInsideCategoryElements')){
+                // console.log(thisTarget.id);
                 if (thisTarget.style.display != 'none') {
                     thisTarget.style.display = 'none';
                 }
@@ -487,7 +434,7 @@ function resizeWindow (){
 // ______________________________SIDEBAR STUFF______________________________
 
 // ______________________________HOTKEYS______________________________
-buttonsInvisible = false;
+let buttonsInvisible = false;
 
 document.onkeydown = function(e) {
     // console.log(e.which);
@@ -517,11 +464,11 @@ document.onkeydown = function(e) {
     // "SPACE" HOTKEY FOR PAUSING
     if (e.which == 32) {
         e.preventDefault(); //to prevent going to the end of the sidebar
-        if (audio1.paused) {
-            audio1.play();
+        if (audioPlayer.paused) {
+            audioPlayer.play();
         }
         else {
-            audio1.pause();
+            audioPlayer.pause();
         }    
     }
 
@@ -569,3 +516,71 @@ document.onkeydown = function(e) {
     
 };
 // ______________________________HOTKEYS______________________________
+
+// ______________________________BACKGROUND______________________________
+colorInput1.addEventListener('input', setBackground);
+colorInput2.addEventListener('input', setBackground);
+droplistBackgrounds.addEventListener('input', setBackground);
+
+function setBackground() {
+    if (document.getElementById('droplistBackgrounds').value == 'linear'){
+        document.getElementById('gradAngleSliderDiv').style.display = 'block';
+        container.style.background = 'linear-gradient(' + document.getElementById('gradAngle').value +'deg, ' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
+    }
+    else {
+        document.getElementById('gradAngleSliderDiv').style.display = 'none';
+        container.style.background = 'radial-gradient(' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
+    }
+}
+setBackground();
+// ______________________________BACKGROUND______________________________
+
+//______________________________SHADOW______________________________
+colorInputShadow.addEventListener('input', setShadow);
+alphaShadow.addEventListener('input', setShadow);
+shadowOffsetX.addEventListener('input', setShadow);
+shadowOffsetY.addEventListener('input', setShadow);
+shadowBlur.addEventListener('input', setShadow);
+
+function setShadow() {
+    function hexToRgba(hex) {
+        let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+        result ? rgbObj = {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16)
+        } : null;
+        return 'rgba(' + rgbObj.r + ', ' + rgbObj.g + ', ' + rgbObj.b + ', ' + alphaShadow.value + ')';
+      }
+    ctx.shadowColor = hexToRgba(colorInputShadow.value);
+    ctx.shadowOffsetX = shadowOffsetX.value;
+    ctx.shadowOffsetY = -shadowOffsetY.value;
+    ctx.shadowBlur = shadowBlur.value;
+}
+setShadow();
+//______________________________SHADOW______________________________
+
+//______________________________STARTING INFO DISPLAY______________________________
+function setStartingInfo(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
+    ctx.fillStyle = 'rgba(200,200,200,0.7)';
+    ctx.textAlign = "center";
+    ctx.shadowColor = 'rgba(250,250,250,0.1)';
+    ctx.shadowOffsetX = 5;
+    ctx.shadowOffsetY = 20;
+    ctx.shadowBlur = 2;
+    ctx.font = "5rem Audiowide";
+    ctx.fillText('BROWSE AND PLAY A FILE TO RUN', canvas.width/2, canvas.height/2-320);
+
+    ctx.font = "3rem Audiowide";
+    const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nFocus the slider to change by the minimal value with side arrows';
+    const x = 500;
+    const y = 500;
+    const lineheight = 80;
+    const lines = startingText.split('\n');
+    for (let i = 0; i < lines.length; i++) {
+    ctx.fillText(lines[i], canvas.width/2, canvas.height/2 -140 + (i * lineheight));
+    }
+}
+setStartingInfo();
+//______________________________STARTING INFO DISPLAY______________________________

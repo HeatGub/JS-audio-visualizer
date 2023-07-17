@@ -21,7 +21,7 @@
         <div id ="audioContainer">
             <div id="hideAudioButton" class="showHideButton fa-solid fa-angles-down">
             </div>
-            <audio id="audio1" src="Vanilla - origin.mp3" controls loop></audio>
+            <audio id="audioPlayer" src="Vanilla - origin.mp3" controls loop></audio>
         </div>
         <div id="hideMenuButton" class="showHideButton fa-solid fa-angles-left">
         </div>
@@ -37,20 +37,18 @@
                         <label for="visualizers">Visualizer Type:</label>
                         <select name="visualizers" id="droplistVisualizers">
                             <option value="horizontal bars">Horizontal Bars</option>
-                            <option value="polygons">Polygons</option>
+                            <option value="horizontal bars log">Horizontal Bars (logarithmic)</option>
                             <option value="radial bars">Radial Bars</option>
                             <option value="radial bars log">Radial Bars (logarithmic)</option>
-
-                            <option value="horizontal bars log">Horizontal Bars (logarithmic)</option>
+                            <option value="polygons" selected="selected">Polygons</option>
                         </select>
                     </div>
                     <div class = "sidebarElement">
-                        <label for="fftSizes">FFT size:</label>
-                        <select name="fftSizes" id="droplistFftSizes">
-                            <option value="64">64</option>
+                        <label for="fftSizes" title="Bars amount = FFT size/2 (without cutoff) &#013;Computationally demanding!">FFT size:</label>
+                        <select name="fftSizes" id="droplistFftSizes" title="Bars amount = FFT size/2 (without cutoff) &#013;Computationally demanding!">
                             <option value="32">32</option>
                             <option value="64">64</option>
-                            <option value="128">128</option>
+                            <option value="128" selected="selected">128</option>
                             <option value="256">256</option>
                             <option value="512">512</option>
                             <option value="1024">1024</option>
@@ -69,7 +67,7 @@
                         </div>
                     </div>
                     <div class = "sidebarElement">
-                        <div class="slider">
+                        <div class="slider" title="May be computationally demanding!">
                             <p>width Multiplier</p>
                             <span>
                                 <input id="widthMultiplier" type="range" min="0.001" max="50" value="2" step="0.001" data-field="widthMultiplier" />
@@ -78,10 +76,10 @@
                         </div>
                     </div>
                     <div class = "sidebarElement">
-                        <div class="slider">
+                        <div class="slider" title="Part of all frequencies cut - starting from the highest">
                             <p>high freq Cutoff</p>
                             <span>
-                                <input id="highCutoff" type="range" type="range" min="0" max="0.999" value="0.25" step="0.001" data-field="highCutoff" />
+                                <input id="highCutoff" type="range" type="range" min="0" max="0.999" value="0.25" step="0.001" data-field="highCutoff"/>
                                 <input type="text" value="0.25" data-field="highCutoff" />
                             </span>
                         </div>
@@ -96,25 +94,25 @@
                         </div>
                     </div>
                     <div class = "sidebarElement" id="polygonSymmetrySliderDiv">
-                        <div class="slider">
+                        <div class="slider" title="Computationally demanding!">
                             <p>polygon Symmetry</p>
                             <span>
-                                <input id="polygonSymmetry" type="range" value="5" min="2" max="100" step="1" data-field="polygonSymmetry" />
-                                <input type="text" value="5" data-field="polygonSymmetry" />
+                                <input id="polygonSymmetry" type="range" value="7" min="2" max="100" step="1" data-field="polygonSymmetry" />
+                                <input type="text" value="7" data-field="polygonSymmetry" />
                             </span>
                         </div>
                     </div>
                     <div class = "sidebarElement" id="insetSliderDiv">
-                        <div class="slider">
+                        <div class="slider" title="Determines sides length">
                             <p>inset modifier</p>
                             <span>
-                                <input id="inset" type="range" value="0.755" min="-10" max="10" step="0.001" data-field="inset" />
-                                <input type="text" value="0.755" data-field="inset" />
+                                <input id="inset" type="range" value="1" min="-10" max="10" step="0.001" data-field="inset" />
+                                <input type="text" value="1" data-field="inset" />
                             </span>
                         </div>
                     </div>
                     <div class = "sidebarElement" id="initialRadiusSliderDiv">
-                        <div class="slider">
+                        <div class="slider" title="Determines Starting point.&#013;May be used to invert the shape">
                             <p>initial radius</p>
                             <span>
                                 <input id="initialRadius" type="range" value="0" min="-400" max="400" step="0.001" data-field="initialRadius" />
@@ -143,20 +141,20 @@
                 </div>
             </div>
 
-            <div class ="sidebarCategory" id="sidebarCategory2"> RGB RESPONSE
+            <div class ="sidebarCategory" id="sidebarCategory2"> RGB MIXER
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements2">
                     <div class = "sidebarElement"> 
-                        alpha
-                        <div class="slider">
+                        <div class="slider" title="Determines lines transparency">
+                        <p>alpha</p>
                             <span>
                                 <input type="range" value="1" min="0" max="1" step="0.01" data-field="alphaRGB" />
                                 <input type="text" value="1" data-field="alphaRGB" />
                             </span>
                         </div>
                     </div>
-                        <p id="redName">RED</p>
+                    <p id="redName">RED</p>
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Response to low frequencies">
                             <p>low freq</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="lowMultiplierRed" />
@@ -165,7 +163,7 @@
                         </div>
                     </div>
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Response to high frequencies">
                             <p>high freq</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="highMultiplierRed" />
@@ -174,7 +172,7 @@
                         </div>
                     </div>
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Response to amplitude">
                             <p>amplitude</p>
                             <span>
                                 <input type="range" value="1" min="0" max="1" step="0.01" data-field="respMultiplierRed" />
@@ -184,7 +182,7 @@
                     </div>
                         <p id="greenName">GREEN</p>
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Response to low frequencies">
                             <p>low freq</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="lowMultiplierGreen" />
@@ -193,7 +191,7 @@
                         </div>
                     </div>
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Response to high frequencies">
                             <p>high freq</p>
                             <span>
                                 <input type="range" value="1" min="0" max="1" step="0.01" data-field="highMultiplierGreen" />
@@ -203,7 +201,7 @@
                     </div>
 
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Response to amplitude">
                             <p>amplitude</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="respMultiplierGreen" />
@@ -213,7 +211,7 @@
                     </div>
                         <p id="blueName">BLUE</p>
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Response to low frequencies">
                             <p>low freq</p>
                             <span>
                                 <input type="range" value="1" min="0" max="1" step="0.01" data-field="lowMultiplierBlue" />
@@ -222,7 +220,7 @@
                         </div>
                     </div>
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Response to high frequencies">
                             <p>high freq</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="highMultiplierBlue" />
@@ -231,7 +229,7 @@
                         </div>
                     </div>
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Response to amplitude">
                             <p>amplitude</p>
                             <span>
                                 <input type="range" value="0" min="0" max="1" step="0.01" data-field="respMultiplierBlue" />
@@ -296,11 +294,11 @@
                         <input type="color" id="colorInputShadow" value="#ffffff">
                     </div>
                     <div class = "sidebarElement"> 
-                        <div class="slider">
+                        <div class="slider" title="Determines shadow transparency">
                             <p>alpha</p>
                             <span>
-                                <input id="alphaShadow" type="range" value="0.2" min="0" max="1" step="0.01" data-field="alphaShadow" />
-                                <input type="text" value="0.2" data-field="alphaShadow" />
+                                <input id="alphaShadow" type="range" value="0" min="0" max="1" step="0.01" data-field="alphaShadow" />
+                                <input type="text" value="0" data-field="alphaShadow" />
                             </span>
                         </div>
                     </div>
@@ -324,7 +322,7 @@
                     </div>
                     <div class = "sidebarElement"> 
                         <div class="slider">
-                            <p>shadow Blur</p>
+                            <p>Blur</p>
                             <span>
                                 <input id="shadowBlur" type="range" value="0" min="0" max="420" step="0.1" data-field="shadowBlur" />
                                 <input type="text" value="0" data-field="shadowBlur" />
