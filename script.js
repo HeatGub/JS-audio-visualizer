@@ -306,7 +306,7 @@ let MaxSidebarX = window.innerWidth*0.9; //changes with refresh
 let MinSidebarX = 250;
 
 function initResizerFn( resizer, sidebar ) {
-// track current mouse position in x var
+    // track current mouse position in x var
     let x, w;
     function rs_mousedownHandler( e ) {
         x = e.clientX;
@@ -581,26 +581,28 @@ setShadow();
 //______________________________SHADOW______________________________
 
 //______________________________STARTING INFO DISPLAY______________________________
-
 function setStartingInfo(){
     ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
+    fontSizeWidth = Math.round(window.innerWidth/40);
     ctx.fillStyle = 'rgba(200,200,200,0.7)';
     ctx.textAlign = "center";
     ctx.shadowColor = 'rgba(250,250,250,0.1)';
     ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = 20;
+    ctx.shadowOffsetY = fontSizeWidth/1.4;
     ctx.shadowBlur = 2;
-    ctx.font = "5rem Audiowide";
-    ctx.fillText('BROWSE AND PLAY A FILE TO RUN', canvas.width/2, canvas.height/2-320);
+    
+    ctx.font = fontSizeWidth + 'px' + ' Audiowide';
+    ctx.fillText('BROWSE AND PLAY A FILE TO RUN', canvas.width/2, canvas.height/4 - canvas.height/20);
 
-    ctx.font = "3rem Audiowide";
+    ctx.shadowOffsetY = fontSizeWidth/2;
+    // ctx.font = "3rem Audiowide";
+    fontSizeWidth = Math.round(window.innerWidth/70);
+    ctx.font = fontSizeWidth + 'px' + ' Audiowide';
+    const lineheight = window.innerHeight/14;
     const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nFocus the slider to change by the minimal value with side arrows';
-    const x = 500;
-    const y = 500;
-    const lineheight = 80;
     const lines = startingText.split('\n');
     for (let i = 0; i < lines.length; i++) {
-    ctx.fillText(lines[i], canvas.width/2, canvas.height/2 -140 + (i * lineheight));
+        ctx.fillText(lines[i], canvas.width/2, canvas.height/3 + canvas.height/20 + (i * lineheight));
     }
 }
 // ON LOAD, IN CASE THE API FONT DIDNT LOAD ALREADY
