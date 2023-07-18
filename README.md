@@ -22,7 +22,7 @@ Depending on which you choose, there are different parameters to control. Polygo
 - ***Lower down the slider value if you experience lags***
 
 #### Highest computation cost parameters:
-- **FFT size** - Since FFT size/2 = bars/lines amount 
+- **FFT size** - Since FFT size/2 = bars(lines) amount
 - **Width Multiplier** - Lower this first (polygons)
 - **Polygon Symmetry**
 - **Inset Modifier** - Negative inset with high amplification gives incredible shapes (along with incredible FPS drops ocasionally ;))

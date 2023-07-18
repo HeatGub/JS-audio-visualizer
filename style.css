@@ -5,14 +5,14 @@
     text-transform: capitalize;
     --initialSidebarWidth: 50rem;
     --sidebarAudioSpacing: 0.5rem;
-    --backgroundColorInput: rgba(0, 0, 0, 0.704);
+    --backgroundColorInput: rgba(0, 0, 0, 0.7);
     --backgroundColorOddElement: rgba(255, 255, 255, 0.05);
     --backgroundColorEvenElement: rgba(162, 162, 162, 0.05);
-    --backgroundColorElementCategoryHover: rgba(0, 0, 0, 0.8);
+    --backgroundColorElementCategoryHover: rgba(0, 0, 0, 0.6);
     --textColorInput: rgb(239, 239, 239);
     --textColorVariable: rgb(222, 215, 215, 0.9);
     --textColorCategory: rgb(24, 84, 214);
-    --textColorCategoryAlpha050: rgba(24, 84, 214, 0.822);
+    --textColorCategoryAlpha050: rgba(24, 84, 214, 0.6);
     --shadowColorCategory: rgb(16, 236, 148);
     --resizerWidth: 0.7rem;
 }
@@ -50,13 +50,11 @@ html, body {
 
 .sidebar {
     position: relative;
-    /* position: absolute; */
     height: 100%;
     width: var(--initialSidebarWidth);
     height: 100%;
-    /* height: 100wh; */
     overflow-x: hidden;
-    background-color: rgba(255, 255, 255, 0.209);
+    background-color: rgba(255, 255, 255, 0.15);
     text-align: center;
     padding-right: var(--resizerWidth); /* to compensate resizer width*/ 
     margin: 0;
@@ -70,7 +68,7 @@ html, body {
     /* left: 0; */
     right: 0;
     cursor: col-resize;
-    background-color: var(--textColorCategoryAlpha050);
+    background-color: var(--textColorCategory);
     /* background-color:  var(--shadowColorCategory); */
     /* border: 1px solid var(--shadowColorCategory); */
 }
@@ -114,18 +112,18 @@ input {
     color: var(--textColorInput);
 }
 
+/* doesnt include audioPlayer range input */
 input[type="range"] {
     width: calc(98% - 6rem); /* 4.5rem because text input width is not enough and it changes line*/
     height: 0.5rem;
     cursor: pointer;
     margin-left: 0.1rem;
-    /* margin-top: -1rem; */
-    /* -webkit-appearance: none; */
-    /* background: rgba(178, 174, 174, 0.6); */
-    /* border-radius: 0rem; */
-    /* background-image: linear-gradient(#fb5b26, #a1320a); */
-    /* background-size: 100% 100%; */
-    /* background-repeat: no-repeat; */
+    /* -webkit-appearance: none;
+    background: rgba(178, 174, 174, 0.6);
+    border-radius: 0rem;
+    background-image: linear-gradient(#d4ff00, #ec4204);
+    background-size: 100% 100%;
+    background-repeat: no-repeat; */
 }
 
 input[type="text"] {
@@ -146,7 +144,7 @@ input[type="color"] {
 }
 
 .sidebarCategory{
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.4);
     font-size: 3.2rem;
     border-radius: 1.5rem;
     padding: 0.5rem;
@@ -261,12 +259,6 @@ input[type="color"] {
     text-shadow: 0px 0px 3px var(--shadowColorCategory);
 }
 
-/* #openMenuButton, #openAudioButton:hover{
-    box-shadow: 0 0 8px var(--shadowColorCategory);
-    color: var(--shadowColorCategory);
-    transition: 1s ease;
-} */
-
 #hideAudioButton:hover, #hideMenuButton:hover{
     box-shadow: 0 0 8px var(--shadowColorCategory);
     color: var(--shadowColorCategory);
@@ -326,13 +318,12 @@ input[type="color"] {
     margin-right: 1rem;
 }
 
-#audioPlayer::-webkit-media-controls-timeline{
+/*#audioPlayer::-webkit-media-controls-timeline{
     border-radius: 40px;
     padding: 0.1rem 0rem;
     width: 50%;
     outline: 1px solid rgba(16, 236, 148, 0.464);
-    /* background: var(--textColorCategoryAlpha050); */
-}
+}*/
 
 #audioPlayer::-webkit-media-controls-play-button{
     outline: 3px solid var(--shadowColorCategory);
