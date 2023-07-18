@@ -101,6 +101,11 @@ function updateVisualizerType() {
         document.getElementById('widthMultiplier').max = 50;
         document.getElementById('widthMultiplier').value = 0.5;
         document.getElementById('widthMultiplierTextInput').value = 0.5;
+
+        //  add fft size options
+        document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="block";
+        document.getElementById('droplistFftSizes').querySelector("option[value='4096'").style.display ="block";
+        document.getElementById('droplistFftSizes').querySelector("option[value='8192'").style.display ="block";
     }
     else if (visualizerType == 'polygons'){
         document.getElementById('turnsSliderDiv').style.display = 'none';
@@ -111,9 +116,18 @@ function updateVisualizerType() {
         document.getElementById('insetSliderDiv').style.display = 'block';
 
         document.getElementById('widthMultiplier').min = 0.001;
-        document.getElementById('widthMultiplier').max = 100;
+        document.getElementById('widthMultiplier').max = 20;
         document.getElementById('widthMultiplier').value = 10;
         document.getElementById('widthMultiplierTextInput').value = 10;
+
+        //  remove fft size options and change the value if it was too high
+        document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="none";
+        document.getElementById('droplistFftSizes').querySelector("option[value='4096'").style.display ="none";
+        document.getElementById('droplistFftSizes').querySelector("option[value='8192'").style.display ="none";
+        if (document.getElementById('droplistFftSizes').value >=1024) {
+            document.getElementById('droplistFftSizes').value =1024;
+        }
+        
     }
     else { //horizontal bars//
         document.getElementById('turnsSliderDiv').style.display = 'none';
@@ -127,6 +141,11 @@ function updateVisualizerType() {
         document.getElementById('widthMultiplier').max = 10;
         document.getElementById('widthMultiplier').value = 1.333;
         document.getElementById('widthMultiplierTextInput').value = 1.333;
+
+        //  add fft size options
+        document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="block";
+        document.getElementById('droplistFftSizes').querySelector("option[value='4096'").style.display ="block";
+        document.getElementById('droplistFftSizes').querySelector("option[value='8192'").style.display ="block";
     }
     updateValues();
 }
@@ -248,7 +267,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
     ctx.translate(-canvas.width/2, -canvas.height/2);
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
         ctx.strokeStyle = mixingColors(i, dataArray);
-        radius = Number(initialRadius)* amplification + (i+1)/bufferLengthAfterCutoff * amplification * 240;
+        radius = Number(initialRadius)* amplification + (i+1)/bufferLengthAfterCutoff * amplification * 300;
         insetFinal = inset * (1 +  dataArray[i]/255);
 
         //THRESHOLD /255
