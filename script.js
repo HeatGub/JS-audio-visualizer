@@ -301,9 +301,9 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
 let resizer = document.querySelector(".resizer");
 let sidebar = document.querySelector(".sidebar");
 let cwGlobal = 500; //has to be the same as sidebar width in css
-// let MaxSidebarX = 1500;
 let MaxSidebarX = window.innerWidth*0.9; //changes with refresh
 let MinSidebarX = 250;
+let resizerWidth = 7; //px as in CSS --resizerWidth
 
 function initResizerFn( resizer, sidebar ) {
     // track current mouse position in x var
@@ -311,7 +311,6 @@ function initResizerFn( resizer, sidebar ) {
     function rs_mousedownHandler( e ) {
         x = e.clientX;
         var sbWidth = window.getComputedStyle( sidebar ).width;
-        console.log(sbWidth);
         w = parseInt( sbWidth, 10 );
         document.addEventListener("mousemove", rs_mousemoveHandler);
         document.addEventListener("mouseup", rs_mouseupHandler);
@@ -323,6 +322,7 @@ function initResizerFn( resizer, sidebar ) {
         
         if ( cw >= MinSidebarX && cw <= MaxSidebarX ) {
             sidebar.style.width = `${ cw }px`;
+            resizer.style.left = cw - resizerWidth + 'px';
             hideMenuButton.style.left = `${ cw }px`; //glue to bar
             audioContainer.style.left = `${ cw }px`; //glue to bar
             audioContainer.style.width = window.innerWidth - cw + 'px';
@@ -359,6 +359,8 @@ function openSidebarMenu() {
     audioContainer.style.width = window.innerWidth - cwGlobal +'px'; //OK
     sidebar.style.width = cwGlobal + 'px';
     sidebar.style.display = 'block';
+    resizer.style.left = cwGlobal - resizerWidth + 'px';
+    resizer.style.display = 'block';
     hideMenuButton.style.left = cwGlobal + 'px';
     hideMenuButton.style.display = 'block';
     openAudioButton.style.left = cwGlobal + 'px';
@@ -368,6 +370,7 @@ function openSidebarMenu() {
 hideMenuButton.addEventListener("click", closeSidebarMenu);
 function closeSidebarMenu () {
     sidebar.style.display = 'none';
+    resizer.style.display = 'none';
     hideMenuButton.style.display = 'none';
     openAudioButton.style.left = `0rem`;
     //dont show the opening button if buttonsInvisible

@@ -4,6 +4,7 @@
     font-family: "Audiowide", sans-serif;
     text-transform: capitalize;
     --initialSidebarWidth: 50rem;
+    --resizerWidth: 0.7rem;
     --sidebarAudioSpacing: 0.5rem;
     --backgroundColorInput: rgba(0, 0, 0, 0.7);
     --backgroundColorOddElement: rgba(255, 255, 255, 0.05);
@@ -14,7 +15,6 @@
     --textColorCategory: rgb(24, 84, 214);
     --textColorCategoryAlpha050: rgba(24, 84, 214, 0.6);
     --shadowColorCategory: rgb(16, 236, 148);
-    --resizerWidth: 0.7rem;
 }
 
 html, body {
@@ -54,10 +54,11 @@ html, body {
     width: var(--initialSidebarWidth);
     height: 100%;
     overflow-x: hidden;
-    background-color: rgba(255, 255, 255, 0.15);
+    /* background-color: rgba(178, 178, 178, 0.2); */
+    background: linear-gradient(90deg, rgba(24, 84, 214, 0.2) 0%, rgba(16, 236, 148, 0.2) 100%);
     text-align: center;
     /* padidng-right to compensate resizer width*/ 
-    /* padding-right: var(--resizerWidth);  */
+    padding-right: var(--resizerWidth);
     margin: 0;
 }
 
@@ -66,12 +67,13 @@ html, body {
     overflow: hidden;
     width: var(--resizerWidth);
     height: 100%;
-    left: var(--initialSidebarWidth);
-    /* right: 0; */
+    left: calc(var(--initialSidebarWidth) - var(--resizerWidth));
     cursor: col-resize;
-    background-color: var(--textColorCategory);
+    z-index: 100;
     /* background-color:  var(--shadowColorCategory); */
-    /* border: 1px solid var(--shadowColorCategory); */
+    /* outline: 1px solid var(--textColorCategory); */
+    /* border: 10px solid var(--textColorCategory); */
+    background: linear-gradient(90deg, var(--textColorCategory) 25%, var(--shadowColorCategory) 50%, var(--textColorCategory) 75%);
 }
 
 ::-webkit-scrollbar{
@@ -232,7 +234,7 @@ input[type="color"] {
 
 #hideMenuButton{
     top: calc(50% - 4.8rem); /*minus button height hardcoded*/
-    left: calc(var(--initialSidebarWidth) - 2px);
+    left: calc(var(--initialSidebarWidth));
     font-size: 1.5rem;
     background: var(--textColorCategory);
     padding: 4rem 0.2rem;
@@ -305,6 +307,7 @@ input[type="color"] {
 #audioPlayer::-webkit-media-controls-panel{
     /* background-color: rgba(0, 0, 0, 0.85); */
     background: var(--textColorCategory);
+    background: linear-gradient(var(--textColorCategory) 0%, var(--shadowColorCategory) 100%);
 }
 
 #audioPlayer::-webkit-media-controls-current-time-display{
