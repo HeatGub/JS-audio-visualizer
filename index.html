@@ -22,8 +22,8 @@
         <div id ="audioContainer">
             <div id="hideAudioButton" class="showHideButton fa-solid fa-angles-down">
             </div>
-            <!-- <audio id="audioPlayer" src="Vanilla - origin.mp3" controls loop></audio> -->
-            <audio id="audioPlayer" controls loop></audio>
+            <audio id="audioPlayer" src="spell.wav" controls loop></audio>
+            <!-- <audio id="audioPlayer" controls loop></audio> -->
         </div>
         <div id="hideMenuButton" class="showHideButton fa-solid fa-angles-left">
         </div>
@@ -90,8 +90,8 @@
                         <div class="slider">
                             <p>turns</p>
                             <span>
-                                <input id="turns" type="range" value="1" min="-10" max="10" step="0.001" data-field="turns" />
-                                <input type="text" value="1" data-field="turns" />
+                                <input id="turns" type="range" value="1.333" min="-10" max="10" step="0.001" data-field="turns" />
+                                <input type="text" value="1.333" data-field="turns" />
                             </span>
                         </div>
                     </div>
@@ -104,6 +104,17 @@
                             </span>
                         </div>
                     </div>
+
+                    <div class = "sidebarElement" id="polygonsReactivenessSliderDiv">
+                        <div class="slider" title="Determines polygons dynamics">
+                            <p>reactiveness</p>
+                            <span>
+                                <input id="polygonsReactiveness" type="range" value="0.5" min="0" max="1" step="0.001" data-field="polygonsReactiveness" />
+                                <input type="text" value="0.5" data-field="polygonsReactiveness" />
+                            </span>
+                        </div>
+                    </div>
+                    
                     <div class = "sidebarElement" id="insetSliderDiv">
                         <div class="slider" title="Determines sides length">
                             <p>inset modifier</p>

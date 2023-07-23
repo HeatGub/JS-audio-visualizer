@@ -32,6 +32,8 @@ let frameTurn;
 // ________POLYGONS________
 let inset = Number(document.getElementById('inset').value);
 let initialRadius = Number(document.getElementById('initialRadius').value);
+let polygonsReactiveness = Number(document.getElementById('polygonsReactiveness').value);
+let polygonsReactivenessFinal = Number((1 - polygonsReactiveness).toFixed(3));
 
 // SOME DECLARATIONS ARE NEARBY THEIR MAIN FUNCTIONS
 
@@ -65,14 +67,15 @@ function updateField(e) {
 
 // UPDATE VALUES FUNCTION
 function updateValues() {
-    [amplification, widthMultiplier, highCutoff, turns, polygonSymmetry, inset, initialRadius, initialRotation, rotationSpeed, alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
+    [amplification, widthMultiplier, highCutoff, turns, polygonSymmetry, polygonsReactiveness, inset, initialRadius, initialRotation, rotationSpeed, alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
     barWidth = widthMultiplier * (canvas.width/fftSize*2);
     bufferLength = fftSize/2;
     highCutoff = fftSize/2 * highCutoff;
     bufferLengthAfterCutoff = bufferLength - highCutoff;
+    polygonsReactivenessFinal = Number((1 - polygonsReactiveness).toFixed(3));
     // console.log(inset);
-    // console.log(initialRadius);
+    // console.log(polygonsReactivenessFinal);
 }
 
 //FFT UPDATE
@@ -150,8 +153,8 @@ function updateVisualizerType() {
         document.getElementById('widthMultiplierTextInput').value = 1.333;
 
         document.getElementById('amplification').max = 10;
-        // document.getElementById('amplification').value = 1;
-        // document.getElementById('amplificationTextInput').value = 1;
+        document.getElementById('amplification').value = 1;
+        document.getElementById('amplificationTextInput').value = 1;
 
         //  add fft size options
         document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="block";
@@ -278,8 +281,8 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
     ctx.translate(-canvas.width/2, -canvas.height/2);
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
         ctx.strokeStyle = mixingColors(i, dataArray);
-        radius = Number(initialRadius)* amplification + (i+1)/bufferLengthAfterCutoff * amplification * 600;
-        insetFinal = inset * (1 +  dataArray[i]/255);
+        radius = Number(initialRadius)* amplification + (i+1)/bufferLengthAfterCutoff * amplification * 500;
+        insetFinal = inset * (polygonsReactivenessFinal +  dataArray[i]/255);
 
         //THRESHOLD /255
         if (dataArray[i] <= 1) {
@@ -292,7 +295,6 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
         ctx.translate(canvas.width/2, canvas.height/2);
         ctx.moveTo(0, 0 - radius); //center
 
-        
         for (let j=0; j < polygonSymmetry; j++){
             ctx.rotate(Math.PI / polygonSymmetry);
             ctx.lineTo(0, 0 - (radius * insetFinal));
@@ -304,8 +306,8 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
         ctx.stroke();//display 
         // ctx.fill();
         ctx.restore(); //to the ctx.save
+        }
     }
-}
 }
 
 // ______________________________SIDEBAR STUFF______________________________
