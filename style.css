@@ -90,10 +90,10 @@ html, body {
     z-index: 100; /* always on top on other elements */
     cursor: pointer;
     font-family: "Audiowide", sans-serif;
-    width: 98%;
+    width: 95%;
     border-radius: 0.5rem;
-    box-shadow: 0 0 20px var(--shadowColorCategory);
-    outline: 5px solid var(--shadowColorCategory);
+    box-shadow: 0 0 15px var(--shadowColorCategory);
+    outline: 2px solid var(--shadowColorCategory);
 }
 
 input::file-selector-button {
