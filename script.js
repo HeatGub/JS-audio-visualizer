@@ -41,6 +41,8 @@ let polygonsReactivenessFinal = Number((1 - polygonsReactiveness).toFixed(3));
 file.addEventListener('change', function(){
     const files = this.files;
     audioPlayer.src = URL.createObjectURL(files[0]);
+    fileupload.style.boxShadow = 'none';
+    fileupload.style.outline = 'none';
 });
 
 // ____________________SLIDERS____________________
@@ -95,6 +97,7 @@ function updateVisualizerType() {
     if (visualizerType == 'radial bars' || visualizerType == 'radial bars log'){
         document.getElementById('turnsSliderDiv').style.display = 'block';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
+        document.getElementById('polygonsReactivenessSliderDiv').style.display = 'none';
         document.getElementById('initialRotationSliderDiv').style.display = 'block';
         document.getElementById('rotationSpeedSliderDiv').style.display = 'block';
         document.getElementById('initialRadiusSliderDiv').style.display = 'none';
@@ -117,6 +120,7 @@ function updateVisualizerType() {
     else if (visualizerType == 'polygons'){
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'block';
+        document.getElementById('polygonsReactivenessSliderDiv').style.display = 'block';
         document.getElementById('initialRotationSliderDiv').style.display = 'block';
         document.getElementById('rotationSpeedSliderDiv').style.display = 'block';
         document.getElementById('initialRadiusSliderDiv').style.display = 'block';
@@ -142,6 +146,7 @@ function updateVisualizerType() {
     else { //horizontal bars//
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
+        document.getElementById('polygonsReactivenessSliderDiv').style.display = 'none';
         document.getElementById('initialRotationSliderDiv').style.display = 'none';
         document.getElementById('rotationSpeedSliderDiv').style.display = 'none';
         document.getElementById('initialRadiusSliderDiv').style.display = 'none';
@@ -282,9 +287,10 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
         ctx.strokeStyle = mixingColors(i, dataArray);
         radius = Number(initialRadius)* amplification + (i+1)/bufferLengthAfterCutoff * amplification * 500;
+        // radius = Number(initialRadius)* amplification + (i+1)/bufferLengthAfterCutoff * amplification * 500 + 100*dataArray[i]/255;
         insetFinal = inset * (polygonsReactivenessFinal +  dataArray[i]/255);
 
-        //THRESHOLD /255
+        //THRESHOLD /255 - for glitchy lines when amplitude low
         if (dataArray[i] <= 1) {
             ctx.lineWidth = 0;
         }
