@@ -311,6 +311,7 @@ function initResizerFn( resizer, sidebar ) {
     function rs_mousedownHandler( e ) {
         x = e.clientX;
         var sbWidth = window.getComputedStyle( sidebar ).width;
+        console.log(sbWidth);
         w = parseInt( sbWidth, 10 );
         document.addEventListener("mousemove", rs_mousemoveHandler);
         document.addEventListener("mouseup", rs_mouseupHandler);

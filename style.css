@@ -56,7 +56,8 @@ html, body {
     overflow-x: hidden;
     background-color: rgba(255, 255, 255, 0.15);
     text-align: center;
-    padding-right: var(--resizerWidth); /* to compensate resizer width*/ 
+    /* padidng-right to compensate resizer width*/ 
+    /* padding-right: var(--resizerWidth);  */
     margin: 0;
 }
 
@@ -65,8 +66,8 @@ html, body {
     overflow: hidden;
     width: var(--resizerWidth);
     height: 100%;
-    /* left: 0; */
-    right: 0;
+    left: var(--initialSidebarWidth);
+    /* right: 0; */
     cursor: col-resize;
     background-color: var(--textColorCategory);
     /* background-color:  var(--shadowColorCategory); */
