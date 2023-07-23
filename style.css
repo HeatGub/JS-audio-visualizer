@@ -55,7 +55,7 @@ html, body {
     height: 100%;
     overflow-x: hidden;
     /* background-color: rgba(178, 178, 178, 0.2); */
-    background: linear-gradient(90deg, rgba(24, 84, 214, 0.2) 0%, rgba(16, 236, 148, 0.2) 100%);
+    background: linear-gradient(90deg, rgba(24, 84, 214, 0.12) 0%, rgba(16, 236, 148, 0.12) 100%);
     text-align: center;
     /* padidng-right to compensate resizer width*/ 
     padding-right: var(--resizerWidth);
@@ -74,6 +74,10 @@ html, body {
     /* outline: 1px solid var(--textColorCategory); */
     /* border: 10px solid var(--textColorCategory); */
     background: linear-gradient(90deg, var(--textColorCategory) 25%, var(--shadowColorCategory) 50%, var(--textColorCategory) 75%);
+}
+
+.resizer:hover {
+    box-shadow: 0 0 10px var(--shadowColorCategory);
 }
 
 ::-webkit-scrollbar{
@@ -307,7 +311,7 @@ input[type="color"] {
 #audioPlayer::-webkit-media-controls-panel{
     /* background-color: rgba(0, 0, 0, 0.85); */
     background: var(--textColorCategory);
-    background: linear-gradient(var(--textColorCategory) 0%, var(--shadowColorCategory) 100%);
+    background: linear-gradient(var(--textColorCategory) 50%, var(--shadowColorCategory) 100%);
 }
 
 #audioPlayer::-webkit-media-controls-current-time-display{
@@ -322,12 +326,12 @@ input[type="color"] {
     margin-right: 1rem;
 }
 
-/*#audioPlayer::-webkit-media-controls-timeline{
+/* #audioPlayer::-webkit-media-controls-timeline{
     border-radius: 40px;
     padding: 0.1rem 0rem;
     width: 50%;
     outline: 1px solid rgba(16, 236, 148, 0.464);
-}*/
+} */
 
 #audioPlayer::-webkit-media-controls-play-button{
     outline: 3px solid var(--shadowColorCategory);

@@ -60,16 +60,16 @@
                         </select>
                     </div>
                     <div class = "sidebarElement">
-                        <div class="slider">
+                        <div class="slider" title="(Resets with Visualizer Type change)">
                             <p>amplification</p>
                             <span>
                                 <input id="amplification" type="range" min="0.1" max="100" value="2" step="0.01" data-field="amplification" />
-                                <input type="text" value="2" data-field="amplification" />
+                                <input id="amplificationTextInput" type="text" value="2" data-field="amplification" />
                             </span>
                         </div>
                     </div>
                     <div class = "sidebarElement">
-                        <div class="slider" title="May be computationally expensive!">
+                        <div class="slider" title="May be computationally expensive!&#013;(Resets with Visualizer Type change)">
                             <p>width Multiplier</p>
                             <span>
                                 <input id="widthMultiplier" type="range" min="0.001" max="50" value="2" step="0.001" data-field="widthMultiplier" />
@@ -108,16 +108,16 @@
                         <div class="slider" title="Determines sides length">
                             <p>inset modifier</p>
                             <span>
-                                <input id="inset" type="range" value="1" min="-10" max="10" step="0.001" data-field="inset" />
+                                <input id="inset" type="range" value="1" min="-5" max="5" step="0.001" data-field="inset" />
                                 <input type="text" value="1" data-field="inset" />
                             </span>
                         </div>
                     </div>
                     <div class = "sidebarElement" id="initialRadiusSliderDiv">
-                        <div class="slider" title="Determines Starting point.&#013;May be used to invert the shape">
+                        <div class="slider" title="Determines Starting point&#013;May be used to invert the shape">
                             <p>initial radius</p>
                             <span>
-                                <input id="initialRadius" type="range" value="0" min="-400" max="400" step="0.001" data-field="initialRadius" />
+                                <input id="initialRadius" type="range" value="0" min="-420" max="420" step="0.001" data-field="initialRadius" />
                                 <input type="text" value="0" data-field="initialRadius" />
                             </span>
                         </div>

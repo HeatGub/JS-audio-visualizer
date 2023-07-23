@@ -102,6 +102,10 @@ function updateVisualizerType() {
         document.getElementById('widthMultiplier').value = 0.5;
         document.getElementById('widthMultiplierTextInput').value = 0.5;
 
+        document.getElementById('amplification').max = 10;
+        document.getElementById('amplification').value = 1;
+        document.getElementById('amplificationTextInput').value = 1;
+
         //  add fft size options
         document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="block";
         document.getElementById('droplistFftSizes').querySelector("option[value='4096'").style.display ="block";
@@ -115,10 +119,13 @@ function updateVisualizerType() {
         document.getElementById('initialRadiusSliderDiv').style.display = 'block';
         document.getElementById('insetSliderDiv').style.display = 'block';
 
-        document.getElementById('widthMultiplier').min = 0.001;
         document.getElementById('widthMultiplier').max = 20;
         document.getElementById('widthMultiplier').value = 10;
         document.getElementById('widthMultiplierTextInput').value = 10;
+
+        document.getElementById('amplification').max = 100;
+        document.getElementById('amplification').value = 1;
+        document.getElementById('amplificationTextInput').value = 1;
 
         //  remove fft size options and change the value if it was too high
         document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="none";
@@ -141,6 +148,10 @@ function updateVisualizerType() {
         document.getElementById('widthMultiplier').max = 10;
         document.getElementById('widthMultiplier').value = 1.333;
         document.getElementById('widthMultiplierTextInput').value = 1.333;
+
+        document.getElementById('amplification').max = 10;
+        // document.getElementById('amplification').value = 1;
+        // document.getElementById('amplificationTextInput').value = 1;
 
         //  add fft size options
         document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="block";
@@ -214,7 +225,7 @@ function mixingColors(i, dataArray){
 // HORIZONTAL BARS VISUALIZER
 function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, dataArray){
     for (let i = 0; i < bufferLengthAfterCutoff; i++){
-        barHeight = dataArray[i] * amplification * 2;
+        barHeight = dataArray[i] * amplification * 4;
         ctx.fillStyle = mixingColors(i, dataArray);
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
@@ -224,7 +235,7 @@ function drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, data
 // HORIZONTAL BARS VISUALIZER - LOGARITHMIC SCALE
 function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, dataArray){
     for (let i = 0; i < bufferLengthAfterCutoff; i++){
-        barHeight = Math.log(dataArray[i]) * amplification * 60;
+        barHeight = Math.log(dataArray[i]) * amplification * 120;
         ctx.fillStyle = mixingColors(i, dataArray);
         ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
         x += barWidth;
@@ -234,7 +245,7 @@ function drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, d
 // RADIAL BARS VISUALIZER
 function drawVisualizerRadialBars(bufferLengthAfterCutoff, barWidth, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        barHeight = dataArray[i] * amplification;
+        barHeight = dataArray[i] * amplification *2;
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         // console.log(initialRotation);
@@ -248,7 +259,7 @@ function drawVisualizerRadialBars(bufferLengthAfterCutoff, barWidth, dataArray){
 // RADIAL BARS VISUALIZER - LOGARITHMIC SCALE
 function drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, barWidth, dataArray){
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
-        barHeight = Math.log(dataArray[i]) * amplification * 30;
+        barHeight = Math.log(dataArray[i]) * amplification * 60;
         ctx.save(); //canvas values to restore later
         ctx.translate(canvas.width/2, canvas.height/2); //move (0,0) to the center of canvas
         // ctx.rotate(turns * i * Math.PI * 2 / bufferLength); //full circle with rotates = 1
@@ -267,7 +278,7 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
     ctx.translate(-canvas.width/2, -canvas.height/2);
     for (let i=0; i<(bufferLengthAfterCutoff); i++){
         ctx.strokeStyle = mixingColors(i, dataArray);
-        radius = Number(initialRadius)* amplification + (i+1)/bufferLengthAfterCutoff * amplification * 300;
+        radius = Number(initialRadius)* amplification + (i+1)/bufferLengthAfterCutoff * amplification * 600;
         insetFinal = inset * (1 +  dataArray[i]/255);
 
         //THRESHOLD /255
