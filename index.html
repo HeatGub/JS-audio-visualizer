@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <title>Visualizer</title>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    <link rel="icon" href="data:;base64,iVBORw0KGgo="> <!-- no icon error -->
     <link rel="icon" href="V_icon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Audiowide">
-    <title>Visualizer</title>
 </head>
 <body>
     <div id="openMenuButton" class="showHideButton fa-solid fa-sliders">
@@ -38,7 +38,7 @@
                     </div>
                     <div class = "sidebarElement">
                         <label for="visualizers">Visualizer Type:</label>
-                        <select name="visualizers" id="droplistVisualizers">
+                        <select name="visualizers" id="droplistVisualizers" data-field="droplistVisualizers">
                             <option value="horizontal bars">Horizontal Bars</option>
                             <option value="horizontal bars log">Horizontal Bars (logarithmic)</option>
                             <option value="radial bars">Radial Bars</option>
@@ -48,7 +48,7 @@
                     </div>
                     <div class = "sidebarElement">
                         <label for="fftSizes" title="Bars amount = FFT size/2 (without cutoff) &#013;Computationally expensive!">FFT size:</label>
-                        <select name="fftSizes" id="droplistFftSizes" title="Bars amount = FFT size/2 (without cutoff) &#013;Computationally expensive!">
+                        <select name="fftSizes" id="droplistFftSizes" data-field="droplistFftSizes" title="Bars amount = FFT size/2 (without cutoff) &#013;Computationally expensive!">
                             <option value="32">32</option>
                             <option value="64">64</option>
                             <option value="128" selected="selected">128</option>
@@ -258,18 +258,18 @@
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements3">
                     <div class = "sidebarElement"> 
                         <label for="backgrounds">Gradient type:</label>
-                        <select name="backgrounds" id="droplistBackgrounds">
+                        <select name="backgrounds" id="droplistBackgrounds" data-field="droplistBackgrounds">
                             <option value="linear">linear</option>
                             <option value="radial">radial</option>
                         </select>
                     </div>
                     <div class = "sidebarElement"> 
                         <b>Color 1:</b>
-                        <input type="color" id="colorInput1" value="#39419C">
+                        <input type="color" id="colorInput1" data-field="colorInput1" value="#39419C">
                     </div>
                     <div class = "sidebarElement"> 
                         <b>Color 2:</b>
-                        <input type="color" id="colorInput2">
+                        <input type="color" id="colorInput2" data-field="colorInput2">
                     </div>
                     <div class = "sidebarElement" id="gradAngleSliderDiv"> 
                         <div class="slider">
@@ -305,7 +305,7 @@
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements4">
                     <div class = "sidebarElement"> 
                         <b>Shadow's color:</b>
-                        <input type="color" id="colorInputShadow" value="#ffffff">
+                        <input type="color" id="colorInputShadow" data-field="colorInputShadow" value="#ffffff">
                     </div>
                     <div class = "sidebarElement"> 
                         <div class="slider" title="Determines shadow transparency">
@@ -347,6 +347,5 @@
             </div>
         </div>
     </div>
-    <script src="script.js"></script>
 </body>
 </html>

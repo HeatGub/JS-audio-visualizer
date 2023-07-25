@@ -64,6 +64,7 @@ function updateField(e) {
     updateValues();
     setBackground();
     setShadow();
+    console.log(e.target.dataset.field);
 }
 // ____________________SLIDERS____________________
 
@@ -633,3 +634,28 @@ window.addEventListener('load', () => {
     setStartingInfo();
 });
 //______________________________STARTING INFO DISPLAY______________________________
+
+
+//________________________SAVE SETTINGS________________________
+const saveSettings = () => {
+    let queryParameters = document.querySelectorAll(`[data-field]`);
+    let settingsObject = {};
+    const makePair = (element) => {
+        if (element != element+1) { //EXCLUDE SAME PARAMETER'S VALUES (slider and text input values have same data-field)
+            parameterName = element.dataset.field;
+            parameterValue = element.value;
+            //ASSIGN OBJECT'S KEY-VALUE PAIRS
+            settingsObject[parameterName] = parameterValue;
+        }
+    }
+    queryParameters.forEach(makePair);
+    settingsObject = [settingsObject]; //make it array of object(s)
+    console.log(Object.keys(settingsObject).length); //array's length
+    console.log(Object.keys(settingsObject[0]).length); //object's length
+    console.log(settingsObject);
+    //SAVE TO LOCAL STORAGE
+    // localStorage.setItem('settings', JSON.stringify(settingsObject));
+}
+// RUN THE FUNCTION
+saveSettings();
+//________________________SAVE SETTINGS________________________
