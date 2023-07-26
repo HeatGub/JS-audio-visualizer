@@ -284,7 +284,8 @@ input[type="color"] {
     margin: 0.5rem;
 }
 
-.saveLoadButton {
+.saveLoadButton, .yesNoButton{
+    /* display: flex; */
     position: relative;
     background-color: rgb(73, 158, 13);
     width: 40%;
@@ -292,10 +293,16 @@ input[type="color"] {
     margin: 1rem;
 }
 
+.flexContainer {
+    display: flex;
+}
+
+#deleteYesNoContainer, #saveYesNoContainer{
+    display: none;
+}
+
 .saveLoadButton:hover {
-    position: relative;
     background-color: rgb(66, 140, 14);
-    width: 40%;
 }
 
 #saveTextInput {
@@ -308,6 +315,13 @@ input[type="color"] {
     /* display: block; */
 }
 
+#deleteButton {
+    background-color: rgb(140, 10, 10);
+}
+
+.saveLoadMessage {
+    text-transform: none;
+}
 
 #openAudioButton:hover, #openMenuButton:hover{
     background-color: rgba(255, 255, 255, 0.05);

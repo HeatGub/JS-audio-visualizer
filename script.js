@@ -691,12 +691,37 @@ const saveSettings = () => {
     queryParameters.forEach(makePair);
     // console.log(Object.keys(settingsObject).length); //object's length
     // console.log(settingsObject);
-    //SAVE TO LOCAL STORAGE
     settingsName = saveTextInput.value;
-    localStorage.setItem(settingsName, JSON.stringify(settingsObject));
-    console.log(settingsName);
+    let nameTaken = '';
+    // NAME MUST NOT BE EMPTY
+    if (settingsName.length <=0) {
+        overwriteMessage.innerHTML = 'Enter a name';
+    }
+    else {
+        //CHECK IF NAME IS TAKEN (nameTaken)
+        overwriteMessage.innerHTML = '';
+        for (i=0; i<droplistLoad.length; i++) {
+            // console.log(droplistLoad[i].value);
+            if (droplistLoad[i].value == settingsName) {
+                //NAME TAKEN
+                nameTaken = droplistLoad[i].value
+            };
+        };
 
-    reloadLoadDroplist();
+        // IF NAME TAKEN
+        if (nameTaken.length > 0) {
+            overwriteMessage.innerHTML = 'Overwrite ' + nameTaken + '?';
+            // YES OR NO - DISPLAY
+            // saveButton.style.display = 'none';
+            saveYesNoContainer.style.display = 'flex';
+        }
+        //IF NAME AVAILABLE - SAVE TO LOCAL STORAGE
+        else {
+            localStorage.setItem(settingsName, JSON.stringify(settingsObject));
+            console.log('SAVE TO LOCAL STORAGE - ' + settingsName);
+        }
+        reloadLoadDroplist();
+    }
 }
 saveButton.addEventListener('click', saveSettings);
 //______________________________SAVE SETTINGS______________________________
@@ -733,9 +758,51 @@ const loadSettings = () => {
     setBackground();
     setShadow();
     reloadAnimation();
-
-    console.log('LOADED');
+    // console.log('LOADED');
 };
 loadButton = document.getElementById('loadButton');
 loadButton.addEventListener('click', loadSettings);
 //______________________________LOAD SETTINGS______________________________
+
+//______________________________DELETE SETTINGS______________________________
+const deleteSettingsInitiation = () => {
+    // console.log(droplistLoad.value);
+    // loadMessage.style.display = 'block';
+    loadDeleteContainer.style.display = 'none';
+    selectedSettings = droplistLoad.value;
+    deleteMessage.innerHTML = 'Delete ' + selectedSettings + '?';
+    deleteYesNoContainer.style.display = 'flex';
+
+    console.log(droplistLoad.value);
+
+    const deleteSettings = () => {
+        localStorage.removeItem(selectedSettings);
+        reloadLoadDroplist();
+        console.log('deleteYesButton');
+        console.log(selectedSettings);
+
+        loadDeleteContainer.style.display = 'flex';
+        deleteMessage.innerHTML = '';
+        deleteYesNoContainer.style.display = 'none';
+        // deleteYesButton.removeEventListener('click', deleteSettings);
+    };
+    deleteYesButton.addEventListener('click', deleteSettings);
+
+    const dontDeleteSettings = () => {
+        loadDeleteContainer.style.display = 'flex';
+        deleteMessage.innerHTML = '';
+        deleteYesNoContainer.style.display = 'none';
+        // deleteNoButton.removeEventListener('click', dontDeleteSettings);
+    };
+    deleteNoButton.addEventListener('click', dontDeleteSettings);
+    
+    // localStorage.removeItem(droplistLoad.value);
+    // reloadLoadDroplist();
+
+    // deleteButton.removeEventListener('click', deleteSettingsInitiation);
+};
+
+deleteButton = document.getElementById('deleteButton');
+deleteButton.addEventListener('click', deleteSettingsInitiation);
+
+//______________________________DELETE SETTINGS______________________________
