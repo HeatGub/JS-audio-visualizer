@@ -60,11 +60,11 @@ function updateField(e) {
     document
       .querySelectorAll(`[data-field="${field}"]`)
       .forEach((el) => (el.value = value));
-    // console.log(e.target.id);
     updateValues();
     setBackground();
     setShadow();
-    console.log(e.target.dataset.field);
+    // console.log(e.target.id);
+    // console.log(e.target.dataset.field);
 }
 // ____________________SLIDERS____________________
 
@@ -636,12 +636,13 @@ window.addEventListener('load', () => {
 //______________________________STARTING INFO DISPLAY______________________________
 
 
-//________________________SAVE SETTINGS________________________
+//______________________________SAVE SETTINGS______________________________
 const saveSettings = () => {
     let queryParameters = document.querySelectorAll(`[data-field]`);
     let settingsObject = {};
     const makePair = (element) => {
-        if (element != element+1) { //EXCLUDE SAME PARAMETER'S VALUES (slider and text input values have same data-field)
+        if (element.type != 'text') { //EXCLUDE text input values
+            // console.log(element.type);
             parameterName = element.dataset.field;
             parameterValue = element.value;
             //ASSIGN OBJECT'S KEY-VALUE PAIRS
@@ -649,13 +650,47 @@ const saveSettings = () => {
         }
     }
     queryParameters.forEach(makePair);
-    settingsObject = [settingsObject]; //make it array of object(s)
-    console.log(Object.keys(settingsObject).length); //array's length
-    console.log(Object.keys(settingsObject[0]).length); //object's length
+    console.log(Object.keys(settingsObject).length); //object's length
     console.log(settingsObject);
     //SAVE TO LOCAL STORAGE
-    // localStorage.setItem('settings', JSON.stringify(settingsObject));
+    settingsName = 'szet3';
+    localStorage.setItem(settingsName, JSON.stringify(settingsObject));
 }
 // RUN THE FUNCTION
-saveSettings();
-//________________________SAVE SETTINGS________________________
+// saveSettings();
+//______________________________SAVE SETTINGS______________________________
+
+
+//______________________________LOAD SETTINGS______________________________
+const loadSettings = () => {
+    // DROPLIST SETTINGS
+    // droplistSettings = document.getElementById('droplistSettings');
+    // console.log(droplistSettings);
+
+    //RETRIEVE ALL LOCAL STORAGE ITEMS
+    let localStorageItems = { ...localStorage };
+
+    //CHANGE RETRIEVED OBJECT TO ARRAY TO USE FOREACH
+    localStorageItemsNames = Object.keys(localStorageItems);
+
+    // LOAD FIRST SETTINGS AND PARSE TO JSON
+    let loadTheseSettingsObject = JSON.parse(localStorageItems[localStorageItemsNames[1]]);
+    loadTheseParamatersKeys = Object.keys(loadTheseSettingsObject);
+    //QUERY DOM PARAMETERS
+    let queryParameters = document.querySelectorAll(`[data-field]`);
+
+    queryParameters.forEach( (queryElement) => {
+        // console.log(queryElement.value);
+        parameterFieldValue = queryElement.dataset.field;
+        // console.log(parameterFieldValue);
+
+        loadTheseParamatersKeys.forEach( (loadElement) => {
+            if (loadElement == parameterFieldValue){
+                queryElement.value = loadTheseSettingsObject[loadElement];
+                console.log(queryElement.value);
+            }
+        });
+    });
+};
+loadSettings();
+//______________________________LOAD SETTINGS______________________________
