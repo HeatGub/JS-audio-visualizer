@@ -8,8 +8,6 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
 const audioPlayer = document.getElementById('audioPlayer');
-// audioPlayer.volume = 0.2;
-// let audioContext = new AudioContext();
 audioPlayer.addEventListener('play', reloadAnimation);
 //COLORPARAMETERS INIT
 let [alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0];
@@ -34,7 +32,6 @@ let inset = Number(document.getElementById('inset').value);
 let initialRadius = Number(document.getElementById('initialRadius').value);
 let polygonsReactiveness = Number(document.getElementById('polygonsReactiveness').value);
 let polygonsReactivenessFinal = Number((1 - polygonsReactiveness).toFixed(3));
-
 // SOME DECLARATIONS ARE NEARBY THEIR MAIN FUNCTIONS
 
 //FILE HANDLING
@@ -45,7 +42,7 @@ file.addEventListener('change', function(){
     fileupload.style.outline = 'none';
 });
 
-// ____________________SLIDERS____________________
+// ____________________SLIDER-INPUT PAIRS____________________
 rangeInputs.forEach((el) => {
     el.addEventListener("input", updateField);
 });
@@ -63,21 +60,20 @@ function updateField(e) {
     updateParameters();
     setBackground();
     setShadow();
-    // console.log(e.target.id);
-    // console.log(e.target.dataset.field);
 }
-// ____________________SLIDERS____________________
+// ____________________SLIDER-INPUT PAIRS____________________
 
 // UPDATE VALUES FUNCTION
 function updateParameters() {
-    [amplification, widthMultiplier, highCutoff, turns, polygonSymmetry, polygonsReactiveness, inset, initialRadius, initialRotation, rotationSpeed, alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
+    [amplification, widthMultiplier, highCutoff, turns, polygonSymmetry, polygonsReactiveness, inset, initialRadius, initialRotation, rotationSpeed, alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] 
+    = [...rangeInputs].map((el) => el.value);
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
     barWidth = widthMultiplier * (canvas.width/fftSize*2);
     bufferLength = fftSize/2;
     highCutoff = fftSize/2 * highCutoff;
     bufferLengthAfterCutoff = bufferLength - highCutoff;
     polygonsReactivenessFinal = Number((1 - polygonsReactiveness).toFixed(3));
-    // console.log(inset);
+    // console.log('updateParameters');
 }
 
 //FFT UPDATE
@@ -89,8 +85,16 @@ function updateFftSize() {
     reloadAnimation();
 }
 
-//VISUALIZER TYPE
-droplistVisualizers.addEventListener('input', updateVisualizerType);
+//______________________________VISUALIZER TYPE______________________________
+let resetSelectedParameters = true;
+
+//EVENT LISTENER ON VISUALIZER TYPE - CHANGES BOOLEAN resetSelectedParameters to true
+droplistVisualizers.addEventListener('input', () => {
+    // change boolean value to reset widthMultiplier and amplification
+    resetSelectedParameters = true;
+    updateVisualizerType(resetSelectedParameters);
+});
+
 // update type and disable unnecessary sliders
 function updateVisualizerType() {
     visualizerType = document.getElementById('droplistVisualizers').value;
@@ -103,6 +107,7 @@ function updateVisualizerType() {
         document.getElementById('initialRadiusSliderDiv').style.display = 'none';
         document.getElementById('insetSliderDiv').style.display = 'none';
 
+        if (resetSelectedParameters == true){
         document.getElementById('widthMultiplier').min = 0.01;
         document.getElementById('widthMultiplier').max = 50;
         document.getElementById('widthMultiplier').value = 0.5;
@@ -111,6 +116,7 @@ function updateVisualizerType() {
         document.getElementById('amplification').max = 10;
         document.getElementById('amplification').value = 1;
         document.getElementById('amplificationTextInput').value = 1;
+        }
 
         //  add fft size options
         document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="block";
@@ -126,6 +132,7 @@ function updateVisualizerType() {
         document.getElementById('initialRadiusSliderDiv').style.display = 'block';
         document.getElementById('insetSliderDiv').style.display = 'block';
 
+        if (resetSelectedParameters == true){
         document.getElementById('widthMultiplier').max = 20;
         document.getElementById('widthMultiplier').value = 10;
         document.getElementById('widthMultiplierTextInput').value = 10;
@@ -133,6 +140,7 @@ function updateVisualizerType() {
         document.getElementById('amplification').max = 100;
         document.getElementById('amplification').value = 1;
         document.getElementById('amplificationTextInput').value = 1;
+        }
 
         //  remove fft size options and change the value if it was too high
         document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="none";
@@ -152,6 +160,7 @@ function updateVisualizerType() {
         document.getElementById('initialRadiusSliderDiv').style.display = 'none';
         document.getElementById('insetSliderDiv').style.display = 'none';
 
+        if (resetSelectedParameters == true){
         document.getElementById('widthMultiplier').min = 0.1;
         document.getElementById('widthMultiplier').max = 10;
         document.getElementById('widthMultiplier').value = 1.333;
@@ -160,16 +169,20 @@ function updateVisualizerType() {
         document.getElementById('amplification').max = 10;
         document.getElementById('amplification').value = 1;
         document.getElementById('amplificationTextInput').value = 1;
+        }
 
         //  add fft size options
         document.getElementById('droplistFftSizes').querySelector("option[value='2048'").style.display ="block";
         document.getElementById('droplistFftSizes').querySelector("option[value='4096'").style.display ="block";
         document.getElementById('droplistFftSizes').querySelector("option[value='8192'").style.display ="block";
     }
-    updateParameters();
+    // updateParameters();
+    // console.log('updateVisualizerType');
 }
 updateVisualizerType(); //to disable unnecessary elements at the start
+//______________________________VISUALIZER TYPE______________________________
 
+//______________________________RELOAD ANIMATION______________________________
 let lastRequestId;
 
 function reloadAnimation() {
@@ -189,7 +202,6 @@ function reloadAnimation() {
     let x = 0;
 
     function animate() {
-        // console.log(initialRadius);
         if (audioPlayer.paused) {
             // console.log('paused');
             return; //break the loop if paused
@@ -221,6 +233,7 @@ function reloadAnimation() {
     }
     animate();
 };
+//______________________________RELOAD ANIMATION______________________________
 
 //COLOR MIXER
 function mixingColors(i, dataArray){
@@ -638,23 +651,31 @@ window.addEventListener('load', () => {
 //______________________________RELOAD SETTINGS DROLPIST______________________________
 droplistLoad = document.getElementById('droplistLoad');
 // console.log(droplistLoad);
-//RETRIEVE ALL LOCAL STORAGE ITEMS
-let localStorageItems = { ...localStorage };
-//CHANGE RETRIEVED OBJECT TO ARRAY TO USE FOREACH
-localStorageItemsNames = Object.keys(localStorageItems);
-// console.log(localStorageItemsNames);
 
-const reloadSettingsDroplist = (element, index) => {
-    let option = document.createElement("option");
-    option.text = element;
-    droplistLoad.add(option, droplistLoad[index]);
+const reloadLoadDroplist = () => {
+    //RETRIEVE ALL LOCAL STORAGE ITEMS
+    let localStorageItems = { ...localStorage };
+    //CHANGE RETRIEVED OBJECT TO ARRAY TO USE FOREACH
+    localStorageItemsNames = Object.keys(localStorageItems);
+    // console.log(localStorageItemsNames);
+    //CLEAR THE LIST FIRST
+    droplistLoad.innerHTML = "";
+    const addLoadDroplistElement = (element, index) => {
+        let option = document.createElement("option");
+        option.text = element;
+        droplistLoad.add(option, droplistLoad[index]);
+    };
+
+    localStorageItemsNames.forEach( addLoadDroplistElement );
 };
-
-localStorageItemsNames.forEach( reloadSettingsDroplist );
+reloadLoadDroplist();
 //______________________________RELOAD SETTINGS DROLPIST______________________________
 
 
 //______________________________SAVE SETTINGS______________________________
+saveTextInput = document.getElementById(`saveTextInput`);
+saveButton = document.getElementById(`saveButton`);
+
 const saveSettings = () => {
     let queryParameters = document.querySelectorAll(`[data-field]`);
     let settingsObject = {};
@@ -668,13 +689,16 @@ const saveSettings = () => {
         }
     }
     queryParameters.forEach(makePair);
-    console.log(Object.keys(settingsObject).length); //object's length
-    console.log(settingsObject);
+    // console.log(Object.keys(settingsObject).length); //object's length
+    // console.log(settingsObject);
     //SAVE TO LOCAL STORAGE
-    settingsName = 'szet3';
+    settingsName = saveTextInput.value;
     localStorage.setItem(settingsName, JSON.stringify(settingsObject));
+    console.log(settingsName);
+
+    reloadLoadDroplist();
 }
-// saveSettings();
+saveButton.addEventListener('click', saveSettings);
 //______________________________SAVE SETTINGS______________________________
 
 
@@ -701,11 +725,13 @@ const loadSettings = () => {
             }
         });
     });
-    updateParameters();
+
+    // updateParameters();
+    resetSelectedParameters = false;
+    updateVisualizerType(resetSelectedParameters);
     updateFftSize();
     setBackground();
     setShadow();
-    updateVisualizerType();
     reloadAnimation();
 
     console.log('LOADED');
