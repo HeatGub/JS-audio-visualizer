@@ -60,7 +60,7 @@ function updateField(e) {
     document
       .querySelectorAll(`[data-field="${field}"]`)
       .forEach((el) => (el.value = value));
-    updateValues();
+    updateParameters();
     setBackground();
     setShadow();
     // console.log(e.target.id);
@@ -69,7 +69,7 @@ function updateField(e) {
 // ____________________SLIDERS____________________
 
 // UPDATE VALUES FUNCTION
-function updateValues() {
+function updateParameters() {
     [amplification, widthMultiplier, highCutoff, turns, polygonSymmetry, polygonsReactiveness, inset, initialRadius, initialRotation, rotationSpeed, alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [...rangeInputs].map((el) => el.value);
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
     barWidth = widthMultiplier * (canvas.width/fftSize*2);
@@ -78,7 +78,6 @@ function updateValues() {
     bufferLengthAfterCutoff = bufferLength - highCutoff;
     polygonsReactivenessFinal = Number((1 - polygonsReactiveness).toFixed(3));
     // console.log(inset);
-    // console.log(polygonsReactivenessFinal);
 }
 
 //FFT UPDATE
@@ -86,7 +85,7 @@ droplistFftSizes.addEventListener('input', updateFftSize);
 
 function updateFftSize() {
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
-    updateValues();
+    updateParameters();
     reloadAnimation();
 }
 
@@ -167,7 +166,7 @@ function updateVisualizerType() {
         document.getElementById('droplistFftSizes').querySelector("option[value='4096'").style.display ="block";
         document.getElementById('droplistFftSizes').querySelector("option[value='8192'").style.display ="block";
     }
-    updateValues();
+    updateParameters();
 }
 updateVisualizerType(); //to disable unnecessary elements at the start
 
@@ -636,6 +635,25 @@ window.addEventListener('load', () => {
 //______________________________STARTING INFO DISPLAY______________________________
 
 
+//______________________________RELOAD SETTINGS DROLPIST______________________________
+droplistLoad = document.getElementById('droplistLoad');
+// console.log(droplistLoad);
+//RETRIEVE ALL LOCAL STORAGE ITEMS
+let localStorageItems = { ...localStorage };
+//CHANGE RETRIEVED OBJECT TO ARRAY TO USE FOREACH
+localStorageItemsNames = Object.keys(localStorageItems);
+// console.log(localStorageItemsNames);
+
+const reloadSettingsDroplist = (element, index) => {
+    let option = document.createElement("option");
+    option.text = element;
+    droplistLoad.add(option, droplistLoad[index]);
+};
+
+localStorageItemsNames.forEach( reloadSettingsDroplist );
+//______________________________RELOAD SETTINGS DROLPIST______________________________
+
+
 //______________________________SAVE SETTINGS______________________________
 const saveSettings = () => {
     let queryParameters = document.querySelectorAll(`[data-field]`);
@@ -656,41 +674,42 @@ const saveSettings = () => {
     settingsName = 'szet3';
     localStorage.setItem(settingsName, JSON.stringify(settingsObject));
 }
-// RUN THE FUNCTION
 // saveSettings();
 //______________________________SAVE SETTINGS______________________________
 
 
 //______________________________LOAD SETTINGS______________________________
 const loadSettings = () => {
-    // DROPLIST SETTINGS
-    // droplistSettings = document.getElementById('droplistSettings');
-    // console.log(droplistSettings);
-
     //RETRIEVE ALL LOCAL STORAGE ITEMS
     let localStorageItems = { ...localStorage };
 
-    //CHANGE RETRIEVED OBJECT TO ARRAY TO USE FOREACH
-    localStorageItemsNames = Object.keys(localStorageItems);
-
-    // LOAD FIRST SETTINGS AND PARSE TO JSON
-    let loadTheseSettingsObject = JSON.parse(localStorageItems[localStorageItemsNames[1]]);
+    // LOAD DROPLIST'S SELECTED SETTINGS AND PARSE TO JSON
+    let loadTheseSettingsObject = JSON.parse(localStorageItems[droplistLoad.value]);
     loadTheseParamatersKeys = Object.keys(loadTheseSettingsObject);
+
     //QUERY DOM PARAMETERS
     let queryParameters = document.querySelectorAll(`[data-field]`);
-
     queryParameters.forEach( (queryElement) => {
-        // console.log(queryElement.value);
         parameterFieldValue = queryElement.dataset.field;
         // console.log(parameterFieldValue);
 
+        //AND FILL WITH LOADED VALUE
         loadTheseParamatersKeys.forEach( (loadElement) => {
             if (loadElement == parameterFieldValue){
                 queryElement.value = loadTheseSettingsObject[loadElement];
-                console.log(queryElement.value);
+                // console.log(queryElement.value);
             }
         });
     });
+    updateParameters();
+    updateFftSize();
+    setBackground();
+    setShadow();
+    updateVisualizerType();
+    reloadAnimation();
+
+    console.log('LOADED');
 };
-loadSettings();
+loadButton = document.getElementById('loadButton');
+loadButton.addEventListener('click', loadSettings);
 //______________________________LOAD SETTINGS______________________________

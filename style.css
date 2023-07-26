@@ -284,6 +284,21 @@ input[type="color"] {
     margin: 0.5rem;
 }
 
+.saveLoadButton {
+    position: relative;
+    background-color: rgb(73, 158, 13);
+    width: 40%;
+    border-radius: 0.5rem;
+    margin: 1rem;
+}
+
+.saveLoadButton:hover {
+    position: relative;
+    background-color: rgb(66, 140, 14);
+    width: 40%;
+}
+
+
 #openAudioButton:hover, #openMenuButton:hover{
     background-color: rgba(255, 255, 255, 0.05);
     box-shadow: 0 0 8px var(--shadowColorCategory);
