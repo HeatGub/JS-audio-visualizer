@@ -15,6 +15,7 @@
     --textColorCategory: rgb(24, 84, 214);
     --textColorCategoryAlpha050: rgba(24, 84, 214, 0.6);
     --shadowColorCategory: rgb(16, 236, 148);
+    --backgroundColorSaveLoadButtons: rgba(0, 0, 0, 0.5);
 }
 
 html, body {
@@ -379,7 +380,8 @@ input[type="color"] {
 
 .saveLoadButton, .yesNoButton{
     position: relative;
-    background-color: var(--textColorCategory);
+    /* background-color: var(--textColorCategory); */
+    background-color: var(--backgroundColorSaveLoadButtons);
     width: 42%;
     border-radius: 0.5rem;
     margin: 0.5rem 0 0.5rem 0;
@@ -404,9 +406,13 @@ input[type="color"] {
     font-size: 1.8rem;
 }
 
+#saveButton, #loadButton {
+    /* background-color: var(--textColorCategory); */
+    background-color: var(--backgroundColorSaveLoadButtons);
+    color: var(--shadowColorCategory);
+}
+
 #deleteButton {
-    background-color: var(--shadowColorCategory);
-    /* color: var(--shadowColorCategory); */
     color: var(--textColorCategory);
 }
 
@@ -428,11 +434,6 @@ input[type="color"] {
 }
 
 .noButton {
-    background-color: var(--textColorCategory);
-    color: var(--shadowColorCategory);
-}
-
-#saveButton, #loadButton {
     background-color: var(--textColorCategory);
     color: var(--shadowColorCategory);
 }

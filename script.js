@@ -698,6 +698,14 @@ const reloadLoadDroplist = () => {
 reloadLoadDroplist();
 //______________________________RELOAD SETTINGS DROLPIST______________________________
 
+// DISAPPEARING MESSAGE FUNCTION
+const showDisappearingMessage = (elementsId, settings, message) => {
+    elementsId.innerHTML = message + ' ' + settings + '.';
+    setTimeout(() => {
+        elementsId.innerHTML = '';
+    }, 1000);
+}
+
 //______________________________SAVE SETTINGS______________________________
 saveTextInput = document.getElementById(`saveTextInput`);
 saveButton = document.getElementById(`saveButton`);
@@ -756,11 +764,11 @@ const saveSettingsInitiation = () => {
                 localStorage.setItem(settingsName, JSON.stringify(settingsObject));
                 saveContainer.style.display = 'flex';
                 saveYesNoContainer.style.display = 'none';
-                overwriteMessage.innerHTML = '';
+                // overwriteMessage.innerHTML = '';
                 // ENBLE INPUT
                 saveTextInput.disabled = false;
                 reloadLoadDroplist();
-                // console.log('SAVE YES BTN - ' + settingsName);
+                showDisappearingMessage(overwriteMessage, settingsName, 'Saved as');
             };
         }
 
@@ -770,8 +778,9 @@ const saveSettingsInitiation = () => {
             localStorage.setItem(settingsName, JSON.stringify(settingsObject));
             // console.log('SAVE TO LOCAL STORAGE - ' + settingsName);
             saveContainer.style.display = 'flex';
-            overwriteMessage.innerHTML = '';
+            // overwriteMessage.innerHTML = '';
             reloadLoadDroplist();
+            showDisappearingMessage(overwriteMessage, settingsName, 'Saved as');
         }
     }
 }
@@ -784,7 +793,8 @@ const loadSettings = () => {
     let localStorageItems = { ...localStorage };
 
     // LOAD DROPLIST'S SELECTED SETTINGS AND PARSE TO JSON
-    let loadTheseSettingsObject = JSON.parse(localStorageItems[droplistLoad.value]);
+    let theseSettings = droplistLoad.value;
+    let loadTheseSettingsObject = JSON.parse(localStorageItems[theseSettings]);
     loadTheseParamatersKeys = Object.keys(loadTheseSettingsObject);
 
     //QUERY DOM PARAMETERS
@@ -809,7 +819,13 @@ const loadSettings = () => {
     setBackground();
     setShadow();
     reloadAnimation();
+
+    //show msg and fill saveTextInput with a loaded value
+    showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded');
+    saveTextInput.value = [theseSettings];
+
     // console.log('LOADED');
+
 };
 loadButton = document.getElementById('loadButton');
 loadButton.addEventListener('click', loadSettings);
@@ -819,7 +835,7 @@ loadButton.addEventListener('click', loadSettings);
 const deleteSettingsInitiation = () => {
     loadDeleteContainer.style.display = 'none';
     selectedSettings = droplistLoad.value;
-    deleteMessage.innerHTML = 'Delete ' + selectedSettings + '?';
+    loadDeleteMessage.innerHTML = 'Delete ' + selectedSettings + '?';
     deleteYesNoContainer.style.display = 'flex';
 
     //event handler onclick here, adding many EventListeners would fire yes/no functions many times
@@ -827,18 +843,19 @@ const deleteSettingsInitiation = () => {
         //DELETE
         localStorage.removeItem(selectedSettings);
         reloadLoadDroplist();
-        console.log('deleteYesButton');
-        console.log(selectedSettings);
+
+        showDisappearingMessage(loadDeleteMessage, selectedSettings, 'Deleted');
 
         loadDeleteContainer.style.display = 'flex';
-        deleteMessage.innerHTML = '';
+        // loadDeleteMessage.innerHTML = '';
         deleteYesNoContainer.style.display = 'none';
+
     };
 
     //event handler
     deleteNoButton.onclick = () => {
         loadDeleteContainer.style.display = 'flex';
-        deleteMessage.innerHTML = '';
+        loadDeleteMessage.innerHTML = '';
         deleteYesNoContainer.style.display = 'none';
     };
 };
