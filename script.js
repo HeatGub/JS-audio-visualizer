@@ -444,6 +444,8 @@ function closeAudioContainer () {
 };
 
 //STARTING DISPLAY (CSS display : none WORKED BAD WITH THE hideShowCategoryElements)
+// document.getElementById('sidebarInsideCategoryElements0').style.display = 'none';
+// document.getElementById('sidebarInsideCategoryElements1').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements2').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements3').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements4').style.display = 'none';
@@ -646,7 +648,6 @@ window.addEventListener('load', () => {
 });
 //______________________________STARTING INFO DISPLAY______________________________
 
-
 //______________________________RELOAD SETTINGS DROLPIST______________________________
 droplistLoad = document.getElementById('droplistLoad');
 // console.log(droplistLoad);
@@ -670,34 +671,30 @@ const reloadLoadDroplist = () => {
 reloadLoadDroplist();
 //______________________________RELOAD SETTINGS DROLPIST______________________________
 
-
 //______________________________SAVE SETTINGS______________________________
 saveTextInput = document.getElementById(`saveTextInput`);
 saveButton = document.getElementById(`saveButton`);
 
-const saveSettings = () => {
+const saveSettingsInitiation = () => {
     let queryParameters = document.querySelectorAll(`[data-field]`);
     let settingsObject = {};
     const makePair = (element) => {
         if (element.type != 'text') { //EXCLUDE text input values
-            // console.log(element.type);
             parameterName = element.dataset.field;
             parameterValue = element.value;
             //ASSIGN OBJECT'S KEY-VALUE PAIRS
             settingsObject[parameterName] = parameterValue;
         }
     }
-    queryParameters.forEach(makePair);
-    // console.log(Object.keys(settingsObject).length); //object's length
-    // console.log(settingsObject);
+    // queryParameters.forEach(makePair);
     settingsName = saveTextInput.value;
-    let nameTaken = '';
     // NAME MUST NOT BE EMPTY
     if (settingsName.length <=0) {
-        overwriteMessage.innerHTML = 'Enter a name';
+        overwriteMessage.innerHTML = 'Enter the name to save';
     }
     else {
         //CHECK IF NAME IS TAKEN (nameTaken)
+        let nameTaken = '';
         overwriteMessage.innerHTML = '';
         for (i=0; i<droplistLoad.length; i++) {
             // console.log(droplistLoad[i].value);
@@ -710,21 +707,43 @@ const saveSettings = () => {
         // IF NAME TAKEN
         if (nameTaken.length > 0) {
             overwriteMessage.innerHTML = 'Overwrite ' + nameTaken + '?';
-            // YES OR NO - DISPLAY
-            // saveButton.style.display = 'none';
+            // DISPLAY YES OR NO CONTAINER
+            saveContainer.style.display = 'none';
             saveYesNoContainer.style.display = 'flex';
+
+            // CANCEL SAVING
+            saveNoButton.onclick = () => {
+                saveContainer.style.display = 'flex';
+                saveYesNoContainer.style.display = 'none';
+                overwriteMessage.innerHTML = '';
+                // console.log('saveNoButton');
+            };
+
+            // SAVE AFTER CONFIRMATION - OVERWRITE
+            saveYesButton.onclick = () => {
+                queryParameters.forEach(makePair);
+                localStorage.setItem(settingsName, JSON.stringify(settingsObject));
+                saveContainer.style.display = 'flex';
+                saveYesNoContainer.style.display = 'none';
+                overwriteMessage.innerHTML = '';
+                reloadLoadDroplist();
+                // console.log('SAVE YES BTN - ' + settingsName);
+            };
         }
+
         //IF NAME AVAILABLE - SAVE TO LOCAL STORAGE
         else {
+            queryParameters.forEach(makePair);
             localStorage.setItem(settingsName, JSON.stringify(settingsObject));
-            console.log('SAVE TO LOCAL STORAGE - ' + settingsName);
+            // console.log('SAVE TO LOCAL STORAGE - ' + settingsName);
+            saveContainer.style.display = 'flex';
+            overwriteMessage.innerHTML = '';
+            reloadLoadDroplist();
         }
-        reloadLoadDroplist();
     }
 }
-saveButton.addEventListener('click', saveSettings);
+saveButton.addEventListener('click', saveSettingsInitiation);
 //______________________________SAVE SETTINGS______________________________
-
 
 //______________________________LOAD SETTINGS______________________________
 const loadSettings = () => {
@@ -762,7 +781,6 @@ const loadSettings = () => {
 loadButton = document.getElementById('loadButton');
 loadButton.addEventListener('click', loadSettings);
 //______________________________LOAD SETTINGS______________________________
-
 
 //______________________________DELETE SETTINGS______________________________
 const deleteSettingsInitiation = () => {

@@ -30,13 +30,12 @@
         </div>
         <div class="resizer"> 
         </div>
-        <div class="sidebar">     
-            <div class ="sidebarCategory" id="sidebarCategory1"> GENERAL
-                <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements1">
-
-                    <!-- ______________________________ SAVE AND LOAD ______________________________ -->
+        <div class="sidebar">   
+            <div class ="sidebarCategory" id="sidebarCategory0">LOAD / SAVE 
+                <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements0">  
+                <!-- ______________________________ SAVE AND LOAD ______________________________ -->
                     <div class = "sidebarElement">
-                        <label for="settings">Load:</label>
+                        <label for="settings">Settings</label>
                         <select id="droplistLoad">
                             <!-- SAVED SETTINGS - FILLED WITH JS -->
                         </select>
@@ -57,11 +56,15 @@
                             <div class="yesNoButton" id="deleteNoButton"> NO
                             </div>
                         </div>
-
+                    </div>
+                    <!-- SAVE -->
+                    <div class = "sidebarElement"> Settings' name
                         <input type="text" id="saveTextInput" />
                         <div class="saveLoadMessage" id="overwriteMessage">
                         </div>
-                        <div class="saveLoadButton" id="saveButton"> SAVE
+                        <div class="flexContainer" id="saveContainer">
+                            <div class="saveLoadButton" id="saveButton"> SAVE
+                            </div>
                         </div>
 
                         <div class="flexContainer" id="saveYesNoContainer">
@@ -70,10 +73,13 @@
                             <div class="yesNoButton" id="saveNoButton"> NO
                             </div>
                         </div>
-
                     </div>
-                    <!-- ______________________________ SAVE AND LOAD ______________________________ -->
+                </div>
+            </div>
+                <!-- ______________________________ SAVE AND LOAD ______________________________ -->
 
+            <div class ="sidebarCategory" id="sidebarCategory1"> GENERAL
+                <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements1">
                     <div class = "sidebarElement">
                         <input type = "file" id="fileupload" accept="audio/*"></input>
                     </div>
