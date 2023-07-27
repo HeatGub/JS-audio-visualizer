@@ -31,7 +31,7 @@
         <div class="resizer"> 
         </div>
         <div class="sidebar">   
-            <div class ="sidebarCategory" id="sidebarCategory0">LOAD / SAVE 
+            <div class ="sidebarCategory" id="sidebarCategory0">LOAD/SAVE
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements0">  
                 <!-- ______________________________ SAVE AND LOAD ______________________________ -->
                     <div class = "sidebarElement">
@@ -51,14 +51,14 @@
                         </div>
 
                         <div class="flexContainer" id="deleteYesNoContainer">
-                            <div class="yesNoButton" id="deleteYesButton"> YES
+                            <div class="yesNoButton yesButton" id="deleteYesButton"> YES
                             </div>
-                            <div class="yesNoButton" id="deleteNoButton"> NO
+                            <div class="yesNoButton noButton" id="deleteNoButton"> NO
                             </div>
                         </div>
                     </div>
                     <!-- SAVE -->
-                    <div class = "sidebarElement"> Settings' name
+                    <div class = "sidebarElement"> Save as
                         <input type="text" id="saveTextInput" />
                         <div class="saveLoadMessage" id="overwriteMessage">
                         </div>
@@ -68,9 +68,9 @@
                         </div>
 
                         <div class="flexContainer" id="saveYesNoContainer">
-                            <div class="yesNoButton" id="saveYesButton"> YES
+                            <div class="yesNoButton yesButton" id="saveYesButton"> YES
                             </div>
-                            <div class="yesNoButton" id="saveNoButton"> NO
+                            <div class="yesNoButton noButton" id="saveNoButton"> NO
                             </div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                         <input type = "file" id="fileupload" accept="audio/*"></input>
                     </div>
                     <div class = "sidebarElement">
-                        <label for="visualizers">Visualizer Type:</label>
+                        <label for="visualizers">Visualizer Type</label>
                         <select name="visualizers" id="droplistVisualizers" data-field="droplistVisualizers">
                             <option value="horizontal bars">Horizontal Bars</option>
                             <option value="horizontal bars log">Horizontal Bars (logarithmic)</option>
@@ -94,7 +94,7 @@
                         </select>
                     </div>
                     <div class = "sidebarElement">
-                        <label for="fftSizes" title="Bars amount = FFT size/2 (without cutoff) &#013;Computationally expensive!">FFT size:</label>
+                        <label for="fftSizes" title="Bars amount = FFT size/2 (without cutoff) &#013;Computationally expensive!">FFT size</label>
                         <select name="fftSizes" id="droplistFftSizes" data-field="droplistFftSizes" title="Bars amount = FFT size/2 (without cutoff) &#013;Computationally expensive!">
                             <option value="32">32</option>
                             <option value="64">64</option>
@@ -143,6 +143,10 @@
                             </span>
                         </div>
                     </div>
+
+                    <!-- <div class = "sidebarElement" id="emptyDivForEvenNumberOfDivs">
+                    </div> -->
+
                     <div class = "sidebarElement" id="polygonSymmetrySliderDiv">
                         <div class="slider" title="Computationally expensive!">
                             <p>polygon Symmetry</p>
@@ -152,7 +156,6 @@
                             </span>
                         </div>
                     </div>
-
                     <div class = "sidebarElement" id="polygonsReactivenessSliderDiv">
                         <div class="slider" title="Determines polygons dynamics">
                             <p>reactiveness</p>
@@ -162,7 +165,6 @@
                             </span>
                         </div>
                     </div>
-                    
                     <div class = "sidebarElement" id="insetSliderDiv">
                         <div class="slider" title="Determines sides length">
                             <p>inset modifier</p>
@@ -304,18 +306,18 @@
             <div class ="sidebarCategory" id="sidebarCategory3"> BACKGROUND
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements3">
                     <div class = "sidebarElement"> 
-                        <label for="backgrounds">Gradient type:</label>
+                        <label for="backgrounds">Gradient type</label>
                         <select name="backgrounds" id="droplistBackgrounds" data-field="droplistBackgrounds">
                             <option value="linear">linear</option>
                             <option value="radial">radial</option>
                         </select>
                     </div>
                     <div class = "sidebarElement"> 
-                        <b>Color 1:</b>
+                        <b>Color 1</b>
                         <input type="color" id="colorInput1" data-field="colorInput1" value="#39419C">
                     </div>
                     <div class = "sidebarElement"> 
-                        <b>Color 2:</b>
+                        <b>Color 2</b>
                         <input type="color" id="colorInput2" data-field="colorInput2">
                     </div>
                     <div class = "sidebarElement" id="gradAngleSliderDiv"> 
@@ -351,7 +353,7 @@
             <div class ="sidebarCategory" id="sidebarCategory4"> SHADOW
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements4">
                     <div class = "sidebarElement"> 
-                        <b>Shadow's color:</b>
+                        <b>Shadow's color</b>
                         <input type="color" id="colorInputShadow" data-field="colorInputShadow" value="#ffffff">
                     </div>
                     <div class = "sidebarElement"> 

@@ -98,6 +98,9 @@ droplistVisualizers.addEventListener('input', () => {
 // update type and disable unnecessary sliders
 function updateVisualizerType() {
     visualizerType = document.getElementById('droplistVisualizers').value;
+    emptyDivForEvenNumberOfDivs = document.getElementById('emptyDivForEvenNumberOfDivs');
+
+    // RADIALS
     if (visualizerType == 'radial bars' || visualizerType == 'radial bars log'){
         document.getElementById('turnsSliderDiv').style.display = 'block';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
@@ -106,6 +109,12 @@ function updateVisualizerType() {
         document.getElementById('rotationSpeedSliderDiv').style.display = 'block';
         document.getElementById('initialRadiusSliderDiv').style.display = 'none';
         document.getElementById('insetSliderDiv').style.display = 'none';
+
+        //remove empty div if it exists already
+        if (typeof(emptyDivForEvenNumberOfDivs) != 'undefined' && emptyDivForEvenNumberOfDivs != null)
+        {
+            emptyDivForEvenNumberOfDivs.remove();
+        }
 
         if (resetSelectedParameters == true){
         document.getElementById('widthMultiplier').min = 0.01;
@@ -123,6 +132,7 @@ function updateVisualizerType() {
         document.getElementById('droplistFftSizes').querySelector("option[value='4096'").style.display ="block";
         document.getElementById('droplistFftSizes').querySelector("option[value='8192'").style.display ="block";
     }
+    // POLYGONS
     else if (visualizerType == 'polygons'){
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'block';
@@ -149,8 +159,19 @@ function updateVisualizerType() {
         if (document.getElementById('droplistFftSizes').value >=1024) {
             document.getElementById('droplistFftSizes').value =1024;
         }
-        
+
+        // make empty div for even number of parameters - if it doesnt exist already
+        if (typeof(emptyDivForEvenNumberOfDivs) == 'undefined' || emptyDivForEvenNumberOfDivs == null){
+            const newDiv = document.createElement("div");
+            const newContent = document.createTextNode("Hi there and greetings!");
+            // newDiv.appendChild(newContent);
+            newDiv.setAttribute("id", "emptyDivForEvenNumberOfDivs");
+            newDiv.setAttribute("class", "sidebarElement");
+            sidebarInsideCategoryElements1 = document.getElementById("sidebarInsideCategoryElements1");
+            sidebarInsideCategoryElements1.insertBefore(newDiv, polygonSymmetrySliderDiv);
+        }
     }
+    // HORIZONTAL
     else { //horizontal bars//
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
@@ -159,6 +180,12 @@ function updateVisualizerType() {
         document.getElementById('rotationSpeedSliderDiv').style.display = 'none';
         document.getElementById('initialRadiusSliderDiv').style.display = 'none';
         document.getElementById('insetSliderDiv').style.display = 'none';
+
+        //remove empty div if it exists already
+        if (typeof(emptyDivForEvenNumberOfDivs) != 'undefined' && emptyDivForEvenNumberOfDivs != null)
+        {
+            emptyDivForEvenNumberOfDivs.remove();
+        }
 
         if (resetSelectedParameters == true){
         document.getElementById('widthMultiplier').min = 0.1;
@@ -444,7 +471,7 @@ function closeAudioContainer () {
 };
 
 //STARTING DISPLAY (CSS display : none WORKED BAD WITH THE hideShowCategoryElements)
-// document.getElementById('sidebarInsideCategoryElements0').style.display = 'none';
+document.getElementById('sidebarInsideCategoryElements0').style.display = 'none';
 // document.getElementById('sidebarInsideCategoryElements1').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements2').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements3').style.display = 'none';
@@ -690,7 +717,7 @@ const saveSettingsInitiation = () => {
     settingsName = saveTextInput.value;
     // NAME MUST NOT BE EMPTY
     if (settingsName.length <=0) {
-        overwriteMessage.innerHTML = 'Enter the name to save';
+        overwriteMessage.innerHTML = 'Enter a name to save';
     }
     else {
         //CHECK IF NAME IS TAKEN (nameTaken)
@@ -710,22 +737,28 @@ const saveSettingsInitiation = () => {
             // DISPLAY YES OR NO CONTAINER
             saveContainer.style.display = 'none';
             saveYesNoContainer.style.display = 'flex';
+            // DISABLE INPUT
+            saveTextInput.disabled = true;
 
-            // CANCEL SAVING
+            // NO BUTTON - CANCEL SAVING
             saveNoButton.onclick = () => {
                 saveContainer.style.display = 'flex';
                 saveYesNoContainer.style.display = 'none';
                 overwriteMessage.innerHTML = '';
+                // ENBLE INPUT
+                saveTextInput.disabled = false;
                 // console.log('saveNoButton');
             };
 
-            // SAVE AFTER CONFIRMATION - OVERWRITE
+            // YES BUTTON - SAVE AFTER CONFIRMATION - OVERWRITE
             saveYesButton.onclick = () => {
                 queryParameters.forEach(makePair);
                 localStorage.setItem(settingsName, JSON.stringify(settingsObject));
                 saveContainer.style.display = 'flex';
                 saveYesNoContainer.style.display = 'none';
                 overwriteMessage.innerHTML = '';
+                // ENBLE INPUT
+                saveTextInput.disabled = false;
                 reloadLoadDroplist();
                 // console.log('SAVE YES BTN - ' + settingsName);
             };
@@ -788,7 +821,6 @@ const deleteSettingsInitiation = () => {
     selectedSettings = droplistLoad.value;
     deleteMessage.innerHTML = 'Delete ' + selectedSettings + '?';
     deleteYesNoContainer.style.display = 'flex';
-    console.log(droplistLoad.value);
 
     //event handler onclick here, adding many EventListeners would fire yes/no functions many times
     deleteYesButton.onclick = () => {
