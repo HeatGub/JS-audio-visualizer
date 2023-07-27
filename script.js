@@ -176,7 +176,7 @@ function updateVisualizerType() {
         document.getElementById('droplistFftSizes').querySelector("option[value='4096'").style.display ="block";
         document.getElementById('droplistFftSizes').querySelector("option[value='8192'").style.display ="block";
     }
-    // updateParameters();
+    updateParameters();
     // console.log('updateVisualizerType');
 }
 updateVisualizerType(); //to disable unnecessary elements at the start
@@ -366,7 +366,6 @@ function initResizerFn( resizer, sidebar ) {
         }
         else if (cw > MaxSidebarX) {
             cwGlobal = MaxSidebarX;
-
         }
     }
 
@@ -764,18 +763,18 @@ loadButton = document.getElementById('loadButton');
 loadButton.addEventListener('click', loadSettings);
 //______________________________LOAD SETTINGS______________________________
 
+
 //______________________________DELETE SETTINGS______________________________
 const deleteSettingsInitiation = () => {
-    // console.log(droplistLoad.value);
-    // loadMessage.style.display = 'block';
     loadDeleteContainer.style.display = 'none';
     selectedSettings = droplistLoad.value;
     deleteMessage.innerHTML = 'Delete ' + selectedSettings + '?';
     deleteYesNoContainer.style.display = 'flex';
-
     console.log(droplistLoad.value);
 
-    const deleteSettings = () => {
+    //event handler onclick here, adding many EventListeners would fire yes/no functions many times
+    deleteYesButton.onclick = () => {
+        //DELETE
         localStorage.removeItem(selectedSettings);
         reloadLoadDroplist();
         console.log('deleteYesButton');
@@ -784,25 +783,16 @@ const deleteSettingsInitiation = () => {
         loadDeleteContainer.style.display = 'flex';
         deleteMessage.innerHTML = '';
         deleteYesNoContainer.style.display = 'none';
-        // deleteYesButton.removeEventListener('click', deleteSettings);
     };
-    deleteYesButton.addEventListener('click', deleteSettings);
 
-    const dontDeleteSettings = () => {
+    //event handler
+    deleteNoButton.onclick = () => {
         loadDeleteContainer.style.display = 'flex';
         deleteMessage.innerHTML = '';
         deleteYesNoContainer.style.display = 'none';
-        // deleteNoButton.removeEventListener('click', dontDeleteSettings);
     };
-    deleteNoButton.addEventListener('click', dontDeleteSettings);
-    
-    // localStorage.removeItem(droplistLoad.value);
-    // reloadLoadDroplist();
-
-    // deleteButton.removeEventListener('click', deleteSettingsInitiation);
 };
 
 deleteButton = document.getElementById('deleteButton');
 deleteButton.addEventListener('click', deleteSettingsInitiation);
-
 //______________________________DELETE SETTINGS______________________________
