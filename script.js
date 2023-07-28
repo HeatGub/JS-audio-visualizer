@@ -34,7 +34,7 @@ let polygonsReactiveness = Number(document.getElementById('polygonsReactiveness'
 let polygonsReactivenessFinal = Number((1 - polygonsReactiveness).toFixed(3));
 // SOME DECLARATIONS ARE NEARBY THEIR MAIN FUNCTIONS
 
-//FILE HANDLING
+//AUDIO FILE HANDLING
 file.addEventListener('change', function(){
     const files = this.files;
     audioPlayer.src = URL.createObjectURL(files[0]);
@@ -100,8 +100,9 @@ function updateVisualizerType() {
     visualizerType = document.getElementById('droplistVisualizers').value;
     emptyDivForEvenNumberOfDivs = document.getElementById('emptyDivForEvenNumberOfDivs');
 
-    // RADIALS
+    // RADIALS _____________________
     if (visualizerType == 'radial bars' || visualizerType == 'radial bars log'){
+        // PARAMETERS DISLPAY
         document.getElementById('turnsSliderDiv').style.display = 'block';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
         document.getElementById('polygonsReactivenessSliderDiv').style.display = 'none';
@@ -116,15 +117,17 @@ function updateVisualizerType() {
             emptyDivForEvenNumberOfDivs.remove();
         }
 
-        if (resetSelectedParameters == true){
+        // SET MAX/MIN
         document.getElementById('widthMultiplier').min = 0.01;
         document.getElementById('widthMultiplier').max = 50;
-        document.getElementById('widthMultiplier').value = 0.5;
-        document.getElementById('widthMultiplierTextInput').value = 0.5;
-
         document.getElementById('amplification').max = 10;
-        document.getElementById('amplification').value = 1;
-        document.getElementById('amplificationTextInput').value = 1;
+
+        // RESET PARAMS?
+        if (resetSelectedParameters == true){
+            document.getElementById('widthMultiplier').value = 0.5;
+            document.getElementById('widthMultiplierTextInput').value = 0.5;
+            document.getElementById('amplification').value = 1;
+            document.getElementById('amplificationTextInput').value = 1;
         }
 
         //  add fft size options
@@ -132,8 +135,9 @@ function updateVisualizerType() {
         document.getElementById('droplistFftSizes').querySelector("option[value='4096'").style.display ="block";
         document.getElementById('droplistFftSizes').querySelector("option[value='8192'").style.display ="block";
     }
-    // POLYGONS
+    // POLYGONS _____________________
     else if (visualizerType == 'polygons'){
+        // PARAMETERS DISLPAY
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'block';
         document.getElementById('polygonsReactivenessSliderDiv').style.display = 'block';
@@ -142,14 +146,17 @@ function updateVisualizerType() {
         document.getElementById('initialRadiusSliderDiv').style.display = 'block';
         document.getElementById('insetSliderDiv').style.display = 'block';
 
-        if (resetSelectedParameters == true){
+        // SET MAX/MIN
+        document.getElementById('widthMultiplier').min = 0.01;
         document.getElementById('widthMultiplier').max = 20;
-        document.getElementById('widthMultiplier').value = 10;
-        document.getElementById('widthMultiplierTextInput').value = 10;
-
         document.getElementById('amplification').max = 100;
-        document.getElementById('amplification').value = 1;
-        document.getElementById('amplificationTextInput').value = 1;
+        
+        // RESET PARAMS?
+        if (resetSelectedParameters == true){
+            document.getElementById('amplification').value = 1;
+            document.getElementById('amplificationTextInput').value = 1;
+            document.getElementById('widthMultiplier').value = 10;
+            document.getElementById('widthMultiplierTextInput').value = 10;
         }
 
         //  remove fft size options and change the value if it was too high
@@ -171,8 +178,9 @@ function updateVisualizerType() {
             sidebarInsideCategoryElements1.insertBefore(newDiv, polygonSymmetrySliderDiv);
         }
     }
-    // HORIZONTAL
+    // HORIZONTAL _____________________
     else { //horizontal bars//
+        // PARAMETERS DISLPAY
         document.getElementById('turnsSliderDiv').style.display = 'none';
         document.getElementById('polygonSymmetrySliderDiv').style.display = 'none';
         document.getElementById('polygonsReactivenessSliderDiv').style.display = 'none';
@@ -187,15 +195,17 @@ function updateVisualizerType() {
             emptyDivForEvenNumberOfDivs.remove();
         }
 
-        if (resetSelectedParameters == true){
+        // SET MAX/MIN
         document.getElementById('widthMultiplier').min = 0.1;
         document.getElementById('widthMultiplier').max = 10;
-        document.getElementById('widthMultiplier').value = 1.333;
-        document.getElementById('widthMultiplierTextInput').value = 1.333;
-
         document.getElementById('amplification').max = 10;
-        document.getElementById('amplification').value = 1;
-        document.getElementById('amplificationTextInput').value = 1;
+
+        // RESET PARAMS?
+        if (resetSelectedParameters == true){
+            document.getElementById('widthMultiplier').value = 1.333;
+            document.getElementById('widthMultiplierTextInput').value = 1.333;
+            document.getElementById('amplification').value = 1;
+            document.getElementById('amplificationTextInput').value = 1;
         }
 
         //  add fft size options
@@ -256,7 +266,10 @@ function reloadAnimation() {
         else if (visualizerType == 'polygons') {
             drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray);
         }
+
+        // REQUEST ANIMATION FRAME AND SAVE ITS ID
         lastRequestId = window.requestAnimationFrame(animate);
+        
     }
     animate();
 };
@@ -607,13 +620,15 @@ colorInput2.addEventListener('input', setBackground);
 droplistBackgrounds.addEventListener('input', setBackground);
 
 function setBackground() {
+    // LINEAR
     if (document.getElementById('droplistBackgrounds').value == 'linear'){
         document.getElementById('gradAngleSliderDiv').style.display = 'block';
-        container.style.background = 'linear-gradient(' + document.getElementById('gradAngle').value +'deg, ' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
+        container.style.background = 'linear-gradient(' + document.getElementById('gradAngle').value +'deg, ' + colorInput2.value + ' ' + gradPosition1.value + '%, ' + colorInput1.value + ' ' + gradPosition2.value + '%)';
     }
+    // RADIAL
     else {
         document.getElementById('gradAngleSliderDiv').style.display = 'none';
-        container.style.background = 'radial-gradient(' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
+        container.style.background = 'radial-gradient(circle, ' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
     }
 }
 setBackground();
