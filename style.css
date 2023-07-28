@@ -42,6 +42,7 @@ html, body {
 
 #canvas1{
     position: absolute;
+    overflow:hidden;
     top: 0; 
     left: 0;
     width: 100%;
@@ -124,7 +125,7 @@ input {
 
 /* doesnt include audioPlayer range input */
 input[type="range"] {
-    width: calc(98% - 6rem); /* 4.5rem because text input width is not enough and it changes line*/
+    width: calc(98% - 6.6rem); /* space for text input */
     height: 0.5rem;
     cursor: pointer;
     margin-left: 0.1rem;

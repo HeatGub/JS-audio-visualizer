@@ -532,86 +532,96 @@ function resizeWindow (){
 
 // ______________________________HOTKEYS______________________________
 let buttonsInvisible = false;
+let hotkeysDisabled = false;
 
-document.onkeydown = function(e) {
-    // console.log(e.which);
+document.onkeydown = function keyPressed (e) {
+    if (hotkeysDisabled == false) {
+        console.log(e.which);
 
-    // "ARROW UP" HOTKEY FOR SIDEBAR
-    if (e.which == 38) { 
-        e.preventDefault();
-        if (isSidebarHidden == false) {
-            closeSidebarMenu();
-        }
-        else {
-            openSidebarMenu();
-        }    
-    } 
-
-    // "ARROW DOWN" HOTKEY FOR AUDIO
-    if (e.which == 40) { 
-        e.preventDefault();
-        if (isAudioHidden == false) {
-            closeAudioContainer();
-        }
-        else {
-            openAudioContainer();
-        }    
-    }
-
-    // "SPACE" HOTKEY FOR PAUSING
-    if (e.which == 32) {
-        e.preventDefault(); //to prevent going to the end of the sidebar
-        if (audioPlayer.paused) {
-            audioPlayer.play();
-        }
-        else {
-            audioPlayer.pause();
-        }    
-    }
-
-    // "F11" HOTKEY FOR FULLSCREEN
-    if (e.which == 122) { 
-        e.preventDefault();
-        document.documentElement.requestFullscreen();
-    }
-
-    // "SHIFT" HOTKEY FOR BUTTONS VISIBILITY 
-    if (e.which == 16) {
-        if (buttonsInvisible == false){
-            if (isSidebarHidden == false){
-                openMenuButton.style.display = 'none';
+        // "ARROW UP" HOTKEY FOR SIDEBAR
+        if (e.which == 38) { 
+            e.preventDefault();
+            if (isSidebarHidden == false) {
+                closeSidebarMenu();
             }
-            else if (isSidebarHidden == true){
-                openMenuButton.style.display = 'none';
+            else {
+                openSidebarMenu();
+            }    
+        } 
+
+        // "ARROW DOWN" HOTKEY FOR AUDIO
+        if (e.which == 40) { 
+            e.preventDefault();
+            if (isAudioHidden == false) {
+                closeAudioContainer();
             }
-            if (isAudioHidden == false){
-                openAudioButton.style.display = 'none';
-            }
-            else if (isAudioHidden == true){
-                openAudioButton.style.display = 'none';
-            }
-            buttonsInvisible = true;
+            else {
+                openAudioContainer();
+            }    
         }
 
-        else if (buttonsInvisible == true){
-            if (isSidebarHidden == false){
-                openMenuButton.style.display = 'none';
+        // "SPACE" HOTKEY FOR PAUSING
+        if (e.which == 32) {
+            e.preventDefault(); //to prevent going to the end of the sidebar
+            if (audioPlayer.paused) {
+                audioPlayer.play();
             }
-            else if (isSidebarHidden == true){
-                openMenuButton.style.display = 'block';
-            }
-            if (isAudioHidden == false){
-                openAudioButton.style.display = 'none';
-            }
-            else if (isAudioHidden == true){
-                openAudioButton.style.display = 'block';
-            }
-            buttonsInvisible = false;
+            else {
+                audioPlayer.pause();
+            }    
         }
-    }
 
-    
+        // "F11" HOTKEY FOR FULLSCREEN
+        if (e.which == 122) { 
+            e.preventDefault();
+            document.documentElement.requestFullscreen();
+        }
+
+        // "SHIFT" HOTKEY FOR BUTTONS VISIBILITY 
+        if (e.which == 16) {
+            if (buttonsInvisible == false){
+                if (isSidebarHidden == false){
+                    openMenuButton.style.display = 'none';
+                }
+                else if (isSidebarHidden == true){
+                    openMenuButton.style.display = 'none';
+                }
+                if (isAudioHidden == false){
+                    openAudioButton.style.display = 'none';
+                }
+                else if (isAudioHidden == true){
+                    openAudioButton.style.display = 'none';
+                }
+                buttonsInvisible = true;
+            }
+
+            else if (buttonsInvisible == true){
+                if (isSidebarHidden == false){
+                    openMenuButton.style.display = 'none';
+                }
+                else if (isSidebarHidden == true){
+                    openMenuButton.style.display = 'block';
+                }
+                if (isAudioHidden == false){
+                    openAudioButton.style.display = 'none';
+                }
+                else if (isAudioHidden == true){
+                    openAudioButton.style.display = 'block';
+                }
+                buttonsInvisible = false;
+            }
+        }
+    }  
 };
+
+//FOCUS AND UNFOCUS EVENTS FOR  saveTextInput - DISABLING HOTKEYS
+document.getElementById('saveTextInput').addEventListener('focus', function() {
+    hotkeysDisabled = true;
+});
+document.getElementById('saveTextInput').addEventListener('focusout', function() {
+    // console.log('input outfocused.');
+    hotkeysDisabled = false;
+});
 // ______________________________HOTKEYS______________________________
 
 // ______________________________BACKGROUND______________________________
@@ -878,3 +888,43 @@ const deleteSettingsInitiation = () => {
 deleteButton = document.getElementById('deleteButton');
 deleteButton.addEventListener('click', deleteSettingsInitiation);
 //______________________________DELETE SETTINGS______________________________
+
+//______________________________EXPORT SETTINGS______________________________
+const ExportSettingsInitiation = () => {
+    //RETRIEVE ALL LOCAL STORAGE ITEMS
+    let localStorageItems = { ...localStorage };
+    console.log(localStorageItems);
+
+    // LOAD DROPLIST'S SELECTED SETTINGS AND PARSE TO JSON
+    let theseSettings = droplistLoad.value;
+    let loadTheseSettingsObject = JSON.parse(localStorageItems[theseSettings]);
+    loadTheseParamatersKeys = Object.keys(loadTheseSettingsObject);
+
+
+
+    // //QUERY DOM PARAMETERS
+    // let queryParameters = document.querySelectorAll(`[data-field]`);
+    // queryParameters.forEach( (queryElement) => {
+    //     parameterFieldValue = queryElement.dataset.field;
+    //     // console.log(parameterFieldValue);
+
+    //     //AND FILL WITH LOADED VALUE
+    //     loadTheseParamatersKeys.forEach( (loadElement) => {
+    //         if (loadElement == parameterFieldValue){
+    //             queryElement.value = loadTheseSettingsObject[loadElement];
+    //             // console.log(queryElement.value);
+    //         }
+    //     });
+    // });
+
+    //show msg and fill saveTextInput with a loaded value
+    // showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded');
+    // saveTextInput.value = [theseSettings];
+
+    // console.log('LOADED');
+
+};
+
+ExportSettingsInitiation();
+
+//______________________________EXPORT SETTINGS______________________________
