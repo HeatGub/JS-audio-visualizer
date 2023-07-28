@@ -536,7 +536,8 @@ let hotkeysDisabled = false;
 
 document.onkeydown = function keyPressed (e) {
     if (hotkeysDisabled == false) {
-        console.log(e.which);
+        // key code
+        // console.log(e.which);
 
         // "ARROW UP" HOTKEY FOR SIDEBAR
         if (e.which == 38) { 
@@ -894,37 +895,29 @@ const ExportSettingsInitiation = () => {
     //RETRIEVE ALL LOCAL STORAGE ITEMS
     let localStorageItems = { ...localStorage };
     console.log(localStorageItems);
-
-    // LOAD DROPLIST'S SELECTED SETTINGS AND PARSE TO JSON
-    let theseSettings = droplistLoad.value;
-    let loadTheseSettingsObject = JSON.parse(localStorageItems[theseSettings]);
-    loadTheseParamatersKeys = Object.keys(loadTheseSettingsObject);
-
-
-
-    // //QUERY DOM PARAMETERS
-    // let queryParameters = document.querySelectorAll(`[data-field]`);
-    // queryParameters.forEach( (queryElement) => {
-    //     parameterFieldValue = queryElement.dataset.field;
-    //     // console.log(parameterFieldValue);
-
-    //     //AND FILL WITH LOADED VALUE
-    //     loadTheseParamatersKeys.forEach( (loadElement) => {
-    //         if (loadElement == parameterFieldValue){
-    //             queryElement.value = loadTheseSettingsObject[loadElement];
-    //             // console.log(queryElement.value);
-    //         }
-    //     });
-    // });
-
-    //show msg and fill saveTextInput with a loaded value
-    // showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded');
-    // saveTextInput.value = [theseSettings];
-
-    // console.log('LOADED');
+    
+    const saveTemplateAsFile = (filename, dataObjToWrite) => {
+        const blob = new Blob([JSON.stringify(dataObjToWrite)], { type: "text/json" });
+        const link = document.createElement("a");
+    
+        link.download = filename;
+        link.href = window.URL.createObjectURL(blob);
+        link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
+    
+        const evt = new MouseEvent("click", {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+        });
+        // remove link
+        link.dispatchEvent(evt);
+        link.remove()
+        };
+    
+    saveTemplateAsFile("VisualizerSettingsExport.json", localStorageItems);
 
 };
 
-ExportSettingsInitiation();
+// ExportSettingsInitiation();
 
 //______________________________EXPORT SETTINGS______________________________
