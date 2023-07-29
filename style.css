@@ -15,6 +15,7 @@
     --textColorCategory: rgb(24, 84, 214);
     --textColorCategoryAlpha050: rgba(24, 84, 214, 0.6);
     --shadowColorCategory: rgb(16, 236, 148);
+    --shadowColorCategoryDimmed: rgba(16, 236, 148, 0.8);
     --backgroundColorSaveLoadButtons: rgba(0, 0, 0, 0.5);
 }
 
@@ -87,7 +88,12 @@ html, body {
     display: none;
 }
 
-#fileupload {
+input {
+    background-color: var(--backgroundColorInput);
+    color: var(--textColorInput);
+}
+
+#audioFileInput {
     font-size: 1.6rem;
     z-index: 100; /* always on top on other elements */
     cursor: pointer;
@@ -98,13 +104,23 @@ html, body {
     outline: 2px solid var(--shadowColorCategory);
 }
 
+input[type="file"]{
+    margin: 0.2rem 0 0.2rem 0;
+}
+
+input[type="file"]:hover {
+    box-shadow: 0 0 8px var(--shadowColorCategory);
+    text-shadow: 2px -1px 1px black;
+    outline: 2px solid var(--shadowColorCategory);
+    transition: 1s ease;
+    color: var(--shadowColorCategory);
+}
+
 input::file-selector-button {
     font-family: "Audiowide", sans-serif;
     color: var(--textColorVariable);
     background-color: var(--textColorCategory);
-    /* padding: 0.5em; */
     border-radius: 0.5rem;
-    /* margin: 0.2rem; */
     cursor: pointer;
 }
 
@@ -116,11 +132,7 @@ select{
     font-family: "Audiowide", sans-serif;
     border-radius: 0.5rem;
     width: 60%;
-}
-
-input {
-    background-color: var(--backgroundColorInput);
-    color: var(--textColorInput);
+    margin: 0 0 0.2rem 0;
 }
 
 /* doesnt include audioPlayer range input */
@@ -365,7 +377,7 @@ input[type="color"] {
     padding-right: 10px;
 }
 
-/* LOAD AND SAVE ELEMENTS */
+/* _________________________ LOAD AND SAVE ELEMENTS _________________________ */
 
 .flexContainer {
     display: flex;
@@ -379,20 +391,17 @@ input[type="color"] {
     text-shadow: 1px -1px 1px black;
 }
 
+.saveLoadButton{
+    outline: 1px solid var(--textColorCategory);
+}
+
 .saveLoadButton, .yesNoButton{
     position: relative;
     /* background-color: var(--textColorCategory); */
     background-color: var(--backgroundColorSaveLoadButtons);
     width: 42%;
     border-radius: 0.5rem;
-    margin: 0.5rem 0 0.5rem 0;
-}
-
-.saveLoadButton:hover, .yesNoButton:hover {
-    box-shadow: 0 0 8px var(--shadowColorCategory);
-    text-shadow: 2px -1px 1px black;
-    outline: 2px solid var(--shadowColorCategory);
-    transition: 1s ease;
+    margin: 0.2rem 0 0.2rem 0;
 }
 
 #deleteYesNoContainer, #saveYesNoContainer{
@@ -400,24 +409,27 @@ input[type="color"] {
 }
 
 #saveTextInput {
-    width: 50%;
+    width: 75%;
     border-radius: 0.3rem;
     height: 2.4rem;
     font-family: "Audiowide", sans-serif;
     font-size: 1.8rem;
+    text-align: center;
 }
 
-#saveButton, #loadButton {
-    /* background-color: var(--textColorCategory); */
-    background-color: var(--backgroundColorSaveLoadButtons);
+.saveLoadButton:hover, .yesNoButton:hover {
+    box-shadow: 0 0 8px var(--shadowColorCategory);
+    text-shadow: 2px -1px 1px black;
+    outline: 2px solid var(--shadowColorCategory);
     color: var(--shadowColorCategory);
+    transition: 1s ease;
 }
 
 #deleteButton {
     color: var(--textColorCategory);
 }
 
-#deleteButton:hover, .yesButton:hover {
+.yesButton:hover {
     box-shadow: 0 0 8px var(--shadowColorCategory);
     outline: 2px solid var(--textColorCategory);
     transition: 1s ease;
@@ -426,7 +438,9 @@ input[type="color"] {
 
 .saveLoadMessage {
     text-transform: none;
-    color: var(--textColorInput);
+    font-size: 1.6rem;
+    color: var(--shadowColorCategory);
+    text-shadow: 2px -1px 0px var(--textColorCategory);
 }
 
 .yesButton {
@@ -437,4 +451,22 @@ input[type="color"] {
 .noButton {
     background-color: var(--textColorCategory);
     color: var(--shadowColorCategory);
+}
+
+#jsonFileInput {
+    font-size: 1.6rem;
+    z-index: 100; /* always on top on other elements */
+    cursor: pointer;
+    font-family: "Audiowide", sans-serif;
+    width: 95%;
+    border-radius: 0.5rem;
+}
+
+#jsonFileInput::file-selector-button {
+    font-family: "Audiowide", sans-serif;
+    color: var(--textColorCategory);
+    background-color: var(--backgroundColorSaveLoadButtons);
+    /* padding: 0.5em; */
+    border-radius: 0.5rem;
+    cursor: pointer;
 }

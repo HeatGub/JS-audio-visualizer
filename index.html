@@ -32,12 +32,14 @@
         </div>
         <div class="sidebar">   
             <div class ="sidebarCategory" id="sidebarCategory0">LOAD/SAVE
-                <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements0">  
-                <!-- ______________________________ SAVE AND LOAD ______________________________ -->
+            <!-- _______________________________________ SAVE AND LOAD _______________________________________ -->
+                <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements0">
+                     <!-- LOAD -->
                     <div class = "sidebarElement">
-                        <label for="settings">Settings</label>
+                        <label for="settings">Settings list</label>
+                        <br>
                         <select id="droplistLoad">
-                            <!-- SAVED SETTINGS - FILLED WITH JS -->
+                            <!-- saved settings here - filled with js -->
                         </select>
 
                         <div class="saveLoadMessage" id="loadDeleteMessage">
@@ -58,7 +60,8 @@
                         </div>
                     </div>
                     <!-- SAVE -->
-                    <div class = "sidebarElement"> Save as
+                    <div class = "sidebarElement"> Save settings as
+                        <br>
                         <input type="text" id="saveTextInput" />
 
                         <div class="saveLoadMessage" id="overwriteMessage">
@@ -76,14 +79,27 @@
                             </div>
                         </div>
                     </div>
+                    <!-- EXPORT JSON -->
+                    <div class = "sidebarElement"> Export
+                        <div class="flexContainer">
+                            <div class="saveLoadButton" id="exportButton"> EXPORT
+                            </div>
+                        </div>
+                    </div>
+                    <!-- IMPORT JSON -->
+                    <div class = "sidebarElement"> Import
+                        <br>
+                        <input type = "file" id="jsonFileInput" accept="application/JSON"></input>
+                    </div>
                 </div>
             </div>
-                <!-- ______________________________ SAVE AND LOAD ______________________________ -->
+            <!-- _______________________________________ SAVE AND LOAD _______________________________________ -->
 
+            <!-- _______________________________________ GENERAL _______________________________________ -->
             <div class ="sidebarCategory" id="sidebarCategory1"> GENERAL
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements1">
                     <div class = "sidebarElement">
-                        <input type = "file" id="fileupload" accept="audio/*"></input>
+                        <input type="file" class="audioFileInput" id="audioFileInput" accept="audio/*"></input>
                     </div>
                     <div class = "sidebarElement">
                         <label for="visualizers">Visualizer Type</label>
@@ -205,7 +221,9 @@
                     </div>
                 </div>
             </div>
+            <!-- _______________________________________ GENERAL _______________________________________ -->
 
+            <!-- _______________________________________ RGB MIXER _______________________________________ -->
             <div class ="sidebarCategory" id="sidebarCategory2"> RGB MIXER
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements2">
                     <div class = "sidebarElement"> 
@@ -304,7 +322,9 @@
                     </div>
                 </div>
             </div>
+            <!-- _______________________________________ RGB MIXER _______________________________________ -->
 
+            <!-- _______________________________________ BACKGROUND _______________________________________ -->
             <div class ="sidebarCategory" id="sidebarCategory3"> BACKGROUND
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements3">
                     <div class = "sidebarElement"> 
@@ -351,7 +371,9 @@
                     </div>
                 </div>
             </div>
+            <!-- _______________________________________ BACKGROUND _______________________________________ -->
 
+            <!-- _______________________________________ SHADOW _______________________________________ -->
             <div class ="sidebarCategory" id="sidebarCategory4"> SHADOW
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements4">
                     <div class = "sidebarElement"> 
@@ -396,6 +418,7 @@
                     </div>
                 </div>
             </div>
+            <!-- _______________________________________ SHADOW _______________________________________ -->
         </div>
     </div>
 </body>

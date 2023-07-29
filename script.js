@@ -1,7 +1,7 @@
 const container = document.getElementById('container');
 const button = document.getElementById('button1');
 const canvas = document.getElementById('canvas1');
-const file = document.getElementById('fileupload');
+const audioFileInput = document.getElementById('audioFileInput');
 const rangeInputs = document.querySelectorAll('.slider input[type="range"]');
 const textInputs = document.querySelectorAll('.slider input[type="text"]');
 canvas.width = window.innerWidth;
@@ -35,11 +35,11 @@ let polygonsReactivenessFinal = Number((1 - polygonsReactiveness).toFixed(3));
 // SOME DECLARATIONS ARE NEARBY THEIR MAIN FUNCTIONS
 
 //AUDIO FILE HANDLING
-file.addEventListener('change', function(){
+audioFileInput.addEventListener('change', function(){
     const files = this.files;
     audioPlayer.src = URL.createObjectURL(files[0]);
-    fileupload.style.boxShadow = 'none';
-    fileupload.style.outline = 'none';
+    audioFileInput.style.boxShadow = 'none';
+    audioFileInput.style.outline = 'none';
 });
 
 // ____________________SLIDER-INPUT PAIRS____________________
@@ -484,7 +484,7 @@ function closeAudioContainer () {
 };
 
 //STARTING DISPLAY (CSS display : none WORKED BAD WITH THE hideShowCategoryElements)
-document.getElementById('sidebarInsideCategoryElements0').style.display = 'none';
+// document.getElementById('sidebarInsideCategoryElements0').style.display = 'none';
 // document.getElementById('sidebarInsideCategoryElements1').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements2').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements3').style.display = 'none';
@@ -890,17 +890,18 @@ deleteButton = document.getElementById('deleteButton');
 deleteButton.addEventListener('click', deleteSettingsInitiation);
 //______________________________DELETE SETTINGS______________________________
 
-//______________________________EXPORT SETTINGS______________________________
+//______________________________ EXPORT JSON ______________________________
+// EXPORT ALL THE SAVED SETTINGS
 const ExportSettingsInitiation = () => {
     //RETRIEVE ALL LOCAL STORAGE ITEMS
     let localStorageItems = { ...localStorage };
     console.log(localStorageItems);
     
-    const saveTemplateAsFile = (filename, dataObjToWrite) => {
+    const saveTemplateAsFile = (fileName, dataObjToWrite) => {
         const blob = new Blob([JSON.stringify(dataObjToWrite)], { type: "text/json" });
         const link = document.createElement("a");
     
-        link.download = filename;
+        link.download = fileName;
         link.href = window.URL.createObjectURL(blob);
         link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
     
@@ -917,7 +918,29 @@ const ExportSettingsInitiation = () => {
     saveTemplateAsFile("VisualizerSettingsExport.json", localStorageItems);
 
 };
+document.getElementById('exportButton').addEventListener('click', ExportSettingsInitiation);
+//______________________________ EXPORT JSON ______________________________
 
-// ExportSettingsInitiation();
+//______________________________ IMPORT JSON ______________________________
+// APPEND ALL THE IMPORTED SETTINGS TO LOCALSOTRAGE?
+document.getElementById('jsonFileInput').addEventListener("change", function() {
+    let file_to_read = document.getElementById("jsonFileInput").files[0];
+    let fileReader = new FileReader();
+        fileReader.onload = function(e) {
+            let content = e.target.result;
+            let parsedJSON = JSON.parse(content); // parse json
+            console.log(parsedJSON);
 
-//______________________________EXPORT SETTINGS______________________________
+            const firstKey = Object.keys(parsedJSON)[0];
+            console.log(firstKey);
+
+            const firstValue = Object.values(parsedJSON)[0];
+            console.log(firstValue);
+
+            const objectsLength = Object.keys(parsedJSON).length;
+            console.log(objectsLength);
+
+        };
+    fileReader.readAsText(file_to_read);
+});
+//______________________________ IMPORT JSON ______________________________
