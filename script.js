@@ -377,6 +377,7 @@ let MaxSidebarX = window.innerWidth*0.9; //changes with refresh
 let MinSidebarX = 250;
 let resizerWidth = 7; //px as in CSS --resizerWidth
 
+// RESIZER
 function initResizerFn( resizer, sidebar ) {
     // track current mouse position in x var
     let x, w;
@@ -423,6 +424,7 @@ initResizerFn( resizer, sidebar );
 let isSidebarHidden = false;
 let isAudioHidden = false;
 
+// OPEN MENU
 openMenuButton.addEventListener("click", openSidebarMenu);
 function openSidebarMenu() {
     openMenuButton.style.display = 'none';
@@ -438,6 +440,7 @@ function openSidebarMenu() {
     isSidebarHidden = false;
 }
 
+// HIDE SIDEBAR
 hideMenuButton.addEventListener("click", closeSidebarMenu);
 function closeSidebarMenu () {
     sidebar.style.display = 'none';
@@ -701,6 +704,7 @@ window.addEventListener('load', () => {
 });
 //______________________________STARTING INFO DISPLAY______________________________
 
+//arrow functions from here
 //______________________________RELOAD SETTINGS DROLPIST______________________________
 droplistLoad = document.getElementById('droplistLoad');
 // console.log(droplistLoad);
@@ -728,6 +732,7 @@ reloadLoadDroplist();
 const showDisappearingMessage = (elementsId, settings, message, timer) => {
     elementsId.innerHTML = message + ' ' + settings + '.';
     setTimeout(() => {
+        // check if it's not the next message about to be deleted
         if (elementsId.innerHTML.includes(message) ) {
             elementsId.innerHTML = '';
         }
@@ -797,6 +802,7 @@ const saveSettingsInitiation = () => {
                 saveTextInput.disabled = false;
                 reloadLoadDroplist();
                 showDisappearingMessage(overwriteMessage, settingsName, 'Saved as', 1000);
+                droplistLoad.value = settingsName;
             };
         }
 
@@ -809,6 +815,7 @@ const saveSettingsInitiation = () => {
             // overwriteMessage.innerHTML = '';
             reloadLoadDroplist();
             showDisappearingMessage(overwriteMessage, settingsName, 'Saved as', 1000);
+            droplistLoad.value = settingsName;
         }
     }
 }
@@ -822,38 +829,44 @@ const loadSettings = () => {
 
     // LOAD DROPLIST'S SELECTED SETTINGS AND PARSE TO JSON
     let theseSettings = droplistLoad.value;
-    let loadTheseSettingsObject = JSON.parse(localStorageItems[theseSettings]);
-    loadTheseParamatersKeys = Object.keys(loadTheseSettingsObject);
+    // check if there is anything on the list to load
+    if (theseSettings) {
+        try {
+            let loadTheseSettingsObject = JSON.parse(localStorageItems[theseSettings]);
+            loadTheseParamatersKeys = Object.keys(loadTheseSettingsObject);
 
-    //QUERY DOM PARAMETERS
-    let queryParameters = document.querySelectorAll(`[data-field]`);
-    queryParameters.forEach( (queryElement) => {
-        parameterFieldValue = queryElement.dataset.field;
-        // console.log(parameterFieldValue);
+            //QUERY DOM PARAMETERS
+            let queryParameters = document.querySelectorAll(`[data-field]`);
+            queryParameters.forEach( (queryElement) => {
+                parameterFieldValue = queryElement.dataset.field;
+                // console.log(parameterFieldValue);
 
-        //AND FILL WITH LOADED VALUE
-        loadTheseParamatersKeys.forEach( (loadElement) => {
-            if (loadElement == parameterFieldValue){
-                queryElement.value = loadTheseSettingsObject[loadElement];
-                // console.log(queryElement.value);
-            }
-        });
-    });
+                //AND FILL WITH LOADED VALUE
+                loadTheseParamatersKeys.forEach( (loadElement) => {
+                    if (loadElement == parameterFieldValue){
+                        queryElement.value = loadTheseSettingsObject[loadElement];
+                        // console.log(queryElement.value);
+                    }
+                });
+            });
 
-    // updateParameters();
-    resetSelectedParameters = false;
-    updateVisualizerType(resetSelectedParameters);
-    updateFftSize();
-    setBackground();
-    setShadow();
-    reloadAnimation();
+            // updateParameters();
+            resetSelectedParameters = false;
+            updateVisualizerType(resetSelectedParameters);
+            updateFftSize();
+            setBackground();
+            setShadow();
+            reloadAnimation();
 
-    //show msg and fill saveTextInput with a loaded value
-    showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded', 1000);
-    saveTextInput.value = [theseSettings];
-
-    // console.log('LOADED');
-
+            //show msg and fill saveTextInput with a loaded value
+            showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded', 1000);
+            saveTextInput.value = [theseSettings];
+            // console.log('LOADED');
+        }
+        catch (error) {
+            showDisappearingMessage(loadDeleteMessage, error, 'Error: ', 4000);
+        };
+    };
 };
 loadButton = document.getElementById('loadButton');
 loadButton.addEventListener('click', loadSettings);
@@ -861,30 +874,34 @@ loadButton.addEventListener('click', loadSettings);
 
 //______________________________DELETE SETTINGS______________________________
 const deleteSettingsInitiation = () => {
-    loadDeleteContainer.style.display = 'none';
+
     selectedSettings = droplistLoad.value;
-    loadDeleteMessage.innerHTML = 'Delete ' + selectedSettings + '?';
-    deleteYesNoContainer.style.display = 'flex';
+    // check if there is anything on the list to delete
+    if (selectedSettings) {
+        loadDeleteContainer.style.display = 'none';
+        loadDeleteMessage.innerHTML = 'Delete ' + selectedSettings + '?';
+        deleteYesNoContainer.style.display = 'flex';
 
-    //event handler onclick here, adding many EventListeners would fire yes/no functions many times
-    deleteYesButton.onclick = () => {
-        //DELETE
-        localStorage.removeItem(selectedSettings);
-        reloadLoadDroplist();
+        //event handler onclick here, adding many EventListeners would fire yes/no functions many times
+        deleteYesButton.onclick = () => {
+            //DELETE
+            localStorage.removeItem(selectedSettings);
+            reloadLoadDroplist();
 
-        showDisappearingMessage(loadDeleteMessage, selectedSettings, 'Deleted', 1000);
+            showDisappearingMessage(loadDeleteMessage, selectedSettings, 'Deleted', 1000);
 
-        loadDeleteContainer.style.display = 'flex';
-        // loadDeleteMessage.innerHTML = '';
-        deleteYesNoContainer.style.display = 'none';
+            loadDeleteContainer.style.display = 'flex';
+            // loadDeleteMessage.innerHTML = '';
+            deleteYesNoContainer.style.display = 'none';
 
-    };
+        };
 
-    //event handler
-    deleteNoButton.onclick = () => {
-        loadDeleteContainer.style.display = 'flex';
-        loadDeleteMessage.innerHTML = '';
-        deleteYesNoContainer.style.display = 'none';
+        //event handler
+        deleteNoButton.onclick = () => {
+            loadDeleteContainer.style.display = 'flex';
+            loadDeleteMessage.innerHTML = '';
+            deleteYesNoContainer.style.display = 'none';
+        };
     };
 };
 
@@ -897,66 +914,122 @@ deleteButton.addEventListener('click', deleteSettingsInitiation);
 const ExportSettingsInitiation = () => {
     //RETRIEVE ALL LOCAL STORAGE ITEMS
     let localStorageItems = { ...localStorage };
-    // console.log(localStorageItems);
-    
-    const saveTemplateAsFile = (fileName, dataObjToWrite) => {
-        const blob = new Blob([JSON.stringify(dataObjToWrite)], { type: "text/json" });
-        const link = document.createElement("a");
-    
-        link.download = fileName;
-        link.href = window.URL.createObjectURL(blob);
-        link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
-    
-        const evt = new MouseEvent("click", {
-            view: window,
-            bubbles: true,
-            cancelable: true,
-        });
-        // remove link
-        link.dispatchEvent(evt);
-        link.remove()
-        };
-        //Append date to a file name
-        let date = new Date();
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-        let fileToSaveName = "Visualizer " + `${year}-${month}-${day}` + ".json";
-    
-    saveTemplateAsFile(fileToSaveName, localStorageItems);
+    let localStorageKeys = Object.keys(localStorageItems);
 
+    // IF LOCAL STORAGE IS EMPTY CANCEL EXPORTING
+    if (localStorageKeys.length === 0) {
+        showDisappearingMessage(exportMessage, '', 'No settings to export', 2000);
+    }
+    else{
+        const saveTemplateAsFile = (fileName, dataObjToWrite) => {
+            const blob = new Blob([JSON.stringify(dataObjToWrite)], { type: "text/json" });
+            const link = document.createElement("a");
+        
+            link.download = fileName;
+            link.href = window.URL.createObjectURL(blob);
+            link.dataset.downloadurl = ["text/json", link.download, link.href].join(":");
+        
+            const evt = new MouseEvent("click", {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+            });
+            // remove link
+            link.dispatchEvent(evt);
+            link.remove()
+            };
+            //Append date to a file name
+            let date = new Date();
+            let day = date.getDate();
+            let month = date.getMonth() + 1;
+            let year = date.getFullYear();
+            let fileToSaveName = "Visualizer " + `${year}-${month}-${day}` + ".json";
+        
+        saveTemplateAsFile(fileToSaveName, localStorageItems);
+    };
 };
 document.getElementById('exportButton').addEventListener('click', ExportSettingsInitiation);
 //______________________________ EXPORT JSON ______________________________
 
 //______________________________ IMPORT JSON ______________________________
-
 document.getElementById('jsonFileInput').addEventListener("change", function() {
     let fileToRead = document.getElementById("jsonFileInput").files[0];
     let fileReader = new FileReader();
+    let importNoButton = document.getElementById("importNoButton");
+    let importYesButton = document.getElementById("importYesButton");
+    
     // ON FILE LOAD FUNCTION
         fileReader.onload = function(e) {
-            let content = e.target.result;
-            let parsedImportJSON = JSON.parse(content); // parse json
-            let importedKeys = Object.keys(parsedImportJSON);
+            // IF FILE IS ALL GOOD
+            try {
+                let content = e.target.result;
+                let parsedImportJSON = JSON.parse(content); // parse json
+                let importedKeys = Object.keys(parsedImportJSON);
+                let localStorageItems = { ...localStorage };
+                let localStorageKeys = Object.keys(localStorageItems);
+                let keysAlreadyTakenList = []; 
 
-            let localStorageItems = { ...localStorage };
-            let localStorageKeys = Object.keys(localStorageItems);
-            console.log('LOCAL LEN = ' + localStorageKeys.length); //LOCAL STORAGE LENGTH
+                // A. IF LOCAL STORAGE IS EMPTY
+                if (localStorageKeys.length === 0) {
+                    importedKeys.forEach ( (importedElement) => {
+                        localStorage.setItem(importedElement, parsedImportJSON[importedElement]);
+                    } );
+                    reloadLoadDroplist();
+                    showDisappearingMessage(importMessage, fileToRead.name, 'Imported:', 3000);
+                }
 
-            // 1. IF LOCAL STORAGE IS EMPTY
-            // if (localStorageKeys.length === 0) {
-            if (localStorageKeys.length >= 0) {
-                importedKeys.forEach ( (importedElement) => {
-                    localStorage.setItem(importedElement, parsedImportJSON[importedElement]);
-                } );
-                reloadLoadDroplist();
-                showDisappearingMessage(importMessage, fileToRead.name, 'Imported', 2000);
-                console.log(fileToRead);
+                // B. IF LOCAL STORAGE HAS SOME SETTINGS
+                else {
+                    // CHECK WHICH KEYS ARE ALREADY TAKEN
+                    importedKeys.forEach ( (importedElement) => {
+                        localStorageKeys.forEach ( (localElement) => {
+                            if (importedElement === localElement) {
+                                keysAlreadyTakenList.push(localElement);
+                            };
+                        });
+                    });
+
+                    // IF SOME KEYS ARE TAKEN
+                    if (keysAlreadyTakenList.length >= 1) {
+                        importMessage.innerHTML = 'Overwrite (' + keysAlreadyTakenList + ')?';
+                        importYesNoContainer.style.display = 'flex';
+
+                        // B1. DONT IMPORT DOUBLED KEYS
+                        importNoButton.onclick = () => {
+                            importedKeys.forEach ( (importedElement) => {
+                                keyDoubled = false;
+                                keysAlreadyTakenList.forEach ( (keyTakenElement) => {
+                                    if (importedElement === keyTakenElement) {
+                                        keyDoubled = true;
+                                        // console.log('keyDoubled ' + importedElement);
+                                    };
+                                });
+                                if (keyDoubled === false) {
+                                    localStorage.setItem(importedElement, parsedImportJSON[importedElement]);
+                                    // console.log(importedElement);
+                                };
+                            });
+                            reloadLoadDroplist();
+                            showDisappearingMessage(importMessage, fileToRead.name, 'Imported (non-overwrite):', 3000);
+                            importYesNoContainer.style.display = 'none';
+                        };
+
+                        // B2. OVERWRITE DOUBLED KEYS
+                        importYesButton.onclick = () => {
+                            importedKeys.forEach ( (importedElement) => {
+                                localStorage.setItem(importedElement, parsedImportJSON[importedElement]);
+                            } );
+                            reloadLoadDroplist();
+                            showDisappearingMessage(importMessage, fileToRead.name, 'Imported (overwrite):', 3000);
+                            importYesNoContainer.style.display = 'none';
+                        };
+                    }; // IF SOME KEYS ARE TAKEN - end
+                }; // B. IF LOCAL STORAGE HAS SOME SETTINGS - end
             }
-            // 2. DONT IMPORT DOUBLED KEYS
-            // 3. OVERWRITE DOUBLED KEYS
-
+            // IF FILE IS WRONG
+            catch (error) {
+            showDisappearingMessage(importMessage, error, 'Error: ', 4000);
+            };
         };
     fileReader.readAsText(fileToRead);
 });

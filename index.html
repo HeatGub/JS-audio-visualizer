@@ -85,6 +85,8 @@
                             <div class="saveLoadButton" id="exportButton"> EXPORT
                             </div>
                         </div>
+                        <div class="saveLoadMessage" id="exportMessage">
+                        </div>
                     </div>
                     <!-- IMPORT JSON -->
                     <div class = "sidebarElement"> Import
@@ -92,6 +94,13 @@
                         <input type = "file" id="jsonFileInput" accept="application/JSON">
                         </input>
                         <div class="saveLoadMessage" id="importMessage">
+                        </div>
+
+                        <div class="flexContainer" id="importYesNoContainer">
+                            <div class="yesNoButton yesButton" id="importYesButton"> YES
+                            </div>
+                            <div class="yesNoButton noButton" id="importNoButton"> NO
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -164,10 +173,7 @@
                             </span>
                         </div>
                     </div>
-
-                    <!-- <div class = "sidebarElement" id="emptyDivForEvenNumberOfDivs">
-                    </div> -->
-
+                    <!-- <div class = "sidebarElement" id="emptyDivForEvenNumberOfDivs"> </div> -->
                     <div class = "sidebarElement" id="polygonSymmetrySliderDiv">
                         <div class="slider" title="Computationally expensive!">
                             <p>polygon Symmetry</p>
