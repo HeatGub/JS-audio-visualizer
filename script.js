@@ -725,11 +725,13 @@ reloadLoadDroplist();
 //______________________________RELOAD SETTINGS DROLPIST______________________________
 
 // DISAPPEARING MESSAGE FUNCTION
-const showDisappearingMessage = (elementsId, settings, message) => {
+const showDisappearingMessage = (elementsId, settings, message, timer) => {
     elementsId.innerHTML = message + ' ' + settings + '.';
     setTimeout(() => {
-        elementsId.innerHTML = '';
-    }, 1000);
+        if (elementsId.innerHTML.includes(message) ) {
+            elementsId.innerHTML = '';
+        }
+    }, timer);
 }
 
 //______________________________SAVE SETTINGS______________________________
@@ -739,7 +741,7 @@ saveButton = document.getElementById(`saveButton`);
 const saveSettingsInitiation = () => {
     let queryParameters = document.querySelectorAll(`[data-field]`);
     let settingsObject = {};
-    const makePair = (element) => {
+    const makeKeyValuePair = (element) => {
         if (element.type != 'text') { //EXCLUDE text input values
             parameterName = element.dataset.field;
             parameterValue = element.value;
@@ -747,7 +749,7 @@ const saveSettingsInitiation = () => {
             settingsObject[parameterName] = parameterValue;
         }
     }
-    // queryParameters.forEach(makePair);
+    // queryParameters.forEach(makeKeyValuePair);
     settingsName = saveTextInput.value;
     // NAME MUST NOT BE EMPTY
     if (settingsName.length <=0) {
@@ -786,7 +788,7 @@ const saveSettingsInitiation = () => {
 
             // YES BUTTON - SAVE AFTER CONFIRMATION - OVERWRITE
             saveYesButton.onclick = () => {
-                queryParameters.forEach(makePair);
+                queryParameters.forEach(makeKeyValuePair);
                 localStorage.setItem(settingsName, JSON.stringify(settingsObject));
                 saveContainer.style.display = 'flex';
                 saveYesNoContainer.style.display = 'none';
@@ -794,19 +796,19 @@ const saveSettingsInitiation = () => {
                 // ENBLE INPUT
                 saveTextInput.disabled = false;
                 reloadLoadDroplist();
-                showDisappearingMessage(overwriteMessage, settingsName, 'Saved as');
+                showDisappearingMessage(overwriteMessage, settingsName, 'Saved as', 1000);
             };
         }
 
         //IF NAME AVAILABLE - SAVE TO LOCAL STORAGE
         else {
-            queryParameters.forEach(makePair);
+            queryParameters.forEach(makeKeyValuePair);
             localStorage.setItem(settingsName, JSON.stringify(settingsObject));
             // console.log('SAVE TO LOCAL STORAGE - ' + settingsName);
             saveContainer.style.display = 'flex';
             // overwriteMessage.innerHTML = '';
             reloadLoadDroplist();
-            showDisappearingMessage(overwriteMessage, settingsName, 'Saved as');
+            showDisappearingMessage(overwriteMessage, settingsName, 'Saved as', 1000);
         }
     }
 }
@@ -847,7 +849,7 @@ const loadSettings = () => {
     reloadAnimation();
 
     //show msg and fill saveTextInput with a loaded value
-    showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded');
+    showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded', 1000);
     saveTextInput.value = [theseSettings];
 
     // console.log('LOADED');
@@ -870,7 +872,7 @@ const deleteSettingsInitiation = () => {
         localStorage.removeItem(selectedSettings);
         reloadLoadDroplist();
 
-        showDisappearingMessage(loadDeleteMessage, selectedSettings, 'Deleted');
+        showDisappearingMessage(loadDeleteMessage, selectedSettings, 'Deleted', 1000);
 
         loadDeleteContainer.style.display = 'flex';
         // loadDeleteMessage.innerHTML = '';
@@ -895,7 +897,7 @@ deleteButton.addEventListener('click', deleteSettingsInitiation);
 const ExportSettingsInitiation = () => {
     //RETRIEVE ALL LOCAL STORAGE ITEMS
     let localStorageItems = { ...localStorage };
-    console.log(localStorageItems);
+    // console.log(localStorageItems);
     
     const saveTemplateAsFile = (fileName, dataObjToWrite) => {
         const blob = new Blob([JSON.stringify(dataObjToWrite)], { type: "text/json" });
@@ -914,33 +916,48 @@ const ExportSettingsInitiation = () => {
         link.dispatchEvent(evt);
         link.remove()
         };
+        //Append date to a file name
+        let date = new Date();
+        let day = date.getDate();
+        let month = date.getMonth() + 1;
+        let year = date.getFullYear();
+        let fileToSaveName = "Visualizer " + `${year}-${month}-${day}` + ".json";
     
-    saveTemplateAsFile("VisualizerSettingsExport.json", localStorageItems);
+    saveTemplateAsFile(fileToSaveName, localStorageItems);
 
 };
 document.getElementById('exportButton').addEventListener('click', ExportSettingsInitiation);
 //______________________________ EXPORT JSON ______________________________
 
 //______________________________ IMPORT JSON ______________________________
-// APPEND ALL THE IMPORTED SETTINGS TO LOCALSOTRAGE?
+
 document.getElementById('jsonFileInput').addEventListener("change", function() {
-    let file_to_read = document.getElementById("jsonFileInput").files[0];
+    let fileToRead = document.getElementById("jsonFileInput").files[0];
     let fileReader = new FileReader();
+    // ON FILE LOAD FUNCTION
         fileReader.onload = function(e) {
             let content = e.target.result;
-            let parsedJSON = JSON.parse(content); // parse json
-            console.log(parsedJSON);
+            let parsedImportJSON = JSON.parse(content); // parse json
+            let importedKeys = Object.keys(parsedImportJSON);
 
-            const firstKey = Object.keys(parsedJSON)[0];
-            console.log(firstKey);
+            let localStorageItems = { ...localStorage };
+            let localStorageKeys = Object.keys(localStorageItems);
+            console.log('LOCAL LEN = ' + localStorageKeys.length); //LOCAL STORAGE LENGTH
 
-            const firstValue = Object.values(parsedJSON)[0];
-            console.log(firstValue);
-
-            const objectsLength = Object.keys(parsedJSON).length;
-            console.log(objectsLength);
+            // 1. IF LOCAL STORAGE IS EMPTY
+            // if (localStorageKeys.length === 0) {
+            if (localStorageKeys.length >= 0) {
+                importedKeys.forEach ( (importedElement) => {
+                    localStorage.setItem(importedElement, parsedImportJSON[importedElement]);
+                } );
+                reloadLoadDroplist();
+                showDisappearingMessage(importMessage, fileToRead.name, 'Imported', 2000);
+                console.log(fileToRead);
+            }
+            // 2. DONT IMPORT DOUBLED KEYS
+            // 3. OVERWRITE DOUBLED KEYS
 
         };
-    fileReader.readAsText(file_to_read);
+    fileReader.readAsText(fileToRead);
 });
 //______________________________ IMPORT JSON ______________________________
