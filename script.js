@@ -489,7 +489,7 @@ function closeAudioContainer () {
 
 //STARTING DISPLAY (CSS display : none WORKED BAD WITH THE hideShowCategoryElements)
 // document.getElementById('sidebarInsideCategoryElements0').style.display = 'none';
-// document.getElementById('sidebarInsideCategoryElements1').style.display = 'none';
+document.getElementById('sidebarInsideCategoryElements1').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements2').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements3').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements4').style.display = 'none';
@@ -768,7 +768,7 @@ const showDisappearingMessage = (elementsId, settings, message, timer) => {
             elementsId.innerHTML = '';
         }
     }, timer);
-}
+};
 
 //______________________________SAVE SETTINGS______________________________
 saveTextInput = document.getElementById(`saveTextInput`);
@@ -897,6 +897,9 @@ const loadSettings = () => {
         catch (error) {
             showDisappearingMessage(loadDeleteMessage, error, 'Error: ', 4000);
         };
+    }
+    else {
+        showDisappearingMessage(loadDeleteMessage, '', 'Settings list is empty', 2000);
     };
 };
 loadButton = document.getElementById('loadButton');
@@ -933,6 +936,9 @@ const deleteSettingsInitiation = () => {
             loadDeleteMessage.innerHTML = '';
             deleteYesNoContainer.style.display = 'none';
         };
+    }
+    else {
+        showDisappearingMessage(loadDeleteMessage, '', 'Settings list is empty', 2000);
     };
 };
 
@@ -1032,12 +1038,10 @@ document.getElementById('jsonFileInput').addEventListener("change", function() {
                                 keysAlreadyTakenList.forEach ( (keyTakenElement) => {
                                     if (importedElement === keyTakenElement) {
                                         keyDoubled = true;
-                                        // console.log('keyDoubled ' + importedElement);
                                     };
                                 });
                                 if (keyDoubled === false) {
                                     localStorage.setItem(importedElement, parsedImportJSON[importedElement]);
-                                    // console.log(importedElement);
                                 };
                             });
                             reloadLoadDroplist();
@@ -1054,7 +1058,16 @@ document.getElementById('jsonFileInput').addEventListener("change", function() {
                             showDisappearingMessage(importMessage, fileToRead.name, 'Imported (overwrite): ', 3000);
                             importYesNoContainer.style.display = 'none';
                         };
-                    }; // IF SOME KEYS ARE TAKEN - end
+                    } // IF SOME KEYS ARE TAKEN - end
+                    
+                    // KEYS ARE NOT TAKEN AND STORAGE IS NOT EMPTY
+                    else {
+                        importedKeys.forEach ( (importedElement) => {
+                            localStorage.setItem(importedElement, parsedImportJSON[importedElement]);
+                        } );
+                        reloadLoadDroplist();
+                        showDisappearingMessage(importMessage, fileToRead.name, 'Imported: ', 3000);
+                    };
                 }; // B. IF LOCAL STORAGE HAS SOME SETTINGS - end
             }
             // IF FILE IS WRONG
