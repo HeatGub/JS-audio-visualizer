@@ -78,7 +78,6 @@ function updateParameters() {
 
 //FFT UPDATE
 droplistFftSizes.addEventListener('input', updateFftSize);
-
 function updateFftSize() {
     fftSize = Math.floor(document.getElementById('droplistFftSizes').value);
     updateParameters();
@@ -372,9 +371,9 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
 // ______________________________SIDEBAR STUFF______________________________
 let resizer = document.querySelector(".resizer");
 let sidebar = document.querySelector(".sidebar");
-let cwGlobal = 500; //has to be the same as sidebar width in css
-let MaxSidebarX = window.innerWidth*0.9; //changes with refresh
-let MinSidebarX = 250;
+let cwGlobal = 500; //has to be the same as initialSidebarWidth in css
+let maxSidebarX = window.innerWidth * 0.95; //changes with refresh
+let minSidebarX = window.innerWidth * 0.10; //changes with refresh
 let resizerWidth = 7; //px as in CSS --resizerWidth
 
 // RESIZER
@@ -393,20 +392,20 @@ function initResizerFn( resizer, sidebar ) {
         let dx = e.clientX - x;
         let cw = w + dx; // complete width
         
-        if ( cw >= MinSidebarX && cw <= MaxSidebarX ) {
+        if ( cw >= minSidebarX && cw <= maxSidebarX ) {
             sidebar.style.width = `${ cw }px`;
             resizer.style.left = cw - resizerWidth + 'px';
-            hideMenuButton.style.left = `${ cw }px`; //glue to bar
+            hideSidebarButton.style.left = `${ cw }px`; //glue to bar
             audioContainer.style.left = `${ cw }px`; //glue to bar
             audioContainer.style.width = window.innerWidth - cw + 'px';
             openAudioButton.style.left = cw + 'px';
             cwGlobal = cw;
         }
-        else if (cw < MinSidebarX) {
-            cwGlobal = MinSidebarX;
+        else if (cw < minSidebarX) {
+            cwGlobal = minSidebarX;
         }
-        else if (cw > MaxSidebarX) {
-            cwGlobal = MaxSidebarX;
+        else if (cw > maxSidebarX) {
+            cwGlobal = maxSidebarX;
         }
     }
 
@@ -424,41 +423,42 @@ initResizerFn( resizer, sidebar );
 let isSidebarHidden = false;
 let isAudioHidden = false;
 
-// OPEN MENU
-openMenuButton.addEventListener("click", openSidebarMenu);
+// OPEN SIDEBAR
+openSidebarButton.addEventListener("click", openSidebarMenu);
 function openSidebarMenu() {
-    openMenuButton.style.display = 'none';
+    openSidebarButton.style.display = 'none';
     audioContainer.style.left = cwGlobal + 'px';
     audioContainer.style.width = window.innerWidth - cwGlobal +'px'; //OK
     sidebar.style.width = cwGlobal + 'px';
     sidebar.style.display = 'block';
     resizer.style.left = cwGlobal - resizerWidth + 'px';
     resizer.style.display = 'block';
-    hideMenuButton.style.left = cwGlobal + 'px';
-    hideMenuButton.style.display = 'block';
+    hideSidebarButton.style.left = cwGlobal + 'px';
+    hideSidebarButton.style.display = 'block';
     openAudioButton.style.left = cwGlobal + 'px';
     isSidebarHidden = false;
 }
 
 // HIDE SIDEBAR
-hideMenuButton.addEventListener("click", closeSidebarMenu);
+hideSidebarButton.addEventListener("click", closeSidebarMenu);
 function closeSidebarMenu () {
     sidebar.style.display = 'none';
     resizer.style.display = 'none';
-    hideMenuButton.style.display = 'none';
+    hideSidebarButton.style.display = 'none';
     openAudioButton.style.left = `0rem`;
     //dont show the opening button if buttonsInvisible
     if (buttonsInvisible == true){
-        openMenuButton.style.display = 'none';
+        openSidebarButton.style.display = 'none';
     }
     else if (buttonsInvisible == false){
-        openMenuButton.style.display = 'block';
+        openSidebarButton.style.display = 'block';
     }
     audioContainer.style.left = '0rem';
     audioContainer.style.width = window.innerWidth + 'px';
     isSidebarHidden = true;
 };
 
+// OPEN AUDIO
 openAudioButton.addEventListener("click", openAudioContainer);
 function openAudioContainer() {
     openAudioButton.style.display = 'none';
@@ -466,6 +466,7 @@ function openAudioContainer() {
     isAudioHidden = false;
 }
 
+// HIDE AUDIO
 hideAudioButton.addEventListener("click", closeAudioContainer);
 function closeAudioContainer () {
     audioContainer.style.display = 'none';
@@ -521,16 +522,45 @@ function hideShowCategoryElements (event) {
 //WINDOW RESIZING
 window.addEventListener('resize', resizeWindow)
 function resizeWindow (){
-    // console.log('resizeWindow');
-    MaxSidebarX = window.innerWidth*0.9;
-    if (openMenuButton.style.display == 'block') {
+    // maxSidebarX = window.innerWidth*0.95;
+    maxSidebarX = window.innerWidth * 0.95; //changes with resize
+    minSidebarX = window.innerWidth * 0.10; //changes with resize
+
+    // IF SIDEBAR HIDDEN
+    if (openSidebarButton.style.display == 'block') {
         audioContainer.style.width = window.innerWidth + 'px';
     }
+    // IF SIDEBAR VISIBLE
     else {
-        audioContainer.style.left = cwGlobal + 'px';
-        audioContainer.style.width = window.innerWidth - cwGlobal +'px';
+        // WHEN SIDEBAR IS WIDER THAN WINDOW SHRINK IT TO 99% WINDOW'S WIDTH
+        if (cwGlobal > maxSidebarX) {
+            // sidebarShrinkedWidth = window.innerWidth*0.99;
+            sidebar.style.width = `${ maxSidebarX }px`;
+            resizer.style.left = maxSidebarX - resizerWidth + 'px';
+            hideSidebarButton.style.left = `${ maxSidebarX }px`; //glue to bar
+            audioContainer.style.left = `${ maxSidebarX }px`; //glue to bar
+            audioContainer.style.width = window.innerWidth - maxSidebarX + 'px';
+            openAudioButton.style.left = maxSidebarX + 'px';
+            cwGlobal = maxSidebarX;
+
+        }
+        //SIDEBAR TOO NARROW
+        else if (cwGlobal < minSidebarX) {
+            sidebar.style.width = `${ minSidebarX }px`;
+            resizer.style.left = minSidebarX - resizerWidth + 'px';
+            hideSidebarButton.style.left = `${ minSidebarX }px`; //glue to bar
+            audioContainer.style.left = `${ minSidebarX }px`; //glue to bar
+            audioContainer.style.width = window.innerWidth - minSidebarX + 'px';
+            openAudioButton.style.left = minSidebarX + 'px';
+            cwGlobal = minSidebarX;
+        }
+        // SIDEBAR VISIBLE BUT IN GOOD WIDTH RANGE
+        else {
+            audioContainer.style.left = cwGlobal + 'px';
+            audioContainer.style.width = window.innerWidth - cwGlobal +'px';
+        }
     }
-}
+};
 // ______________________________SIDEBAR STUFF______________________________
 
 // ______________________________HOTKEYS______________________________
@@ -585,10 +615,10 @@ document.onkeydown = function keyPressed (e) {
         if (e.which == 16) {
             if (buttonsInvisible == false){
                 if (isSidebarHidden == false){
-                    openMenuButton.style.display = 'none';
+                    openSidebarButton.style.display = 'none';
                 }
                 else if (isSidebarHidden == true){
-                    openMenuButton.style.display = 'none';
+                    openSidebarButton.style.display = 'none';
                 }
                 if (isAudioHidden == false){
                     openAudioButton.style.display = 'none';
@@ -601,10 +631,10 @@ document.onkeydown = function keyPressed (e) {
 
             else if (buttonsInvisible == true){
                 if (isSidebarHidden == false){
-                    openMenuButton.style.display = 'none';
+                    openSidebarButton.style.display = 'none';
                 }
                 else if (isSidebarHidden == true){
-                    openMenuButton.style.display = 'block';
+                    openSidebarButton.style.display = 'block';
                 }
                 if (isAudioHidden == false){
                     openAudioButton.style.display = 'none';
