@@ -34,9 +34,44 @@
             <div class ="sidebarCategory" id="sidebarCategory0">LOAD/SAVE
             <!-- _______________________________________ SAVE AND LOAD _______________________________________ -->
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements0">
-                     <!-- LOAD -->
+                    <!-- IMPORT JSON -->
+                    <div class = "sidebarElement"> Import File
+                        <br>
+                        <input type = "file" id="jsonFileInput" accept="application/JSON">
+                        </input>
+                        <div class="saveLoadMessage" id="importMessage">
+                        </div>
+
+                        <div class="flexContainer" id="importYesNoContainer">
+                            <div class="yesNoButton yesButton" id="importYesButton"> YES
+                            </div>
+                            <div class="yesNoButton noButton" id="importNoButton"> NO
+                            </div>
+                        </div>
+                    </div>
+                    <!-- IMPORT SAMPLE PRESETS -->
+                    <div class = "sidebarElement"> Sample presets
+                        <div class="flexContainer">
+                            <div class="saveLoadButton" id="addSamplePresetsButton"> ADD
+                            </div>
+                            <div class="saveLoadButton" id="removeSamplePresetsButton"> REMOVE
+                            </div>
+                        </div>
+                        <div class="saveLoadMessage" id="samplePresetsMessage">
+                        </div>
+                    </div>
+                    <!-- EXPORT JSON -->
+                    <div class = "sidebarElement"> Export File
+                        <div class="flexContainer">
+                            <div class="saveLoadButton" id="exportButton"> EXPORT
+                            </div>
+                        </div>
+                        <div class="saveLoadMessage" id="exportMessage">
+                        </div>
+                    </div>
+                    <!-- LOAD -->
                     <div class = "sidebarElement">
-                        <label for="settings">Settings list</label>
+                        <label for="settings">Settings</label>
                         <br>
                         <select id="droplistLoad">
                             <!-- saved settings here - filled with js -->
@@ -60,7 +95,7 @@
                         </div>
                     </div>
                     <!-- SAVE -->
-                    <div class = "sidebarElement"> Save settings as
+                    <div class = "sidebarElement"> Save setting
                         <br>
                         <input type="text" id="saveTextInput" />
 
@@ -79,30 +114,6 @@
                             </div>
                         </div>
                     </div>
-                    <!-- EXPORT JSON -->
-                    <div class = "sidebarElement"> Export
-                        <div class="flexContainer">
-                            <div class="saveLoadButton" id="exportButton"> EXPORT
-                            </div>
-                        </div>
-                        <div class="saveLoadMessage" id="exportMessage">
-                        </div>
-                    </div>
-                    <!-- IMPORT JSON -->
-                    <div class = "sidebarElement"> Import
-                        <br>
-                        <input type = "file" id="jsonFileInput" accept="application/JSON">
-                        </input>
-                        <div class="saveLoadMessage" id="importMessage">
-                        </div>
-
-                        <div class="flexContainer" id="importYesNoContainer">
-                            <div class="yesNoButton yesButton" id="importYesButton"> YES
-                            </div>
-                            <div class="yesNoButton noButton" id="importNoButton"> NO
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             <!-- _______________________________________ SAVE AND LOAD _______________________________________ -->
@@ -110,7 +121,7 @@
             <!-- _______________________________________ GENERAL _______________________________________ -->
             <div class ="sidebarCategory" id="sidebarCategory1"> GENERAL
                 <div class="sidebarInsideCategoryElements" id="sidebarInsideCategoryElements1">
-                    <div class = "sidebarElement">
+                    <div class = "sidebarElement">sound file
                         <input type="file" class="audioFileInput" id="audioFileInput" accept="audio/*"></input>
                     </div>
                     <div class = "sidebarElement">

@@ -760,7 +760,8 @@ reloadLoadDroplist();
 
 // DISAPPEARING MESSAGE FUNCTION
 const showDisappearingMessage = (elementsId, settings, message, timer) => {
-    elementsId.innerHTML = message + ' ' + settings + '.';
+    // elementsId.innerHTML = message + ' ' + settings + '.';
+    elementsId.innerHTML = message + settings + '.';
     setTimeout(() => {
         // check if it's not the next message about to be deleted
         if (elementsId.innerHTML.includes(message) ) {
@@ -831,7 +832,7 @@ const saveSettingsInitiation = () => {
                 // ENBLE INPUT
                 saveTextInput.disabled = false;
                 reloadLoadDroplist();
-                showDisappearingMessage(overwriteMessage, settingsName, 'Saved as', 1000);
+                showDisappearingMessage(overwriteMessage, settingsName, 'Saved as ', 1000);
                 droplistLoad.value = settingsName;
             };
         }
@@ -844,7 +845,7 @@ const saveSettingsInitiation = () => {
             saveContainer.style.display = 'flex';
             // overwriteMessage.innerHTML = '';
             reloadLoadDroplist();
-            showDisappearingMessage(overwriteMessage, settingsName, 'Saved as', 1000);
+            showDisappearingMessage(overwriteMessage, settingsName, 'Saved as ', 1000);
             droplistLoad.value = settingsName;
         }
     }
@@ -889,7 +890,7 @@ const loadSettings = () => {
             reloadAnimation();
 
             //show msg and fill saveTextInput with a loaded value
-            showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded', 1000);
+            showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded ', 1000);
             saveTextInput.value = [theseSettings];
             // console.log('LOADED');
         }
@@ -918,7 +919,7 @@ const deleteSettingsInitiation = () => {
             localStorage.removeItem(selectedSettings);
             reloadLoadDroplist();
 
-            showDisappearingMessage(loadDeleteMessage, selectedSettings, 'Deleted', 1000);
+            showDisappearingMessage(loadDeleteMessage, selectedSettings, 'Deleted ', 1000);
 
             loadDeleteContainer.style.display = 'flex';
             // loadDeleteMessage.innerHTML = '';
@@ -1005,7 +1006,7 @@ document.getElementById('jsonFileInput').addEventListener("change", function() {
                         localStorage.setItem(importedElement, parsedImportJSON[importedElement]);
                     } );
                     reloadLoadDroplist();
-                    showDisappearingMessage(importMessage, fileToRead.name, 'Imported:', 3000);
+                    showDisappearingMessage(importMessage, fileToRead.name, 'Imported: ', 3000);
                 }
 
                 // B. IF LOCAL STORAGE HAS SOME SETTINGS
@@ -1040,7 +1041,7 @@ document.getElementById('jsonFileInput').addEventListener("change", function() {
                                 };
                             });
                             reloadLoadDroplist();
-                            showDisappearingMessage(importMessage, fileToRead.name, 'Imported (non-overwrite):', 3000);
+                            showDisappearingMessage(importMessage, fileToRead.name, 'Imported (non-overwrite): ', 3000);
                             importYesNoContainer.style.display = 'none';
                         };
 
@@ -1050,7 +1051,7 @@ document.getElementById('jsonFileInput').addEventListener("change", function() {
                                 localStorage.setItem(importedElement, parsedImportJSON[importedElement]);
                             } );
                             reloadLoadDroplist();
-                            showDisappearingMessage(importMessage, fileToRead.name, 'Imported (overwrite):', 3000);
+                            showDisappearingMessage(importMessage, fileToRead.name, 'Imported (overwrite): ', 3000);
                             importYesNoContainer.style.display = 'none';
                         };
                     }; // IF SOME KEYS ARE TAKEN - end
@@ -1064,3 +1065,49 @@ document.getElementById('jsonFileInput').addEventListener("change", function() {
     fileReader.readAsText(fileToRead);
 });
 //______________________________ IMPORT JSON ______________________________
+
+//______________________________ SAMPLE PRESETS ______________________________
+addSamplePresetsButton = document.getElementById('addSamplePresetsButton');
+removeSamplePresetsButton = document.getElementById('removeSamplePresetsButton');
+samplePresetsMessage = document.getElementById('samplePresetsMessage');
+let sampleKeysList = [];
+
+// INITIALIZE KEYS TO POSSIBLY REMOVE THEM IF ALREADY IN STORAGE
+const initializeSampleSettingsKeys = () => {
+fetch('./sampleSettings.json')
+    .then((response) => response.json())
+    .then((sampleSettingsObject) => {
+        sampleSettingsKeys = Object.keys(sampleSettingsObject);
+        sampleSettingsKeys.forEach( (sampleKey) => {
+            sampleKeysList.push(sampleKey);
+        } );
+    });
+};
+initializeSampleSettingsKeys();
+
+//FETCH THE FILE AND IMPORT SAMPLE PRESETS
+const importSampleSettings = () => {
+fetch('./sampleSettings.json')
+    .then((response) => response.json())
+    .then((sampleSettingsObject) => {
+        sampleSettingsKeys = Object.keys(sampleSettingsObject);
+        sampleSettingsKeys.forEach( (sampleKey) => {
+            localStorage.setItem(sampleKey, sampleSettingsObject[sampleKey]);
+        } );
+        reloadLoadDroplist();
+        showDisappearingMessage(samplePresetsMessage, '', 'Added sample settings', 2000);
+    });
+};
+addSamplePresetsButton.addEventListener('click', importSampleSettings);
+
+//DELETE SAMPLE PRESETS FROM THE LIST
+const deleteSampleSettings = () => {
+    sampleKeysList.forEach ( (sampleKey) => {
+        // console.log(sampleKey);
+        localStorage.removeItem(sampleKey);
+    });
+    reloadLoadDroplist();
+    showDisappearingMessage(samplePresetsMessage, '', 'Removed sample settings', 2000);
+};
+removeSamplePresetsButton.addEventListener('click', deleteSampleSettings);
+//______________________________ SAMPLE PRESETS ______________________________
