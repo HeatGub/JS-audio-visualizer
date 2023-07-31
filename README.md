@@ -1,15 +1,43 @@
 # Audio Visualizer (vanilla JS, CSS, HTML)
-### https://heatgub.github.io/JS-audio-visualizer/
+### You can find this project hosted at **https://heatgub.github.io/JS-audio-visualizer/**
 ## Overview
 - **Choose** your audio file and **play** it to create frequencies visualization
+- Set parameters and **save** them as setting
+- **Export/Import** all of your settings to **.json** file
+- Import **sample settings** with one click
 - Contol elements' display with **keyboard hotkeys**
-- You can find this project hosted at **https://heatgub.github.io/JS-audio-visualizer/** (quick instruction included)
+
+## Quick start
+1. **Open** https://heatgub.github.io/JS-audio-visualizer/
+2. **Load** your audio (GENERAL &rarr; Sound file &rarr; Browse)
+3. **Play** (SPACE or click on the player)
+4. **Import Sample Settings** (LOAD/SAVE &rarr; Sample Settings &rarr; ADD)
+5. **Load** one of the loaded **settings** (LOAD/SAVE &rarr; Settings &rarr; LOAD)
+
+## 3 main types of visualizers:
+- **Polygons**
+- **Radial bars** (with logarithmic amplitude scale option)
+- **Horizontal bars** (with logarithmic amplitude scale option)
+
+<p align="center">
+<img src="https://github.com/HeatGub/JS-audio-visualizer/assets/115884941/899be414-d1bc-4f1a-b296-9884fbe033d4" width=90%
+</p>
+
+## Settings management:
+- **LOAD/SAVE** sidebar category
+- Set parameters and **save** them as **setting**
+- **Export/Import** all of your settings to **.json** file
+- Import or remove **sample settings** with one click
+
+<p align="center">
+<img src="https://github.com/HeatGub/JS-audio-visualizer/assets/115884941/54408e3d-1566-4ef5-82a7-4a110360b0a2" width=90%
+</p>
 
 ## Controls
-- **Browse** and **play** a file to run
+- **Browse** and **play** a file to run (GENERAL &rarr; Sound file &rarr; Browse)
 - **Resize** the **sidebar** by dragging its edge
 - Set slider value with **number input**
-- Focus the slider to change by the minimal value with side arrows
+- *Focus the slider to change by the minimal value with side arrows*
 - *mouse over a parameter to display its description*
 
 #### Hotkeys
@@ -17,26 +45,17 @@
 - **DOWN** - show/hide player
 - **F11** - fullscreen on/off
 - **SPACE** - play/pause audio
+- **CTRL** - FPS visibility
 - **SHIFT** - opening buttons visibility
 
 <p align="center">
-<img src="https://github.com/HeatGub/JS-audio-visualizer/assets/115884941/96573b75-02ea-43db-857f-e42fc3786732" width=90%
-</p>
-
-## 5 types of visualizers:
-- **Polygons**
-- **Radial bars**
-- **Radial bars** (logarithmic amplitude scale)
-- **Horizontal bars**
-- **Horizontal bars** (logarithmic amplitude scale)
-
-<p align="center">
-<img src="https://github.com/HeatGub/JS-audio-visualizer/assets/115884941/3816d170-10e7-4465-a52b-f85234fa1dd3" width=90%
+<img src="https://github.com/HeatGub/JS-audio-visualizer/assets/115884941/5554eab8-2125-4ca0-b568-66a38609ccfa" width=90%
 </p>
 
 Depending on which you choose, there are different parameters to control. Polygons and radial bars may have rotation speed.
 
 ## Performance
+- Use **FPS meter** (CTRL) to check the performance.
 - Most **demanding** is **polygons** mode, the rest should go fast even on mobile devices
 - Since JS is executed at **user's device**, it depends on its capabilities
 - Especially complex shapes with many lines (large FFT size) and high area of drawing are computationally expensive
@@ -59,11 +78,12 @@ To [Frankslaboratory](https://www.youtube.com/@Frankslaboratory) for inspiring a
 </p>
 
 <p align="center">
-<img src="https://github.com/HeatGub/JS-audio-visualizer/assets/115884941/3935a5f7-9c9c-400c-b75d-d23be7c8fded" width=100%
+<img src="https://github.com/HeatGub/JS-audio-visualizer/assets/115884941/9d168aa6-88c0-45da-8034-dab1cc665431" width=100%
 </p>
 
 <p align="center">
-<img src="https://github.com/HeatGub/JS-audio-visualizer/assets/115884941/e3815754-484c-412c-9fca-314b9d6db1a4" width=100%
+<img src="https://github.com/HeatGub/JS-audio-visualizer/assets/115884941/3935a5f7-9c9c-400c-b75d-d23be7c8fded" width=100%
 </p>
+
 
 ## GL & HF

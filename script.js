@@ -488,8 +488,8 @@ function closeAudioContainer () {
 };
 
 //STARTING DISPLAY (CSS display : none WORKED BAD WITH THE hideShowCategoryElements)
-// document.getElementById('sidebarInsideCategoryElements0').style.display = 'none';
-document.getElementById('sidebarInsideCategoryElements1').style.display = 'none';
+document.getElementById('sidebarInsideCategoryElements0').style.display = 'none';
+// document.getElementById('sidebarInsideCategoryElements1').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements2').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements3').style.display = 'none';
 document.getElementById('sidebarInsideCategoryElements4').style.display = 'none';
