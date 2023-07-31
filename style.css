@@ -387,7 +387,6 @@ input[type="color"] {
 
 /* remove parent's hover effect text-shadow on buttons */
 .sidebarCategory > * > * > * > .saveLoadButton, .sidebarCategory > * > * > * > .yesNoButton  {
-    /* text-shadow: none; */
     text-shadow: 1px -1px 1px black;
 }
 
@@ -470,4 +469,36 @@ input[type="color"] {
     /* padding: 0.5em; */
     border-radius: 0.5rem;
     cursor: pointer;
+}
+
+#addSamplePresetsButton {
+box-shadow: 0 0 15px var(--shadowColorCategory);
+outline: 2px solid var(--shadowColorCategory);
+}
+
+#fpsContainer{
+    position: absolute;
+    top: 0;
+    right:0;
+    margin: 0.5rem;
+    text-align: center;
+    z-index: 100;
+    background-color: rgba(255, 255, 255, 0.30);
+    border-radius: 2rem;
+    z-index: 100;
+    padding: 0.7rem 0.7rem;
+}
+
+#fpsText{
+    font-size: 1.6rem;
+    color: rgba(1,1,1,0.8);
+}
+
+#fpsValue{
+    position: relative;
+    font-size: 4rem;
+    color: var(--shadowColorCategory);
+    text-shadow: 2px -1px 0px var(--textColorCategory);
+    margin-top: -1rem;
+    margin-bottom: -0.5rem;
 }

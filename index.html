@@ -18,6 +18,14 @@
     </div>
     
     <div id="container">
+        <!-- FPS -->
+        <div id="fpsContainer" title="Animation frames per second"> 
+            <div id="fpsText">FPS
+            </div>
+            <div id="fpsValue">0
+            </div>
+        </div>
+
         <canvas id="canvas1"></canvas>
         <div id ="audioContainer">
             <div id="hideAudioButton" class="showHideButton fa-solid fa-angles-down">
@@ -50,7 +58,7 @@
                         </div>
                     </div>
                     <!-- IMPORT SAMPLE PRESETS -->
-                    <div class = "sidebarElement"> Sample settings
+                    <div class = "sidebarElement" title="Add or remove all sample settings at once"> Sample settings
                         <div class="flexContainer">
                             <div class="saveLoadButton" id="addSamplePresetsButton"> ADD
                             </div>
@@ -61,7 +69,7 @@
                         </div>
                     </div>
                     <!-- EXPORT JSON -->
-                    <div class = "sidebarElement"> Export File
+                    <div class = "sidebarElement" title="Download JSON settings file to your device"> Export File
                         <div class="flexContainer">
                             <div class="saveLoadButton" id="exportButton"> EXPORT
                             </div>
@@ -70,7 +78,7 @@
                         </div>
                     </div>
                     <!-- LOAD -->
-                    <div class = "sidebarElement">
+                    <div class = "sidebarElement" title="Load or delete selected setting">
                         <label for="settings">Settings</label>
                         <br>
                         <select id="droplistLoad">
@@ -95,7 +103,7 @@
                         </div>
                     </div>
                     <!-- SAVE -->
-                    <div class = "sidebarElement"> Save setting
+                    <div class = "sidebarElement" title="Optional overwritting"> Save setting
                         <br>
                         <input type="text" id="saveTextInput" />
 

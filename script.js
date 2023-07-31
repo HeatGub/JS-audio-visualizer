@@ -570,7 +570,7 @@ let hotkeysDisabled = false;
 document.onkeydown = function keyPressed (e) {
     if (hotkeysDisabled == false) {
         // key code
-        // console.log(e.which);
+        console.log(e.which);
 
         // "ARROW UP" HOTKEY FOR SIDEBAR
         if (e.which == 38) { 
@@ -644,7 +644,19 @@ document.onkeydown = function keyPressed (e) {
                 }
                 buttonsInvisible = false;
             }
-        }
+        };
+
+        // "CTRL" FOR FPS METER
+        if (e.which == 17) { 
+            if (isFpsHidden == false) {
+                fpsContainer.style.display = 'none'
+                isFpsHidden = true;
+            }
+            else {
+                fpsContainer.style.display = 'block'
+                isFpsHidden = false;
+            }    
+        };
     }  
 };
 
@@ -715,17 +727,17 @@ function setStartingInfo(){
     ctx.shadowBlur = 2;
     
     ctx.font = fontSizeWidth + 'px' + ' Audiowide';
-    ctx.fillText('BROWSE AND PLAY A FILE TO RUN', canvas.width/2, canvas.height/4 - canvas.height/20);
+    ctx.fillText('BROWSE AND PLAY A FILE TO RUN', canvas.width/2, canvas.height/5);
 
     ctx.shadowOffsetY = fontSizeWidth/2;
     // ctx.font = "3rem Audiowide";
     fontSizeWidth = Math.round(window.innerWidth/70);
     ctx.font = fontSizeWidth + 'px' + ' Audiowide';
     const lineheight = window.innerHeight/14;
-    const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nFocus the slider to change by the minimal value with side arrows';
+    const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nCTRL - FPS visibility\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nFocus the slider to change by the minimal value with side arrows';
     const lines = startingText.split('\n');
     for (let i = 0; i < lines.length; i++) {
-        ctx.fillText(lines[i], canvas.width/2, canvas.height/3 + canvas.height/20 + (i * lineheight));
+        ctx.fillText(lines[i], canvas.width/2, canvas.height/5 + canvas.height/8 + (i * lineheight));
     }
 }
 // ON LOAD, IN CASE THE API FONT DIDNT LOAD ALREADY
@@ -893,6 +905,8 @@ const loadSettings = () => {
             showDisappearingMessage(loadDeleteMessage, droplistLoad.value, 'Loaded ', 1000);
             saveTextInput.value = [theseSettings];
             // console.log('LOADED');
+            loadButton.style.boxShadow = 'none';
+            loadButton.style.outline = '1px solid var(--textColorCategory)';
         }
         catch (error) {
             showDisappearingMessage(loadDeleteMessage, error, 'Error: ', 4000);
@@ -1110,6 +1124,12 @@ fetch('./sampleSettings.json')
         reloadLoadDroplist();
         showDisappearingMessage(samplePresetsMessage, '', 'Added sample settings', 2000);
     });
+    //REMOVE HIGHLIGHT ON ADD SAMPLE PRESETS BUTTON
+    addSamplePresetsButton.style.boxShadow = 'none';
+    addSamplePresetsButton.style.outline = '1px solid var(--textColorCategory)';
+    //ADD HIGHLIGHT ON LOAD BUTTON
+    loadButton.style.boxShadow = '0 0 15px var(--shadowColorCategory)';
+    loadButton.style.outline = '2px solid var(--shadowColorCategory)';
 };
 addSamplePresetsButton.addEventListener('click', importSampleSettings);
 
@@ -1124,3 +1144,22 @@ const deleteSampleSettings = () => {
 };
 removeSamplePresetsButton.addEventListener('click', deleteSampleSettings);
 //______________________________ SAMPLE PRESETS ______________________________
+
+//______________________________ FPS METER ______________________________
+// CALL FUNCTION EVERY timeInterval  AND CALCULATE FramesPerSecond
+fpsValue =document.getElementById('fpsValue');
+let lastframeCounter = frameCounter;
+const timeInterval = 250;
+let isFpsHidden = false;
+
+const tickingClock = () => {
+    framesDifference = frameCounter - lastframeCounter;
+    lastframeCounter = frameCounter;
+    fps = framesDifference * (1000/timeInterval);
+    fpsValue.innerHTML = fps;
+    color = 'rgb(' + (256-fps*4) + ', ' + (60 + fps*4) + ', ' + (120+fps*4);
+    fpsValue.style.color = color;
+};
+//EVERY timeInterval call tickingClock
+const dailyUpdatesInterval = setInterval(tickingClock, timeInterval);
+//______________________________ FPS METER ______________________________
