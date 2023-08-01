@@ -12,7 +12,7 @@
 2. **Load** your audio (GENERAL &rarr; Sound file &rarr; Browse)
 3. **Play** (SPACE or click on the player)
 4. **Import Sample Settings** (LOAD/SAVE &rarr; Sample Settings &rarr; ADD)
-5. **Load** one of the loaded **settings** (LOAD/SAVE &rarr; Settings &rarr; LOAD)
+5. **Load** one of the added **settings** (LOAD/SAVE &rarr; Settings &rarr; LOAD)
 
 ## 3 main types of visualizers:
 - **Polygons**

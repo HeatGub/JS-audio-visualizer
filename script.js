@@ -61,7 +61,6 @@ function updateField(e) {
       .querySelectorAll(`[data-field="${field}"]`)
       .forEach((el) => (el.value = value));
     updateParameters();
-    setBackground();
     setShadow();
 }
 // ____________________SLIDER-INPUT PAIRS____________________
@@ -244,6 +243,9 @@ function reloadAnimation() {
 
         // RUN OR PAUSE FPS METER
         runOrPauseFpsChecks();
+
+        //CANCEL BACKGROUND ANIMATION AND SET STATIC BACKGROUND 
+        setBackground();
 
         function animate() {
             if (audioPlayer.paused) {
@@ -690,11 +692,16 @@ document.getElementById('saveTextInput').addEventListener('focusout', function()
 // ______________________________HOTKEYS______________________________
 
 // ______________________________BACKGROUND______________________________
+droplistBackgrounds.addEventListener('input', setBackground);
 colorInput1.addEventListener('input', setBackground);
 colorInput2.addEventListener('input', setBackground);
-droplistBackgrounds.addEventListener('input', setBackground);
+gradAngle.addEventListener('input', setBackground);
+gradPosition1.addEventListener('input', setBackground);
+gradPosition2.addEventListener('input', setBackground);
 
 function setBackground() {
+    // console.log('setBackground');
+    stopAnimatingBackground();
     // LINEAR
     if (document.getElementById('droplistBackgrounds').value == 'linear'){
         document.getElementById('gradAngleSliderDiv').style.display = 'block';
@@ -706,7 +713,6 @@ function setBackground() {
         container.style.background = 'radial-gradient(circle, ' + colorInput1.value + ' ' + gradPosition1.value + '%, ' + colorInput2.value + ' ' + gradPosition2.value + '%)';
     }
 }
-setBackground();
 // ______________________________BACKGROUND______________________________
 
 //______________________________SHADOW______________________________
@@ -1208,3 +1214,30 @@ const runOrPauseFpsChecks = () => {
 };
 
 //______________________________ FPS METER ______________________________
+
+// ______________________________ INITIAL BACKGROUND ANIMATION ______________________________
+function setInitialBackground() {
+    //in HSL H+180 is totally opposite color and H+360 is identical color. Lets make it in range (30-80)
+    const randomMaxColorsDistance = 30 + Math.floor(Math.random() * 50);
+    // start from random to get random initial angle and color
+    let frameOfBackgroundAnimation = Math.round(Math.random() * 360);
+    const timeIntervalBackground = 100;
+
+    const setCurrentBackgroundColors = () => {
+        frameOfBackgroundAnimation +=1;
+        //make color2 sinuisoidally around center value (color) determined by frameOfBackgroundAnimation
+        let currentColorsDistance = Math.round(randomMaxColorsDistance* Math.sin(frameOfBackgroundAnimation/70));
+        let color1 = 'hsl(' + frameOfBackgroundAnimation + ', 90%, 30%)';
+        let color2 = 'hsl(' + (frameOfBackgroundAnimation + currentColorsDistance) + ', 100%, 15%)'
+        container.style.background = 'linear-gradient(' + frameOfBackgroundAnimation + 'deg, ' + color2 + ' 10%, ' + color1 + ' ' + '100%)';
+    };
+    animateBackground = setInterval(setCurrentBackgroundColors, timeIntervalBackground);
+};
+
+const stopAnimatingBackground = () => {
+    clearInterval(animateBackground);
+};
+
+// CALL THE FUNCTION
+setInitialBackground();
+// ______________________________ INITIAL BACKGROUND ANIMATION ______________________________
