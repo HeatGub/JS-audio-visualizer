@@ -1,3 +1,4 @@
+// GLOBAL DECLARATIONS 
 const container = document.getElementById('container');
 const button = document.getElementById('button1');
 const canvas = document.getElementById('canvas1');
@@ -8,8 +9,7 @@ canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
 const ctx = canvas.getContext('2d');
 const audioPlayer = document.getElementById('audioPlayer');
-audioPlayer.addEventListener('play', reloadAnimation);
-//COLORPARAMETERS INIT
+//COLORPARAMETERS INIT -hardcoded for now
 let [alphaRGB, lowMultiplierRed, highMultiplierRed, respMultiplierRed, lowMultiplierGreen, highMultiplierGreen, respMultiplierGreen, lowMultiplierBlue, highMultiplierBlue, respMultiplierBlue] = [1, 0, 0, 1, 0, 1, 0, 1, 0, 0];
 // VISUALISATION PARAMETERS INITIALIZATION
 let turns = document.getElementById('turns').value; //how many turns of radial bars. Integers > 1 give overlapping bars.
@@ -35,6 +35,8 @@ let polygonsReactivenessFinal = Number((1 - polygonsReactiveness).toFixed(3));
 // SOME DECLARATIONS ARE NEARBY THEIR MAIN FUNCTIONS
 
 //AUDIO FILE HANDLING
+audioPlayer.addEventListener('play', reloadAnimation);
+
 audioFileInput.addEventListener('change', function(){
     const files = this.files;
     audioPlayer.src = URL.createObjectURL(files[0]);
@@ -51,6 +53,7 @@ textInputs.forEach((el) => {
     el.addEventListener("change", updateField);
 });
 
+//UPDATE NUMBER INPUT BY SLIDER AND VICE-VERSA
 function updateField(e) {
     const field = e.target.dataset.field;
     const value = e.target.value;
@@ -222,55 +225,64 @@ updateVisualizerType(); //to disable unnecessary elements at the start
 let lastRequestId;
 
 function reloadAnimation() {
-    let audioContext = new AudioContext();
-    window.cancelAnimationFrame(lastRequestId); //to cancel possible multiple animation request
-    // console.log('reloadAnimation');
-    if (typeof audioSource == 'undefined') { //without that condition there is an error on creating audioSource
-        audioSource = audioContext.createMediaElementSource(audioPlayer);
-        analyser = audioContext.createAnalyser(); // create node
-        audioSource.connect(analyser);
-        analyser.connect(audioContext.destination);
-    }
+    if (audioPlayer.src != '') {
 
-    analyser.fftSize = fftSize;
-    const bufferLength = analyser.frequencyBinCount;    //data samples available - fftSize/2
-    const dataArray = new Uint8Array(bufferLength);
-    let x = 0;
-
-    function animate() {
-        if (audioPlayer.paused) {
-            // console.log('paused');
-            return; //break the loop if paused
-        }
-        frameCounter += 1;
-        frameTurn = rotationSpeed * frameCounter / 100;
-        x = 0;
-        ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
-        canvas.width = window.innerWidth; //to restore possibly rotated canvas
-        canvas.height = window.innerHeight; //to restore possibly rotated canvas
-        setShadow(); //necessary to restore shadows after canvas resizing
-        analyser.getByteFrequencyData(dataArray); //copies the current frequency data into a Uint8Array
-        if (visualizerType == 'horizontal bars') {
-            drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, dataArray);
-        }
-        else if (visualizerType == 'horizontal bars log') {
-            drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, dataArray);
-        }
-        else if (visualizerType == 'radial bars') {
-            drawVisualizerRadialBars(bufferLengthAfterCutoff, barWidth, dataArray);
-        }
-        else if (visualizerType == 'radial bars log') {
-            drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, barWidth, dataArray);
-        }
-        else if (visualizerType == 'polygons') {
-            drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray);
+        let audioContext = new AudioContext();
+        window.cancelAnimationFrame(lastRequestId); //to cancel possible multiple animation request
+        // console.log('reloadAnimation');
+        if (typeof audioSource == 'undefined') { //without that condition there is an error on creating audioSource
+            audioSource = audioContext.createMediaElementSource(audioPlayer);
+            analyser = audioContext.createAnalyser(); // create node
+            audioSource.connect(analyser);
+            analyser.connect(audioContext.destination);
         }
 
-        // REQUEST ANIMATION FRAME AND SAVE ITS ID
-        lastRequestId = window.requestAnimationFrame(animate);
-        
-    }
-    animate();
+        analyser.fftSize = fftSize;
+        const bufferLength = analyser.frequencyBinCount;    //data samples available - fftSize/2
+        const dataArray = new Uint8Array(bufferLength);
+        let x = 0;
+
+        // RUN OR PAUSE FPS METER
+        runOrPauseFpsChecks();
+
+        function animate() {
+            if (audioPlayer.paused) {
+                // console.log('paused');
+                // PAUSE FPS COUNTING
+                pauseFpsChecks();
+                return; //break the loop if paused
+            }
+            frameCounter += 1;
+            frameTurn = rotationSpeed * frameCounter / 100;
+            x = 0;
+            ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
+            canvas.width = window.innerWidth; //to restore possibly rotated canvas
+            canvas.height = window.innerHeight; //to restore possibly rotated canvas
+            setShadow(); //necessary to restore shadows after canvas resizing
+            analyser.getByteFrequencyData(dataArray); //copies the current frequency data into a Uint8Array
+            if (visualizerType == 'horizontal bars') {
+                drawVisualizerHorizontalBars(bufferLengthAfterCutoff, x, barWidth, dataArray);
+            }
+            else if (visualizerType == 'horizontal bars log') {
+                drawVisualizerHorizontalBarsLog(bufferLengthAfterCutoff, x, barWidth, dataArray);
+            }
+            else if (visualizerType == 'radial bars') {
+                drawVisualizerRadialBars(bufferLengthAfterCutoff, barWidth, dataArray);
+            }
+            else if (visualizerType == 'radial bars log') {
+                drawVisualizerRadialBarsLog(bufferLengthAfterCutoff, barWidth, dataArray);
+            }
+            else if (visualizerType == 'polygons') {
+                drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray);
+            }
+
+            // REQUEST ANIMATION FRAME AND SAVE ITS ID
+            lastRequestId = window.requestAnimationFrame(animate);
+            
+        }
+        // CALL ANIMATE ON ANIMATION RELOAD AND REQUEST ANIMATION FRAME FROM THE INSIDE
+        animate();
+    }; //if audioPlayer.src is not empty
 };
 //______________________________RELOAD ANIMATION______________________________
 
@@ -569,8 +581,8 @@ let hotkeysDisabled = false;
 
 document.onkeydown = function keyPressed (e) {
     if (hotkeysDisabled == false) {
-        // key code
-        console.log(e.which);
+        // KEY CODE
+        // console.log(e.which);
 
         // "ARROW UP" HOTKEY FOR SIDEBAR
         if (e.which == 38) { 
@@ -596,13 +608,20 @@ document.onkeydown = function keyPressed (e) {
 
         // "SPACE" HOTKEY FOR PAUSING
         if (e.which == 32) {
-            e.preventDefault(); //to prevent going to the end of the sidebar
-            if (audioPlayer.paused) {
-                audioPlayer.play();
+            // CHECK IF THERE IS A SOURCE TO PLAY AND PREVENT INIT INFO DISAPPEARANCE IF THERE IS NOT
+            // THERE IS AN ERROR ON PAUSE REQUEST WITHOUT AUDIO SOURCE
+            if (audioPlayer.src != '') {
+                e.preventDefault(); //to prevent going to the end of the sidebar
+                if (audioPlayer.paused) {
+                    audioPlayer.play();
+                }
+                else {
+                    audioPlayer.pause();
+                }
             }
             else {
-                audioPlayer.pause();
-            }    
+                alert('Upload a sound file to play it.\nGENERAL -> Sound File -> Choose File -> Play');
+            };
         }
 
         // "F11" HOTKEY FOR FULLSCREEN
@@ -1152,14 +1171,40 @@ let lastframeCounter = frameCounter;
 const timeInterval = 250;
 let isFpsHidden = false;
 
-const tickingClock = () => {
+//function for SetInterval calling
+const calculateCurrentFps = () => {
     framesDifference = frameCounter - lastframeCounter;
     lastframeCounter = frameCounter;
     fps = framesDifference * (1000/timeInterval);
     fpsValue.innerHTML = fps;
-    color = 'rgb(' + (256-fps*4) + ', ' + (60 + fps*4) + ', ' + (120+fps*4);
+    // target color for 60FPS is rgb(16, 236, 148). Target for 0FPS is red:
+    color = 'rgb(' + (256-fps*4) + ', ' + (56 + fps*3) + ', ' + (28+fps*2);
     fpsValue.style.color = color;
+    // console.log('calculateCurrentFps');
 };
-//EVERY timeInterval call tickingClock
-const dailyUpdatesInterval = setInterval(tickingClock, timeInterval);
+
+const pauseFpsChecks = () => {
+    clearInterval(runFpsChecks);
+    fpsValue.innerHTML = '-';
+    fpsValue.style.color = 'var(--textColorVariable)';
+    // console.log('pauseFpsChecks');
+};
+
+//  FPS SETITNG AND PAUSING FUNCTION - IT'S CALLED INSIDE reloadAnimation()
+const runOrPauseFpsChecks = () => {
+    // CHECK IF INTERVAL IS ALREADY SET. IF IT IS - PAUSE IT
+    if (typeof runFpsChecks !== 'undefined'){
+        // FIRST CANCEL OLD INTERVAL
+        pauseFpsChecks();
+        //THEN EVERY timeInterval (250ms) call calculateCurrentFps
+        runFpsChecks = setInterval(calculateCurrentFps, timeInterval);
+    }
+
+    // IF THE INTERVAL IS NOT SET - RUN IT:
+    else {
+        //EVERY timeInterval (250ms) call calculateCurrentFps
+        runFpsChecks = setInterval(calculateCurrentFps, timeInterval);
+    }
+};
+
 //______________________________ FPS METER ______________________________

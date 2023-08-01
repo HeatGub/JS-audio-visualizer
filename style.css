@@ -497,7 +497,8 @@ outline: 2px solid var(--shadowColorCategory);
 #fpsValue{
     position: relative;
     font-size: 4rem;
-    color: var(--shadowColorCategory);
+    /* color: var(--shadowColorCategory); */
+    color: var(--textColorVariable);
     text-shadow: 2px -1px 0px var(--textColorCategory);
     margin-top: -1rem;
     margin-bottom: -0.5rem;
