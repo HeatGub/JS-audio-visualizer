@@ -739,38 +739,6 @@ function setShadow() {
 }
 setShadow();
 //______________________________SHADOW______________________________
-
-//______________________________STARTING INFO DISPLAY______________________________
-function setStartingInfo(){
-    ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame
-    fontSizeWidth = Math.round(window.innerWidth/40);
-    ctx.fillStyle = 'rgba(200,200,200,0.7)';
-    ctx.textAlign = "center";
-    ctx.shadowColor = 'rgba(250,250,250,0.1)';
-    ctx.shadowOffsetX = 5;
-    ctx.shadowOffsetY = fontSizeWidth/1.4;
-    ctx.shadowBlur = 2;
-    
-    ctx.font = fontSizeWidth + 'px' + ' Audiowide';
-    ctx.fillText('BROWSE AND PLAY A FILE TO RUN', canvas.width/2, canvas.height/5);
-
-    ctx.shadowOffsetY = fontSizeWidth/2;
-    // ctx.font = "3rem Audiowide";
-    fontSizeWidth = Math.round(window.innerWidth/70);
-    ctx.font = fontSizeWidth + 'px' + ' Audiowide';
-    const lineheight = window.innerHeight/14;
-    const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nCTRL - FPS visibility\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nFocus the slider to change by the minimal value with side arrows';
-    const lines = startingText.split('\n');
-    for (let i = 0; i < lines.length; i++) {
-        ctx.fillText(lines[i], canvas.width/2, canvas.height/5 + canvas.height/8 + (i * lineheight));
-    }
-}
-// ON LOAD, IN CASE THE API FONT DIDNT LOAD ALREADY
-window.addEventListener('load', () => {
-    setStartingInfo();
-});
-//______________________________STARTING INFO DISPLAY______________________________
-
 //arrow functions from here
 //______________________________RELOAD SETTINGS DROLPIST______________________________
 droplistLoad = document.getElementById('droplistLoad');
@@ -1215,13 +1183,13 @@ const runOrPauseFpsChecks = () => {
 
 //______________________________ FPS METER ______________________________
 
-// ______________________________ INITIAL BACKGROUND ANIMATION ______________________________
-function setInitialBackground() {
+// ______________________________ INITIAL INFO ANIMATION ______________________________
+function setInitialAnimation() {
     //in HSL H+180 is totally opposite color and H+360 is identical color. Lets make it in range (30-80)
     const randomMaxColorsDistance = 30 + Math.floor(Math.random() * 50);
-    // start from random to get random initial angle and color
-    let frameOfBackgroundAnimation = Math.round(Math.random() * 360);
-    const timeIntervalBackground = 100;
+    // start from random to get random initial angle and color. Range (70-300) not to start on red
+    let frameOfBackgroundAnimation = 70 + Math.round(Math.random() * 230);
+    const timeIntervalBackground = 50;
 
     const setCurrentBackgroundColors = () => {
         frameOfBackgroundAnimation +=1;
@@ -1229,8 +1197,48 @@ function setInitialBackground() {
         let currentColorsDistance = Math.round(randomMaxColorsDistance* Math.sin(frameOfBackgroundAnimation/70));
         let color1 = 'hsl(' + frameOfBackgroundAnimation + ', 90%, 30%)';
         let color2 = 'hsl(' + (frameOfBackgroundAnimation + currentColorsDistance) + ', 100%, 15%)'
-        container.style.background = 'linear-gradient(' + frameOfBackgroundAnimation + 'deg, ' + color2 + ' 10%, ' + color1 + ' ' + '100%)';
+        container.style.background = 'linear-gradient(' + frameOfBackgroundAnimation + 'deg, ' + color2 + ' 0%, ' + color1 + ' ' + '100%)';
+        let currentAngle = frameOfBackgroundAnimation % 360;
+        let currentAngleRadians = currentAngle/360 * 2 * Math.PI;
+        let xDirection = Math.sin(currentAngleRadians);
+        let yDirection = Math.cos(currentAngleRadians);
+        // TEXT CANVAS
+        const fontSizeWidth = Math.round(window.innerWidth/40);
+        const smallerFontSizeWidth = Math.round(window.innerWidth/60);
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        ctx.textAlign = "center";
+
+        // ctx.textAlign = "center";
+
+        function setStartingInfo(){
+            ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame            
+            
+            ctx.fillStyle = 'hsl(' + (frameOfBackgroundAnimation - 50) + ', 70%, 40%)';
+            // ctx.shadowColor = 'rgba(0,0,0,0.9)';
+            ctx.shadowColor = 'hsl(' + (frameOfBackgroundAnimation + 40) + ', 90%, 10%)';
+            ctx.shadowOffsetX = -xDirection*fontSizeWidth/2;
+            ctx.shadowOffsetY = yDirection*fontSizeWidth*2;
+            ctx.shadowBlur = 2 + Math.abs(yDirection*18);
+            
+            ctx.font = fontSizeWidth + 'px' + ' Audiowide';
+            ctx.fillText('BROWSE AND PLAY A FILE TO RUN', canvas.width/2, canvas.height/5);
+        
+            // ctx.shadowOffsetX = -xDirection*fontSizeWidth/3;
+            ctx.shadowOffsetY = yDirection*fontSizeWidth*1.5;
+            // ctx.font = "3rem Audiowide";
+            ctx.font = smallerFontSizeWidth + 'px' + ' Audiowide';
+            const lineheight = window.innerHeight/14;
+            const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nCTRL - FPS visibility\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nFocus the slider to change by the minimal value with side arrows';
+            const lines = startingText.split('\n');
+            for (let i = 0; i < lines.length; i++) {
+                ctx.fillText(lines[i], canvas.width/2, canvas.height/5 + canvas.height/8 + (i * lineheight));
+            }
+        }
+        setStartingInfo();
+
     };
+    //Fire interval
     animateBackground = setInterval(setCurrentBackgroundColors, timeIntervalBackground);
 };
 
@@ -1238,6 +1246,9 @@ const stopAnimatingBackground = () => {
     clearInterval(animateBackground);
 };
 
-// CALL THE FUNCTION
-setInitialBackground();
-// ______________________________ INITIAL BACKGROUND ANIMATION ______________________________
+// ON LOAD, IN CASE THE API FONT OR SMTHG DIDNT LOAD ALREADY
+window.addEventListener('load', () => {
+    setInitialAnimation();
+});
+
+// ______________________________ INITIAL INFO ANIMATION ______________________________
