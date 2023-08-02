@@ -1209,8 +1209,9 @@ function setInitialAnimation() {
     let frameOfBackgroundAnimation = 70 + Math.round(Math.random() * 230);
     const timeIntervalBackground = 50;
 
-    const setCurrentBackgroundColors = () => {
-        frameOfBackgroundAnimation +=1;
+    const setCurrentBackground = () => {
+        //increment by smaller value to slow down the animation. Non-integer is not a problem for hsl
+        frameOfBackgroundAnimation +=0.5;
         //make color2 sinuisoidally around center value (color) determined by frameOfBackgroundAnimation
         let currentColorsDistance = Math.round(randomMaxColorsDistance* Math.sin(frameOfBackgroundAnimation/70));
         let color1 = 'hsl(' + frameOfBackgroundAnimation + ', 90%, 30%)';
@@ -1227,37 +1228,32 @@ function setInitialAnimation() {
         canvas.height = window.innerHeight;
         ctx.textAlign = "center";
 
-        // ctx.textAlign = "center";
-
-        function setStartingInfo(){
-            ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame            
-            
-            ctx.fillStyle = 'hsl(' + (frameOfBackgroundAnimation - 50) + ', 70%, 40%)';
-            // ctx.shadowColor = 'rgba(0,0,0,0.9)';
-            ctx.shadowColor = 'hsl(' + (frameOfBackgroundAnimation + 40) + ', 90%, 10%)';
-            ctx.shadowOffsetX = -xDirection*fontSizeWidth/2;
-            ctx.shadowOffsetY = yDirection*fontSizeWidth*2;
-            ctx.shadowBlur = 2 + Math.abs(yDirection*18);
-            
-            ctx.font = fontSizeWidth + 'px' + ' Audiowide';
-            ctx.fillText('BROWSE AND PLAY A FILE TO RUN', canvas.width/2, canvas.height/5);
+        // ____ STARTING TEXT AND SHADOWS DISPLAY ____ 
+        ctx.clearRect(0, 0, canvas.width, canvas.height); //clears previous frame            
         
-            // ctx.shadowOffsetX = -xDirection*fontSizeWidth/3;
-            ctx.shadowOffsetY = yDirection*fontSizeWidth*1.5;
-            // ctx.font = "3rem Audiowide";
-            ctx.font = smallerFontSizeWidth + 'px' + ' Audiowide';
-            const lineheight = window.innerHeight/14;
-            const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nCTRL - FPS visibility\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nFocus the slider to change by the minimal value with side arrows';
-            const lines = startingText.split('\n');
-            for (let i = 0; i < lines.length; i++) {
-                ctx.fillText(lines[i], canvas.width/2, canvas.height/5 + canvas.height/8 + (i * lineheight));
-            }
+        ctx.fillStyle = 'hsl(' + (frameOfBackgroundAnimation - 50) + ', 100%, 80%)';
+        ctx.shadowColor = 'hsl(' + (frameOfBackgroundAnimation + 40) + ', 90%, 10%)';
+        ctx.shadowOffsetX = -xDirection*fontSizeWidth/2;
+        ctx.shadowOffsetY = yDirection*fontSizeWidth*1.8;
+        ctx.shadowBlur = 3 + Math.abs(yDirection*22);
+        
+        ctx.font = "bold " + fontSizeWidth + 'px' + ' Audiowide';
+        // ctx.fontWeight = '100';
+        ctx.fillText('BROWSE AND PLAY A FILE TO RUN', canvas.width/2, canvas.height/5);
+    
+        ctx.shadowOffsetY = yDirection*fontSizeWidth*1.2;
+        // ctx.font = "3rem Audiowide";
+        ctx.font = smallerFontSizeWidth + 'px' + ' Audiowide';
+        const lineheight = window.innerHeight/14;
+        const startingText = 'UP - sidebar \nDOWN - player\nF11 - fullscreen\nCTRL - FPS visibility\nSPACE - play/pause\nSHIFT - opening buttons visibility\n Resize the sidebar by dragging its edge\nFocus the slider to change by the minimal value with side arrows';
+        const lines = startingText.split('\n');
+        for (let i = 0; i < lines.length; i++) {
+            ctx.fillText(lines[i], canvas.width/2, canvas.height/5 + canvas.height/8 + (i * lineheight));
         }
-        setStartingInfo();
-
+        // ____ STARTING TEXT AND SHADOWS DISPLAY ____ 
     };
     //Fire interval
-    animateBackground = setInterval(setCurrentBackgroundColors, timeIntervalBackground);
+    animateBackground = setInterval(setCurrentBackground, timeIntervalBackground);
 };
 
 const stopAnimatingBackground = () => {
