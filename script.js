@@ -385,10 +385,28 @@ function drawVisualizerPolygons(bufferLengthAfterCutoff, dataArray){
 // ______________________________SIDEBAR STUFF______________________________
 let resizer = document.querySelector(".resizer");
 let sidebar = document.querySelector(".sidebar");
-let cwGlobal = 500; //has to be the same as initialSidebarWidth in css
 let maxSidebarX = window.innerWidth * 0.95; //changes with refresh
 let minSidebarX = window.innerWidth * 0.10; //changes with refresh
 let resizerWidth = 7; //px as in CSS --resizerWidth
+let initialSidebarWidth;
+
+//SET RESPONSIVE INITIAL SIDEBAR WIDTH DEPENDING ON WINDOW (DEVICE) WIDTH
+// it's innerWidth so it's below screen resolution.
+if (window.innerWidth >= 1980) {
+    initialSidebarWidth = window.innerWidth*0.24;
+}
+else if (window.innerWidth >= 1280 && window.innerWidth < 1980) {
+    initialSidebarWidth = window.innerWidth*0.33;
+}
+else if (window.innerWidth >= 720 && window.innerWidth < 1280) {
+    initialSidebarWidth = window.innerWidth*0.50;
+}
+else if (window.innerWidth < 720) {
+    initialSidebarWidth = window.innerWidth*0.70;
+};
+//SET CSS VALUE
+document.documentElement.style.cssText = "--initialSidebarWidth: " + initialSidebarWidth + 'px';
+let cwGlobal = initialSidebarWidth;
 
 // RESIZER
 function initResizerFn( resizer, sidebar ) {

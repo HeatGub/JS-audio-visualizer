@@ -3,6 +3,7 @@
     font-size: 62.5%; /*-> rem = 10px*/
     font-family: "Audiowide", sans-serif;
     text-transform: capitalize;
+    /*init initialSidebarWidth, but it's changed in js anyway*/
     --initialSidebarWidth: 50rem;
     --resizerWidth: 0.7rem;
     --sidebarAudioSpacing: 0.5rem;
